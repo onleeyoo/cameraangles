@@ -43,7 +43,7 @@ select{font:inherit;font-size:14.5px;color:var(--ink);background:var(--card);bor
 .sw i{position:absolute;inset:0;border-radius:99px;background:var(--line);transition:background .2s;pointer-events:none}.sw i::after{content:'';position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.25);transition:transform .2s}
 .sw input:checked+i{background:var(--rec)}.sw input:checked+i::after{transform:translateX(18px)}
 .sw input:focus-visible+i,button:focus-visible,select:focus-visible{outline:3px solid var(--rec);outline-offset:2px}
-.lensbar{display:flex;align-items:center;gap:12px;padding:6px 2px}.lensbar input{flex:1;accent-color:var(--rec);height:32px}.lensbar b{min-width:56px;text-align:right;font-variant-numeric:tabular-nums}
+.lensbar{display:flex;align-items:center;gap:12px;padding:0 2px 6px}.lensbar input{flex:1;accent-color:var(--rec);height:32px}.lensbar b{min-width:56px;text-align:right;font-variant-numeric:tabular-nums}
 .maps{display:grid;gap:10px}
 .map{margin:0;background:var(--card);border-radius:14px;padding:10px 10px 4px}
 .map figcaption{font-size:13px;line-height:1.45;color:var(--sub);margin-bottom:2px}.map figcaption b{color:var(--ink);font-size:14px;margin-right:6px}
@@ -70,22 +70,24 @@ body[data-ar="11"] .view{max-width:620px}
 .tg{display:inline-flex;background:var(--bg);border:1px solid var(--line);border-radius:16px;padding:4px;gap:2px}
 .tb{display:inline-flex;align-items:center;gap:6px;font:inherit;font-size:14px;color:var(--ink);background:transparent;border:0;border-radius:12px;min-width:44px;min-height:44px;padding:0 12px;cursor:pointer}
 .tb:hover{background:var(--card)}.tb svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
-.hint{font-size:13.5px;color:var(--sub);margin:0;text-align:center}
+.hint{font-size:13px;color:var(--sub);margin:0;text-align:center}
+.tools .seg{background:var(--bg);border:1px solid var(--line);border-radius:16px;padding:4px}.tools .seg button{min-height:44px;border-radius:12px}.tools .seg button[aria-pressed=true]{background:var(--ink);color:var(--bg)}
 #strip{display:block;width:100%;max-width:1000px;height:auto;border-radius:12px;background:var(--card)}#strip[hidden]{display:none}
 .out{width:100%;max-width:1000px;display:flex;flex-direction:column;gap:8px}
 .sum{font-weight:700;font-size:17px;margin:0}
 .badge{display:inline-block;font-size:12.5px;font-weight:700;color:#fff;background:var(--rec);border-radius:6px;padding:2px 8px;margin-left:8px;vertical-align:2px}.badge[hidden]{display:none}
-.pr{display:flex;gap:8px}
+.pr{display:flex;gap:8px;align-items:flex-start}
 .pr code{flex:1;font:13.5px/1.6 ui-monospace,Menlo,monospace;background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:10px 14px;overflow-wrap:anywhere;word-break:normal}
 .btn{flex:none;font:inherit;font-size:14.5px;font-weight:500;min-width:64px;min-height:44px;padding:0 16px;border-radius:12px;border:0;background:var(--ink);color:var(--bg);cursor:pointer}
 .toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:12px;font-size:14px;opacity:0;transition:opacity .2s;pointer-events:none}.toast.on{opacity:1}
 @media(max-width:980px){
  .shell{display:flex;flex-direction:column;overflow:clip}
  .stage{display:contents}
- .pill{order:0;align-self:center;margin:14px 0 10px}
+ .pill{display:none}.top .lead{display:none}.top{padding-top:16px}.app{margin-top:12px}
  .view{order:1;position:sticky;top:0;z-index:5;max-width:none;border-radius:0;box-shadow:0 8px 20px rgba(0,0,0,.18)}
  .view canvas{max-height:42vh}body[data-ar="916"] .view{width:100%}body[data-ar="916"] .view canvas{height:42vh;width:auto}
- .tools{order:2;align-self:center;margin-top:14px}.hint{order:3;padding:8px 16px 0}#strip{order:4;margin:12px 16px 0;width:calc(100% - 32px)}.out{order:5;padding:14px 16px 18px;max-width:none}
+ .tools{order:2;align-self:center;margin-top:14px}#strip{order:3;margin:12px 16px 0;width:calc(100% - 32px)}.out{order:4;padding:14px 16px 6px;max-width:none}.hint{order:5;padding:0 16px 18px}
+ .tools{gap:6px}.tools .tb span{display:none}.tools .seg button{padding:0 12px}.tools .tb{padding:0 10px}
  .side{order:6;position:static;max-height:none;border-right:0;border-top:1px solid var(--line)}
 }
 @media(prefers-reduced-motion:reduce){*{transition:none!important}}
@@ -98,32 +100,34 @@ body[data-ar="11"] .view{max-width:620px}
 </div>
 <div class="app"><div class="shell">
  <aside class="side">
+  <details class="sec" open><summary>구도</summary>
+   <div id="panel"></div>
+  </details>
+  <details class="sec" open><summary>렌즈 · 무빙</summary>
+   <div class="row"><span>렌즈 화각</span><b id="flv">35mm</b></div>
+   <div class="lensbar"><input type="range" id="flr" min="2.64" max="5.3" step="0.01" aria-label="렌즈 화각"></div>
+   <div id="panelMove"></div>
+  </details>
   <details class="sec" open><summary>인물</summary>
    <div class="row"><span>인원</span><div class="seg" id="cnt"><button data-v="1" aria-pressed="true">1인</button><button data-v="2" aria-pressed="false">2인</button></div></div>
    <label class="row"><span>성별</span><select id="castSel"></select></label>
   </details>
-  <details class="sec" open><summary>카메라</summary>
-   <div id="panel"></div>
-   <div class="row"><span>렌즈 화각</span></div>
-   <div class="lensbar"><input type="range" id="flr" min="2.64" max="5.3" step="0.01" aria-label="렌즈 화각"><b id="flv">35mm</b></div>
-  </details>
-  <details class="sec" open><summary>도면</summary>
+  <details class="sec" open><summary>도면으로 직접 조정</summary>
    <div class="maps">
     <figure class="map"><figcaption><b>탑뷰</b>카메라·인물을 끌어서 위치 조절<br>인물 앞 작은 점 = 바라보는 방향, ⊕ = 카메라가 보는 곳</figcaption><svg id="top" viewBox="0 0 400 300"></svg></figure>
     <figure class="map"><figcaption><b>사이드뷰</b>카메라를 끌어서 높이·거리 조절<br>⊕를 끌면 보는 높이 (얼굴에 자석)</figcaption><svg id="side" viewBox="0 0 400 300"></svg></figure>
    </div>
   </details>
-  <details class="sec" open><summary>화면</summary>
-   <label class="row"><span>비율</span><select id="arSel"><option value="169">16:9 가로</option><option value="916">9:16 세로 (릴스·쇼츠)</option><option value="11">1:1 정사각</option></select></label>
+  <details class="sec"><summary>화면 표시</summary>
    <label class="row"><span>화면 속 샷 이름</span><span class="sw"><input type="checkbox" id="lbChk" checked><i></i></span></label>
    <label class="row"><span>3분할 격자</span><span class="sw"><input type="checkbox" id="gdChk"><i></i></span></label>
   </details>
-  <details class="sec"><summary>사용법</summary>
+  <details class="sec" id="howSec"><summary>사용법</summary>
    <ol class="howto">
-    <li><div><b>인물 고르기</b>1인·2인과 성별을 골라요.<br>2인은 탑뷰에서 인물을 끌어 위치를 바꿔요.</div></li>
-    <li><div><b>구도 고르기</b>샷 사이즈, 앵글, 인물 방향, 무빙을 골라요.<br>렌즈 화각은 슬라이더로 조절해요.</div></li>
-    <li><div><b>직접 다듬기</b>도면의 카메라를 끌면 위치가 바뀌어요.<br>미리보기 화면을 끌면 인물을 한쪽으로 치우치게 배치해요.</div></li>
-    <li><div><b>저장하고 복사</b>카메라 버튼으로 이미지를 저장하고,<br>영어 프롬프트를 복사해 같이 붙여 쓰세요.</div></li>
+    <li><div><b>구도 고르기</b>샷 사이즈, 앵글, 인물 방향을 골라요.<br>렌즈와 무빙은 그 아래에서 바꿔요.</div></li>
+    <li><div><b>인물 정하기</b>1인·2인과 성별을 골라요.<br>2인은 탑뷰에서 인물을 끌어 위치를 바꿔요.</div></li>
+    <li><div><b>직접 다듬기</b>도면의 카메라를 끌면 위치가 바뀌어요.<br>미리보기를 끌면 인물을 한쪽으로 치우치게 배치해요.</div></li>
+    <li><div><b>저장하고 복사</b>카메라 버튼으로 이미지를 저장하고,<br>프롬프트를 복사해 같이 붙여 쓰세요.</div></li>
    </ol>
   </details>
  </aside>
@@ -134,16 +138,16 @@ body[data-ar="11"] .view{max-width:620px}
    <div class="tg">
     <button class="tb" id="reset" type="button" title="초기화" aria-label="초기화"><svg viewBox="0 0 24 24"><path d="M9 14 4 9l5-5"/><path d="M4 9h11a5 5 0 0 1 0 10h-3"/></svg></button>
     <button class="tb" id="center" type="button" title="구도 가운데로" aria-label="구도 가운데로"><svg viewBox="0 0 24 24"><path d="M3 11 12 4l9 7"/><path d="M5 10v10h14V10"/></svg></button>
-    <button class="tb" id="shot" type="button" title="이미지 저장" aria-label="이미지 저장"><svg viewBox="0 0 24 24"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg></button>
    </div>
-   <div class="tg"><button class="tb" id="copy" type="button"><svg viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V5a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h3"/></svg><span>프롬프트 복사</span></button></div>
+   <div class="seg" id="arSeg" aria-label="화면 비율"><button data-v="169" aria-pressed="true">16:9</button><button data-v="916" aria-pressed="false">9:16</button><button data-v="11" aria-pressed="false">1:1</button></div>
+   <div class="tg"><button class="tb" id="shot" type="button" title="이미지 저장" aria-label="이미지 저장"><svg viewBox="0 0 24 24"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg><span>저장</span></button></div>
   </div>
-  <p class="hint">미리보기를 끌면 인물을 한쪽으로 배치할 수 있어요. 더블클릭하면 가운데로 돌아와요.</p>
   <canvas id="strip" hidden></canvas>
   <div class="out">
    <p class="sum"><span id="sum"></span><span class="badge" id="free" hidden>직접 조정 중</span></p>
-   <div class="pr"><code id="prompt"></code></div>
+   <div class="pr"><code id="prompt"></code><button class="btn" id="copy" type="button">복사</button></div>
   </div>
+  <p class="hint">미리보기를 끌면 인물을 한쪽으로 배치할 수 있어요.<br>더블클릭하거나 집 버튼을 누르면 가운데로 돌아와요.</p>
  </main>
 </div></div>
 <div class="toast" id="toast" role="status"></div>
@@ -320,7 +324,9 @@ function boot(){
  const esc=s=>s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 
  const panel=document.getElementById('panel');
- panel.innerHTML=G.filter(g=>g.k!=='lens').map(g=>`<label class="row"><span>${g.t.replace(' · 높이','')}</span><select data-k="${g.k}">${g.o.map((o,i)=>`<option value="${i}">${esc(o[0])}${o[1]&&o[1]!==o[0]?' · '+esc(o[1]):''}</option>`).join('')}</select></label>`).join('');
+ const selHTML=g=>`<label class="row"><span>${g.t.replace(' · 높이','')}</span><select data-k="${g.k}">${g.o.map((o,i)=>`<option value="${i}">${esc(o[0])}${o[1]&&o[1]!==o[0]?' · '+esc(o[1]):''}</option>`).join('')}</select></label>`;
+ document.getElementById('panelMove').innerHTML=selHTML(G.find(g=>g.k==='move'));
+ panel.innerHTML=G.filter(g=>g.k!=='lens'&&g.k!=='move').map(g=>`<label class="row"><span>${g.t.replace(' · 높이','')}</span><select data-k="${g.k}">${g.o.map((o,i)=>`<option value="${i}">${esc(o[0])}${o[1]&&o[1]!==o[0]?' · '+esc(o[1]):''}</option>`).join('')}</select></label>`).join('');
  const chips=[],toast=t=>{const el=document.getElementById('toast');el.textContent=t;el.classList.add('on');clearTimeout(toast.t);toast.t=setTimeout(()=>el.classList.remove('on'),1600)},flr=document.getElementById('flr'),flv=document.getElementById('flv');
  flr.addEventListener('input',()=>{let mm=Math.round(Math.exp(+flr.value));const st=[14,16,18,20,24,28,35,40,50,65,70,85,100,105,135,150,200];mm=st.reduce((a,b)=>Math.abs(b-mm)<Math.abs(a-mm)?b:a);sel.fl=mm;dragging=1;fast()});flr.addEventListener('change',()=>{dragging=null;req()});
  const main=document.getElementById('main'),strip=document.getElementById('strip');
@@ -367,7 +373,7 @@ function boot(){
   const y=H/2,a=W+Gp*.18,b=W+Gp*.82,hs=Gp*.16;x.strokeStyle='#121316';x.lineWidth=Math.max(3,Gp*.05);x.lineCap='round';x.beginPath();x.moveTo(a,y);x.lineTo(b,y);x.moveTo(b-hs,y-hs);x.lineTo(b,y);x.lineTo(b-hs,y+hs);x.stroke();
   const n=names(sel);label(x,w,H,n.ko,n.en,k)};
  const drawThumbs=()=>{const [tw,th]=TH[ar];R.setSize(tw,th,false);for(const c of chips){const k=c.dataset.k,s={...sel,[k]:+c.dataset.i};if(k==='lens')delete s.fl;const cv=c.querySelector('canvas');if(cv.width!==tw||cv.height!==th){cv.width=tw;cv.height=th}const mv=opt('move',s)[4];cv.getContext('2d').drawImage(shoot(solve(s,tw/th,mv&&mv!=='hand'?(mv==='orbit'?.25:1):0,free&&(k==='lens'||k==='move')),tw,th),0,0)}};
- const ui=()=>{if(free)classify();for(const s of panel.querySelectorAll('select'))s.value=sel[s.dataset.k];const mm=sel.fl||opt('lens',sel)[4];flr.value=Math.log(mm);flv.textContent=mm+'mm';document.getElementById('pillTxt').textContent=CASTS[sel.cast||'w'][0]+' · '+{169:'16:9',916:'9:16',11:'1:1'}[ar]+' · '+(sel.fl||opt('lens',sel)[4])+'mm';const n=names(sel);document.getElementById('sum').textContent=n.ko;document.getElementById('free').hidden=!free;document.getElementById('prompt').textContent=n.pr};
+ const ui=()=>{if(free)classify();for(const s of document.querySelectorAll('select[data-k]'))s.value=sel[s.dataset.k];const mm=sel.fl||opt('lens',sel)[4];flr.value=Math.log(mm);flv.textContent=mm+'mm';document.getElementById('pillTxt').textContent=CASTS[sel.cast||'w'][0]+' · '+{169:'16:9',916:'9:16',11:'1:1'}[ar]+' · '+(sel.fl||opt('lens',sel)[4])+'mm';const n=names(sel);document.getElementById('sum').textContent=n.ko;document.getElementById('free').hidden=!free;document.getElementById('prompt').textContent=n.pr};
  let pend=0,dragging=null;
  const all=()=>{pend=0;[W,H]=AR[ar];ui();drawThumbs();R.setSize(W,H,false);main.width=W;main.height=H;drawStrip();drawMain(performance.now()/1000)};
  const req=()=>{if(!pend){pend=1;requestAnimationFrame(all)}};
@@ -399,9 +405,9 @@ function boot(){
   const end=()=>{if(dragging){dragging=null;req()}};sv.addEventListener('pointerup',end);sv.addEventListener('pointercancel',end);
  }
 
- panel.addEventListener('change',e=>{const c=e.target.closest('select');if(!c)return;const k=c.dataset.k;if(k!=='move'){free=false;AIMP=null;LOOK.yaw=LOOK.pitch=0}sel[k]=+c.value;req()});
+ document.querySelector('.side').addEventListener('change',e=>{const c=e.target.closest('select[data-k]');if(!c)return;const k=c.dataset.k;if(k!=='move'){free=false;AIMP=null;LOOK.yaw=LOOK.pitch=0}sel[k]=+c.value;req()});
  const seg=(id,fn)=>document.getElementById(id).addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;for(const x of b.parentNode.children)x.setAttribute('aria-pressed',x===b);fn(b.dataset.v);req()});
- const arSel=document.getElementById('arSel');arSel.addEventListener('change',()=>{ar=arSel.value;document.body.dataset.ar=ar;req()});
+ seg('arSeg',v=>{ar=v;document.body.dataset.ar=v});
  document.getElementById('gdChk').addEventListener('change',e=>{thirds=e.target.checked;req()});document.getElementById('lbChk').addEventListener('change',e=>{lab=e.target.checked;req()});
  document.getElementById('center').addEventListener('click',()=>{LOOK.yaw=LOOK.pitch=0;AIMP=null;req()});
  document.getElementById('shot').addEventListener('click',()=>{try{const a=document.createElement('a');a.download='camera-angle-'+Date.now()+'.png';a.href=main.toDataURL('image/png');document.body.appendChild(a);a.click();a.remove();toast('이미지를 저장했어요')}catch(_){toast('저장이 막혀 있어요. 화면을 캡쳐해 주세요')}});
@@ -412,7 +418,7 @@ function boot(){
  main.addEventListener('pointermove',e=>{if(!lk)return;const r=main.getBoundingClientRect();LOOK.yaw=Math.max(-60,Math.min(60,lk.yaw+(e.clientX-lk.x)/r.width*lk.hf));LOOK.pitch=Math.max(-45,Math.min(45,lk.pitch+(e.clientY-lk.y)/r.height*lk.vf));fast()});
  const lkEnd=()=>{if(lk){lk=null;dragging=null;bake();req()}};main.addEventListener('pointerup',lkEnd);main.addEventListener('pointercancel',lkEnd);
  main.addEventListener('dblclick',()=>{LOOK.yaw=LOOK.pitch=0;AIMP=null;req()});
- document.getElementById('copy').addEventListener('click',async e=>{const b=e.currentTarget,el=document.getElementById('prompt');try{await navigator.clipboard.writeText(el.textContent)}catch(_){const r=document.createRange();r.selectNodeContents(el);const s=getSelection();s.removeAllRanges();s.addRange(r);try{document.execCommand('copy')}catch(_){}}toast('프롬프트를 복사했어요')});
+ document.getElementById('copy').addEventListener('click',async e=>{const b=e.currentTarget,el=document.getElementById('prompt');try{await navigator.clipboard.writeText(el.textContent)}catch(_){const r=document.createRange();r.selectNodeContents(el);const s=getSelection();s.removeAllRanges();s.addRange(r);try{document.execCommand('copy')}catch(_){}}toast('프롬프트를 복사했어요');b.textContent='복사됨';setTimeout(()=>b.textContent='복사',1400)});
 
  // 사람 모델 불러오기 (여자/남자, 실패하면 기본 마네킹 유지)
  const FZ0=G[0].o.map(o=>o[7]),MODELS={},FILES={w:'person',m:'male'};let cur=P;
