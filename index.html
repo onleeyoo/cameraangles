@@ -3,7 +3,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>카메라 구도 빌더</title>
+<title>카메라 앵글 시뮬레이터</title>
+<meta name="description" content="카메라 뷰와 앵글을 조정해서 촬영 전에 구도를 미리 볼 수 있는 시뮬레이터. AI 영상·이미지 생성 레퍼런스나 스토리보드로 활용하세요.">
+<meta property="og:title" content="카메라 앵글 시뮬레이터">
+<meta property="og:description" content="카메라 뷰와 앵글을 조정해서 구도를 미리 보는 시뮬레이터 — AI 영상 생성 레퍼런스·스토리보드용">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect x='4' y='18' width='40' height='32' rx='7' fill='%23121316'/%3E%3Cpath d='M44 28l16-9v30l-16-9z' fill='%23121316'/%3E%3Ccircle cx='20' cy='34' r='8' fill='%23fff'/%3E%3Ccircle cx='20' cy='34' r='4' fill='%23e5322d'/%3E%3Ccircle cx='36' cy='12' r='6' fill='%23e5322d'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
 <style>
@@ -21,9 +25,9 @@ body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 "Noto Sans KR
 h1{font-size:clamp(30px,4.4vw,46px);line-height:1.05;margin:0 0 10px;font-weight:900;letter-spacing:-.02em;text-wrap:balance}
 h1 i{font-style:normal;display:inline-block;width:.5em;height:.5em;border-radius:50%;background:var(--rec);margin-right:.25em;vertical-align:.12em}
 .lead{margin:0;color:var(--sub);max-width:64ch}
-.stage{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:32px;align-items:start;margin-top:24px}
+.stage{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:24px;align-items:start;margin-top:16px}
+.right{display:flex;flex-direction:column;gap:12px}
 .left{display:flex;flex-direction:column;gap:12px}
-@media(min-width:901px) and (min-height:860px){.left{position:sticky;top:12px}}
 .vc{display:flex;flex-direction:column;gap:10px}
 .view{background:#dcdde2;border-radius:14px;overflow:hidden;display:flex;justify-content:center}
 .view canvas{display:block;width:100%;height:auto;max-height:74vh;object-fit:contain}
@@ -57,11 +61,13 @@ button:focus-visible{outline:3px solid var(--rec);outline-offset:2px}
 .pr code{flex:1;font:13.5px/1.5 ui-monospace,Menlo,monospace;background:var(--card);border-radius:10px;padding:10px 12px;overflow-wrap:anywhere}
 .btn{flex:none;font:500 15px inherit;font-family:inherit;min-width:64px;min-height:44px;padding:0 14px;border-radius:10px;border:1px solid var(--ink);background:var(--ink);color:var(--bg);cursor:pointer}
 .btn.ghost{background:transparent;color:var(--ink);border-color:var(--line)}
-.panel{display:flex;flex-direction:column;gap:24px}
+.panel{display:flex;flex-direction:column;gap:22px;margin-top:28px}
+.grp{background:var(--card);border-radius:14px;padding:16px 16px 18px}
 .grp h2{font-size:19px;margin:0 0 10px;display:flex;justify-content:space-between;gap:10px;align-items:baseline}
 .grp h2 small{font-size:14px;font-weight:500;color:var(--rec)}
-.chips{display:grid;gap:8px;grid-template-columns:repeat(auto-fill,minmax(var(--tw,112px),1fr))}
-body[data-ar="916"] .chips{--tw:84px}
+.chips{display:grid;gap:10px;grid-template-columns:repeat(auto-fill,minmax(var(--tw,140px),1fr))}
+.chip{background:var(--bg)!important}
+body[data-ar="916"] .chips{--tw:96px}
 .chip{display:flex;flex-direction:column;gap:3px;text-align:left;font:inherit;color:var(--ink);background:var(--card);border:2px solid transparent;border-radius:10px;padding:5px 5px 8px;cursor:pointer}
 .chip canvas{display:block;width:100%;height:auto;border-radius:6px;background:#dcdde2}
 .chip b{font-size:14px;line-height:1.25;font-weight:700;padding:0 3px}
@@ -69,37 +75,60 @@ body[data-ar="916"] .chips{--tw:84px}
 .chip[aria-pressed=true]{border-color:var(--rec)}
 .chip[aria-pressed=true] small{color:var(--rec)}
 .note{font-size:14px;color:var(--sub);margin:0}
-@media(max-width:900px){.stage{grid-template-columns:1fr}}@media(max-width:520px){.maps{grid-template-columns:1fr}}
+@media(max-width:900px){.stage{grid-template-columns:1fr}}
+.how{margin-top:20px;border:1px solid var(--line);border-radius:14px;padding:4px 18px 16px}
+.how summary{cursor:pointer;font-weight:700;font-size:17px;padding:12px 0;list-style-position:inside}
+.steps{list-style:none;margin:4px 0 0;padding:0;display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));counter-reset:s}
+.steps li{background:var(--card);border-radius:12px;padding:14px 16px;counter-increment:s}
+.steps li::before{content:counter(s);display:inline-grid;place-items:center;width:26px;height:26px;border-radius:50%;background:var(--rec);color:#fff;font-weight:700;font-size:14px;margin-bottom:8px}
+.steps b{display:block;font-size:16px;margin-bottom:4px}.steps p{margin:0;font-size:14.5px;color:var(--sub);line-height:1.55}
+.tips{margin:14px 0 0;padding:0;list-style:none;display:flex;flex-wrap:wrap;gap:8px 18px;font-size:14px;color:var(--sub)}.tips li::before{content:'· '}
+.castbar{display:flex;flex-wrap:wrap;align-items:center;gap:12px 22px;margin-top:22px;padding:12px 14px;background:var(--card);border-radius:14px}
+.castbar span{font-size:14px;color:var(--sub);margin-right:8px}.castbar .sp{flex:1}
+#cast button[hidden]{display:none}@media(max-width:520px){.maps{grid-template-columns:1fr}}
 </style>
 </head>
 <body data-ar="169">
 <div class="band"><div class="wrap">
- <h1><i></i>카메라 구도 빌더 — 1인 기준</h1>
- <p class="lead">오른쪽 옵션을 하나씩 골라 조합하거나, 화면 아래 도면에서 카메라를 직접 끌어 옮기면 그 장면이 바로 렌더링돼요. 도면으로 옮기면 샷 이름과 프롬프트도 자동으로 바뀌어요. 화면을 캡쳐해서 레퍼런스로 넣고, 아래 영어 프롬프트를 같이 붙여 쓰세요. 옵션마다 있는 작은 미리보기는 그걸 골랐을 때 나오는 장면이에요.</p>
+ <h1><i></i>카메라 앵글 시뮬레이터</h1>
+ <p class="lead">카메라 뷰와 앵글을 조정해서 촬영 전에 구도를 미리 볼 수 있는 시뮬레이터예요. AI 영상·이미지 생성 레퍼런스로 쓰거나 스토리보드로 활용해 보세요.</p>
+ <details class="how" open><summary>사용법</summary>
+  <ol class="steps">
+   <li><b>인물 고르기</b><p>1인·2인과 성별을 골라요. 2인은 탑뷰에서 인물을 끌어 위치를, 앞의 작은 점을 끌어 바라보는 방향을 바꿀 수 있어요.</p></li>
+   <li><b>구도 고르기</b><p>아래에서 샷 사이즈·앵글·인물 방향·렌즈·무빙을 골라요. 카드의 작은 그림이 골랐을 때의 화면이에요.</p></li>
+   <li><b>직접 다듬기</b><p>도면의 카메라를 끌면 위치·높이가, ⊕를 끌면 보는 곳이 바뀌어요. 큰 화면을 끌면 인물을 한쪽으로 치우치게 배치해요.</p></li>
+   <li><b>캡쳐하고 복사</b><p>화면을 캡쳐해 레퍼런스로 넣고, 영어 프롬프트를 복사해 같이 붙여요. 무빙은 시작·끝 프레임을 쓰면 돼요.</p></li>
+  </ol>
+  <ul class="tips"><li>더블클릭: 구도를 가운데로</li><li>화면 속 이름 숨김: 글자 없는 깨끗한 캡쳐</li><li>9:16: 릴스·쇼츠용</li><li>렌즈 슬라이더: 14~200mm</li><li>초기화: 처음 상태로</li></ul>
+ </details>
+ <div class="castbar">
+  <div><span>인물</span><div class="seg" id="cnt"><button data-v="1" aria-pressed="true">1인</button><button data-v="2" aria-pressed="false">2인</button></div></div>
+  <div><span>성별</span><div class="seg" id="cast"><button data-v="w" data-n="1" aria-pressed="true">여자</button><button data-v="m" data-n="1" aria-pressed="false">남자</button><button data-v="ww" data-n="2" aria-pressed="false" hidden>여여</button><button data-v="mm" data-n="2" aria-pressed="false" hidden>남남</button><button data-v="mw" data-n="2" aria-pressed="false" hidden>남여</button><button data-v="wm" data-n="2" aria-pressed="false" hidden>여남</button></div></div>
+  <div class="sp"></div>
+  <div><span>비율</span><div class="seg" id="ar"><button data-v="169" aria-pressed="true">16:9</button><button data-v="916" aria-pressed="false">9:16</button><button data-v="11" aria-pressed="false">1:1</button></div></div>
+  <div><span>화면 속 이름</span><div class="seg" id="lb"><button data-v="1" aria-pressed="true">표시</button><button data-v="0" aria-pressed="false">숨김</button></div></div>
+  <div><span>3분할 격자</span><div class="seg" id="gd"><button data-v="1" aria-pressed="false">표시</button><button data-v="0" aria-pressed="true">숨김</button></div></div>
+  <button class="btn ghost" id="reset" type="button">초기화</button>
+ </div>
  <div class="stage">
   <div class="left">
    <div class="view"><canvas id="main"></canvas></div>
+   <canvas id="strip" hidden></canvas>
+   <div class="out">
+    <p class="sum"><span id="sum"></span><span class="badge" id="free" hidden>직접 조정 중</span></p>
+    <div class="pr"><code id="prompt"></code><button class="btn" id="copy" type="button">복사</button></div>
+   </div>
+  </div>
+  <div class="right">
    <div class="lensbar"><span>렌즈 화각</span><input type="range" id="flr" min="2.64" max="5.3" step="0.01" aria-label="렌즈 화각"><b id="flv">35mm</b></div>
    <p class="hint">화면을 끌면 카메라 고개가 돌아가서 인물을 한쪽으로 배치할 수 있어요. 더블클릭하면 가운데로.</p>
-   <canvas id="strip" hidden></canvas>
    <div class="maps">
     <figure class="map"><figcaption><b>탑뷰</b>카메라·인물 위치 / 인물 앞 점 = 방향 / ⊕ = 보는 곳</figcaption><svg id="top" viewBox="0 0 400 300"></svg></figure>
     <figure class="map"><figcaption><b>사이드뷰</b>카메라 높이·거리 / ⊕ = 보는 곳 (얼굴에 자석)</figcaption><svg id="side" viewBox="0 0 400 300"></svg></figure>
    </div>
-   <div class="out">
-    <p class="sum"><span id="sum"></span><span class="badge" id="free" hidden>직접 조정 중</span></p>
-    <div class="pr"><code id="prompt"></code><button class="btn" id="copy" type="button">복사</button></div>
-    <div class="bar">
-     <div><span>인물</span><div class="seg" id="cast"><button data-v="w" aria-pressed="true">여자</button><button data-v="m" aria-pressed="false">남자</button><button data-v="ww" aria-pressed="false">여+여</button><button data-v="mm" aria-pressed="false">남+남</button><button data-v="mw" aria-pressed="false">남+여</button></div></div>
-     <div><span>비율</span><div class="seg" id="ar"><button data-v="169" aria-pressed="true">16:9</button><button data-v="916" aria-pressed="false">9:16</button><button data-v="11" aria-pressed="false">1:1</button></div></div>
-     <div><span>화면 속 이름</span><div class="seg" id="lb"><button data-v="1" aria-pressed="true">표시</button><button data-v="0" aria-pressed="false">숨김</button></div></div>
-     <div><span>3분할 격자</span><div class="seg" id="gd"><button data-v="1" aria-pressed="false">표시</button><button data-v="0" aria-pressed="true">숨김</button></div></div>
-     <button class="btn ghost" id="reset" type="button">초기화</button>
-    </div>
-   </div>
   </div>
-  <div class="panel" id="panel"></div>
  </div>
+ <div class="panel" id="panel"></div>
 </div></div>
 
 <script>
@@ -203,7 +232,7 @@ function boot(){
  // 카메라 계산: 프리셋(사이즈·앵글·방향) 또는 도면으로 직접 옮긴 값(F) → 기본 카메라, 그 위에 무빙
  const opt=(k,s)=>G.find(g=>g.k===k).o[s[k]];
  let free=false;const LOOK={yaw:0,pitch:0};let AIMP=null;
- const CASTS={w:['여자 1인','Woman','a young Korean woman',['w']],m:['남자 1인','Man','a young Korean man',['m']],ww:['2인 여여','Two Women','two-shot of two young Korean women',['w','w']],mm:['2인 남남','Two Men','two-shot of two young Korean men',['m','m']],mw:['2인 남녀','Man & Woman','two-shot of a young Korean man and woman',['m','w']]};
+ const CASTS={w:['여자 1인','Woman','a young Korean woman',['w']],m:['남자 1인','Man','a young Korean man',['m']],ww:['2인 여여','Two Women','two-shot of two young Korean women',['w','w']],mm:['2인 남남','Two Men','two-shot of two young Korean men',['m','m']],mw:['2인 남여','Man & Woman','two-shot of a young Korean man and woman',['m','w']],wm:['2인 여남','Woman & Man','two-shot of a young Korean woman and man',['w','m']]};
  let ACT=[{k:'w',x:0,z:0,r:0}],moveActors=()=>{};sel.cast='w';
  const gcen=()=>{let x=0,z=0;ACT.forEach(a=>{x+=a.x;z+=a.z});return{x:x/ACT.length,z:z/ACT.length}};const F={az:0,dist:3,h:1.6,ty:1.4,roll:0};
  function base(s,ar,useFree){
@@ -380,7 +409,8 @@ function boot(){
  const setCast=v=>{sel.cast=v;const ks=CASTS[v][3],prev=ACT.length===2&&ks.length===2?ACT:null;ACT=ks.map((k,i)=>({k,x:prev?prev[i].x:(ks.length>1?(i?.42:-.42):0),z:prev?prev[i].z:0,r:prev?prev[i].r:0}));AIMP=null;buildCast();req();
   [...new Set(ks)].forEach(k=>loadModel(k).then(m=>{LOADED[k]=m;if(sel.cast===v){buildCast();req()}}).catch(e=>console.warn(e)))};
  setCast('w');
- seg('cast',v=>setCast(v));}
+ const syncCast=()=>{const n=String(ACT.length);for(const b of document.querySelectorAll('#cast button')){b.hidden=b.dataset.n!==n;b.setAttribute('aria-pressed',b.dataset.v===sel.cast)}for(const b of document.querySelectorAll('#cnt button'))b.setAttribute('aria-pressed',b.dataset.v===n)};
+ seg('cast',v=>{setCast(v);syncCast()});seg('cnt',v=>{if(String(ACT.length)!==v)setCast(v==='1'?(ACT[0].k||'w'):'mw');syncCast()});syncCast();}
 window.__boot=boot;
 }
 </script>
