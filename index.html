@@ -11,125 +11,132 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
 <style>
-/* VOICE: 촬영 현장 콘티 시트처럼 담백하고 정확하게
-   IDEA: 카메라 세팅을 하나씩 돌려 보는 뷰파인더 + 샷 리스트
-   PICTURE: 3D 마네킹을 실제 카메라로 찍은 큰 뷰파인더, 옵션마다 미리보기 썸네일
-   COLOUR and TYPE: 흰 종이 + 먹색, REC 빨강 하나 / Noto Sans KR
-   LAYOUT: 왼쪽 뷰파인더(고정), 오른쪽 옵션 패널 */
-:root{color-scheme:light dark;--bg:light-dark(#ffffff,#121316);--ink:light-dark(#121316,#eceef2);--sub:light-dark(#5d616b,#a3a8b3);--line:light-dark(#e3e5ea,#2a2d33);--card:light-dark(#f4f5f8,#1a1c20);--rec:#e5322d}
+/* VOICE: 앱 시뮬레이터처럼 차분하고 쉽게
+   IDEA: 왼쪽 컨트롤 패널 + 오른쪽 라이브 프리뷰 (디바이스 시뮬레이터)
+   PICTURE: 3D 인물을 실제 카메라로 찍은 큰 미리보기
+   COLOUR and TYPE: 연회색 바탕, 흰 카드, REC 빨강 하나 / Noto Sans KR
+   LAYOUT: 360px 사이드바 + 가운데 미리보기와 하단 툴바 */
+:root{color-scheme:light dark;--app:light-dark(#f2f2f5,#0e0f11);--bg:light-dark(#ffffff,#17181b);--ink:light-dark(#16171a,#eceef2);--sub:light-dark(#6b6f78,#9da2ad);--line:light-dark(#e6e7eb,#2a2c31);--card:light-dark(#f6f6f8,#202227);--rec:#e5322d;--ok:#1f9d55}
 :root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
 *{box-sizing:border-box;min-width:0}
-body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 "Noto Sans KR","Apple SD Gothic Neo",system-ui,sans-serif;overflow-x:clip}
-.band{padding:clamp(20px,3.5vw,48px) max(4vw,16px)}
-.wrap{max-width:1320px;margin:0 auto}
-h1{font-size:clamp(30px,4.4vw,46px);line-height:1.05;margin:0 0 10px;font-weight:900;letter-spacing:-.02em;text-wrap:balance}
-h1 i{font-style:normal;display:inline-block;width:.5em;height:.5em;border-radius:50%;background:var(--rec);margin-right:.25em;vertical-align:.12em}
-.lead{margin:0;color:var(--sub);max-width:64ch}
-.stage{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:24px;align-items:start;margin-top:16px}
-.right{display:flex;flex-direction:column;gap:12px}
-.left{display:flex;flex-direction:column;gap:12px}
-.vc{display:flex;flex-direction:column;gap:10px}
-.view{background:#dcdde2;border-radius:14px;overflow:hidden;display:flex;justify-content:center}
-.view canvas{display:block;width:100%;height:auto;max-height:74vh;object-fit:contain}
-body[data-ar="916"] .view canvas{width:auto;max-width:100%}
-#strip{display:block;width:100%;height:auto;border-radius:10px;background:var(--card)}
-#strip[hidden]{display:none}
-.maps{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.map{margin:0;background:var(--card);border-radius:14px;padding:10px 10px 6px}
-.map figcaption{font-size:13px;line-height:1.35;color:var(--sub);margin-bottom:4px}.map figcaption b{color:var(--ink);font-size:16px;margin-right:6px}
+body{margin:0;background:var(--app);color:var(--ink);font:15px/1.6 "Noto Sans KR","Apple SD Gothic Neo",system-ui,sans-serif;overflow-x:clip;word-break:keep-all;overflow-wrap:break-word}
+p,li,figcaption{text-wrap:pretty}
+.top{max-width:1400px;margin:0 auto;padding:28px max(3vw,16px) 0;display:flex;flex-wrap:wrap;align-items:flex-end;gap:8px 24px}
+h1{font-size:clamp(26px,3vw,34px);line-height:1.15;margin:0;font-weight:900;letter-spacing:-.02em}
+h1 i{font-style:normal;display:inline-block;width:.45em;height:.45em;border-radius:50%;background:var(--rec);margin-right:.3em;vertical-align:.12em}
+.lead{margin:0;color:var(--sub);max-width:46em}
+.app{max-width:1400px;margin:18px auto 40px;padding:0 max(3vw,16px)}
+.shell{display:grid;grid-template-columns:360px minmax(0,1fr);background:var(--bg);border:1px solid var(--line);border-radius:24px;overflow:hidden;min-height:760px}
+.side{border-right:1px solid var(--line);padding:18px 18px 24px;display:flex;flex-direction:column;gap:6px;max-height:calc(100vh - 40px);overflow:auto;position:sticky;top:20px;align-self:start}
+.sec{border-bottom:1px solid var(--line);padding:6px 0 14px}.sec:last-child{border-bottom:0}
+.sec>summary{list-style:none;display:flex;justify-content:space-between;align-items:center;font-weight:700;font-size:16px;padding:10px 2px;cursor:pointer}
+.sec>summary::-webkit-details-marker{display:none}
+.sec>summary::after{content:'';width:8px;height:8px;border-right:2px solid var(--sub);border-bottom:2px solid var(--sub);transform:rotate(45deg);margin:-4px 6px 0 0;transition:transform .2s}
+.sec[open]>summary::after{transform:rotate(-135deg);margin-top:4px}
+.row{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:7px 2px;min-height:44px}
+.row>span{color:var(--sub);font-size:15px;flex:none}
+select{font:inherit;font-size:14.5px;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:10px;padding:8px 30px 8px 12px;min-height:40px;max-width:210px;appearance:none;background-image:linear-gradient(45deg,transparent 50%,var(--sub) 50%),linear-gradient(135deg,var(--sub) 50%,transparent 50%);background-position:calc(100% - 16px) 50%,calc(100% - 11px) 50%;background-size:5px 5px;background-repeat:no-repeat;cursor:pointer}
+.seg{display:inline-flex;background:var(--card);border-radius:12px;padding:3px;gap:2px}
+.seg button{font:inherit;font-size:14px;font-weight:500;color:var(--sub);background:transparent;border:0;border-radius:9px;min-height:36px;padding:0 16px;cursor:pointer}
+.seg button[aria-pressed=true]{background:var(--bg);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.12)}
+.sw{position:relative;width:46px;height:28px;flex:none}.sw input{position:absolute;inset:0;opacity:0;cursor:pointer;margin:0}
+.sw i{position:absolute;inset:0;border-radius:99px;background:var(--line);transition:background .2s;pointer-events:none}.sw i::after{content:'';position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.25);transition:transform .2s}
+.sw input:checked+i{background:var(--rec)}.sw input:checked+i::after{transform:translateX(18px)}
+.sw input:focus-visible+i,button:focus-visible,select:focus-visible{outline:3px solid var(--rec);outline-offset:2px}
+.lensbar{display:flex;align-items:center;gap:12px;padding:6px 2px}.lensbar input{flex:1;accent-color:var(--rec);height:32px}.lensbar b{min-width:56px;text-align:right;font-variant-numeric:tabular-nums}
+.maps{display:grid;gap:10px}
+.map{margin:0;background:var(--card);border-radius:14px;padding:10px 10px 4px}
+.map figcaption{font-size:13px;line-height:1.45;color:var(--sub);margin-bottom:2px}.map figcaption b{color:var(--ink);font-size:14px;margin-right:6px}
 .map svg{display:block;width:100%;height:auto;touch-action:none;user-select:none}
 .map .h{cursor:grab}.map .h:active{cursor:grabbing}
 .ink{stroke:var(--ink);fill:none}.fink{fill:var(--ink)}.sub{fill:var(--sub);font:12px "Noto Sans KR",sans-serif}.ring{stroke:var(--line);fill:none}
 .fov{stroke:var(--sub);stroke-dasharray:4 4;fill:none}.path{stroke:var(--rec);stroke-width:2.5;stroke-dasharray:6 5;fill:none}
 .cam rect{fill:var(--bg);stroke:var(--ink);stroke-width:2}.cam path{fill:var(--ink)}.cam .hit{fill:transparent;stroke:none}
 .rot circle:last-child{fill:var(--bg);stroke:var(--ink);stroke-width:2}.act{cursor:grab}.snap{pointer-events:none;fill:none;stroke:var(--sub);stroke-width:1.5;stroke-dasharray:3 3}.aim{stroke:var(--rec);stroke-width:2;fill:none}.ret circle:nth-child(2){fill:var(--bg);stroke:var(--rec);stroke-width:2.5}.ret path{stroke:var(--rec);stroke-width:2.5}.ret .dot{fill:var(--rec)}
-.view{position:relative}.view canvas{cursor:grab;touch-action:none}.view canvas:active{cursor:grabbing}
-.lensbar{display:flex;align-items:center;gap:12px}.lensbar span{font-size:14px;color:var(--sub);flex:none}.lensbar input{flex:1;accent-color:var(--rec);height:32px}.lensbar b{flex:none;min-width:64px;text-align:right;font-variant-numeric:tabular-nums}
-.hint{font-size:13px;color:var(--sub);margin:-4px 0 0}
-.out{display:flex;flex-direction:column;gap:10px}
-.badge{display:inline-block;font-size:13px;font-weight:700;color:#fff;background:var(--rec);border-radius:6px;padding:2px 8px;margin-left:8px;vertical-align:2px}
-.badge[hidden]{display:none}
-.bar{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center}
-.bar span{font-size:14px;color:var(--sub);margin-right:6px}
-.seg{display:inline-flex;flex-wrap:wrap;border:1px solid var(--line);border-radius:10px;overflow:hidden}
-.seg button{font:500 15px/1 inherit;font-family:inherit;color:var(--ink);background:transparent;border:0;min-height:40px;padding:0 14px;cursor:pointer}
-.seg button+button{border-left:1px solid var(--line)}
-.seg button[aria-pressed=true]{background:var(--ink);color:var(--bg)}
-button:focus-visible{outline:3px solid var(--rec);outline-offset:2px}
-.sum{font-weight:700;font-size:18px;margin:0}
+.howto{margin:4px 0 0;padding:0 0 0 2px;list-style:none;counter-reset:s;display:grid;gap:12px}
+.howto li{counter-increment:s;display:grid;grid-template-columns:24px 1fr;gap:10px;font-size:14px;color:var(--sub);line-height:1.6}
+.howto li::before{content:counter(s);width:24px;height:24px;border-radius:50%;background:var(--rec);color:#fff;font-weight:700;font-size:13px;display:grid;place-items:center;margin-top:1px}
+.howto b{display:block;color:var(--ink);font-size:14.5px}
+.stage{padding:22px clamp(16px,3vw,40px) 28px;display:flex;flex-direction:column;align-items:center;gap:16px;background:var(--app)}
+.pill{display:inline-flex;align-items:center;gap:8px;background:var(--bg);border:1px solid var(--line);border-radius:99px;padding:6px 14px;font-size:14px}
+.pill .live{color:var(--ok);font-weight:500;display:inline-flex;align-items:center;gap:5px}.pill .live::before{content:'';width:7px;height:7px;border-radius:50%;background:var(--ok)}
+.view{position:relative;width:100%;max-width:1000px;border-radius:20px;overflow:hidden;background:#dcdde2;box-shadow:0 12px 40px rgba(0,0,0,.14),0 0 0 8px var(--bg),0 0 0 9px var(--line);display:flex;justify-content:center}
+.view canvas{display:block;width:100%;height:auto;max-height:68vh;object-fit:contain;cursor:grab;touch-action:none}.view canvas:active{cursor:grabbing}
+body[data-ar="916"] .view{width:auto;max-width:100%}body[data-ar="916"] .view canvas{width:auto;height:68vh;max-width:100%}
+body[data-ar="11"] .view{max-width:620px}
+.tools{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+.tg{display:inline-flex;background:var(--bg);border:1px solid var(--line);border-radius:16px;padding:4px;gap:2px}
+.tb{display:inline-flex;align-items:center;gap:6px;font:inherit;font-size:14px;color:var(--ink);background:transparent;border:0;border-radius:12px;min-width:44px;min-height:44px;padding:0 12px;cursor:pointer}
+.tb:hover{background:var(--card)}.tb svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.hint{font-size:13.5px;color:var(--sub);margin:0;text-align:center}
+#strip{display:block;width:100%;max-width:1000px;height:auto;border-radius:12px;background:var(--card)}#strip[hidden]{display:none}
+.out{width:100%;max-width:1000px;display:flex;flex-direction:column;gap:8px}
+.sum{font-weight:700;font-size:17px;margin:0}
+.badge{display:inline-block;font-size:12.5px;font-weight:700;color:#fff;background:var(--rec);border-radius:6px;padding:2px 8px;margin-left:8px;vertical-align:2px}.badge[hidden]{display:none}
 .pr{display:flex;gap:8px}
-.pr code{flex:1;font:13.5px/1.5 ui-monospace,Menlo,monospace;background:var(--card);border-radius:10px;padding:10px 12px;overflow-wrap:anywhere}
-.btn{flex:none;font:500 15px inherit;font-family:inherit;min-width:64px;min-height:44px;padding:0 14px;border-radius:10px;border:1px solid var(--ink);background:var(--ink);color:var(--bg);cursor:pointer}
-.btn.ghost{background:transparent;color:var(--ink);border-color:var(--line)}
-.panel{display:flex;flex-direction:column;gap:22px;margin-top:28px}
-.grp{background:var(--card);border-radius:14px;padding:16px 16px 18px}
-.grp h2{font-size:19px;margin:0 0 10px;display:flex;justify-content:space-between;gap:10px;align-items:baseline}
-.grp h2 small{font-size:14px;font-weight:500;color:var(--rec)}
-.chips{display:grid;gap:10px;grid-template-columns:repeat(auto-fill,minmax(var(--tw,140px),1fr))}
-.chip{background:var(--bg)!important}
-body[data-ar="916"] .chips{--tw:96px}
-.chip{display:flex;flex-direction:column;gap:3px;text-align:left;font:inherit;color:var(--ink);background:var(--card);border:2px solid transparent;border-radius:10px;padding:5px 5px 8px;cursor:pointer}
-.chip canvas{display:block;width:100%;height:auto;border-radius:6px;background:#dcdde2}
-.chip b{font-size:14px;line-height:1.25;font-weight:700;padding:0 3px}
-.chip small{font-size:12px;line-height:1.2;color:var(--sub);padding:0 3px}
-.chip[aria-pressed=true]{border-color:var(--rec)}
-.chip[aria-pressed=true] small{color:var(--rec)}
-.note{font-size:14px;color:var(--sub);margin:0}
-@media(max-width:900px){.stage{grid-template-columns:1fr}}
-.how{margin-top:20px;border:1px solid var(--line);border-radius:14px;padding:4px 18px 16px}
-.how summary{cursor:pointer;font-weight:700;font-size:17px;padding:12px 0;list-style-position:inside}
-.steps{list-style:none;margin:4px 0 0;padding:0;display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));counter-reset:s}
-.steps li{background:var(--card);border-radius:12px;padding:14px 16px;counter-increment:s}
-.steps li::before{content:counter(s);display:inline-grid;place-items:center;width:26px;height:26px;border-radius:50%;background:var(--rec);color:#fff;font-weight:700;font-size:14px;margin-bottom:8px}
-.steps b{display:block;font-size:16px;margin-bottom:4px}.steps p{margin:0;font-size:14.5px;color:var(--sub);line-height:1.55}
-.tips{margin:14px 0 0;padding:0;list-style:none;display:flex;flex-wrap:wrap;gap:8px 18px;font-size:14px;color:var(--sub)}.tips li::before{content:'· '}
-.castbar{display:flex;flex-wrap:wrap;align-items:center;gap:12px 22px;margin-top:22px;padding:12px 14px;background:var(--card);border-radius:14px}
-.castbar span{font-size:14px;color:var(--sub);margin-right:8px}.castbar .sp{flex:1}
-#cast button[hidden]{display:none}@media(max-width:520px){.maps{grid-template-columns:1fr}}
+.pr code{flex:1;font:13.5px/1.6 ui-monospace,Menlo,monospace;background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:10px 14px;overflow-wrap:anywhere;word-break:normal}
+.btn{flex:none;font:inherit;font-size:14.5px;font-weight:500;min-width:64px;min-height:44px;padding:0 16px;border-radius:12px;border:0;background:var(--ink);color:var(--bg);cursor:pointer}
+.toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:12px;font-size:14px;opacity:0;transition:opacity .2s;pointer-events:none}.toast.on{opacity:1}
+@media(max-width:980px){.shell{grid-template-columns:1fr}.side{position:static;max-height:none;border-right:0;border-top:1px solid var(--line);order:2}.stage{order:1}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 </head>
 <body data-ar="169">
-<div class="band"><div class="wrap">
+<div class="top">
  <h1><i></i>카메라 앵글 시뮬레이터</h1>
- <p class="lead">카메라 뷰와 앵글을 조정해서 촬영 전에 구도를 미리 볼 수 있는 시뮬레이터예요. AI 영상·이미지 생성 레퍼런스로 쓰거나 스토리보드로 활용해 보세요.</p>
- <details class="how" open><summary>사용법</summary>
-  <ol class="steps">
-   <li><b>인물 고르기</b><p>1인·2인과 성별을 골라요. 2인은 탑뷰에서 인물을 끌어 위치를, 앞의 작은 점을 끌어 바라보는 방향을 바꿀 수 있어요.</p></li>
-   <li><b>구도 고르기</b><p>아래에서 샷 사이즈·앵글·인물 방향·렌즈·무빙을 골라요. 카드의 작은 그림이 골랐을 때의 화면이에요.</p></li>
-   <li><b>직접 다듬기</b><p>도면의 카메라를 끌면 위치·높이가, ⊕를 끌면 보는 곳이 바뀌어요. 큰 화면을 끌면 인물을 한쪽으로 치우치게 배치해요.</p></li>
-   <li><b>캡쳐하고 복사</b><p>화면을 캡쳐해 레퍼런스로 넣고, 영어 프롬프트를 복사해 같이 붙여요. 무빙은 시작·끝 프레임을 쓰면 돼요.</p></li>
-  </ol>
-  <ul class="tips"><li>더블클릭: 구도를 가운데로</li><li>화면 속 이름 숨김: 글자 없는 깨끗한 캡쳐</li><li>9:16: 릴스·쇼츠용</li><li>렌즈 슬라이더: 14~200mm</li><li>초기화: 처음 상태로</li></ul>
- </details>
- <div class="castbar">
-  <div><span>인물</span><div class="seg" id="cnt"><button data-v="1" aria-pressed="true">1인</button><button data-v="2" aria-pressed="false">2인</button></div></div>
-  <div><span>성별</span><div class="seg" id="cast"><button data-v="w" data-n="1" aria-pressed="true">여자</button><button data-v="m" data-n="1" aria-pressed="false">남자</button><button data-v="ww" data-n="2" aria-pressed="false" hidden>여여</button><button data-v="mm" data-n="2" aria-pressed="false" hidden>남남</button><button data-v="mw" data-n="2" aria-pressed="false" hidden>남여</button><button data-v="wm" data-n="2" aria-pressed="false" hidden>여남</button></div></div>
-  <div class="sp"></div>
-  <div><span>비율</span><div class="seg" id="ar"><button data-v="169" aria-pressed="true">16:9</button><button data-v="916" aria-pressed="false">9:16</button><button data-v="11" aria-pressed="false">1:1</button></div></div>
-  <div><span>화면 속 이름</span><div class="seg" id="lb"><button data-v="1" aria-pressed="true">표시</button><button data-v="0" aria-pressed="false">숨김</button></div></div>
-  <div><span>3분할 격자</span><div class="seg" id="gd"><button data-v="1" aria-pressed="false">표시</button><button data-v="0" aria-pressed="true">숨김</button></div></div>
-  <button class="btn ghost" id="reset" type="button">초기화</button>
- </div>
- <div class="stage">
-  <div class="left">
-   <div class="view"><canvas id="main"></canvas></div>
-   <canvas id="strip" hidden></canvas>
-   <div class="out">
-    <p class="sum"><span id="sum"></span><span class="badge" id="free" hidden>직접 조정 중</span></p>
-    <div class="pr"><code id="prompt"></code><button class="btn" id="copy" type="button">복사</button></div>
-   </div>
-  </div>
-  <div class="right">
-   <div class="lensbar"><span>렌즈 화각</span><input type="range" id="flr" min="2.64" max="5.3" step="0.01" aria-label="렌즈 화각"><b id="flv">35mm</b></div>
-   <p class="hint">화면을 끌면 카메라 고개가 돌아가서 인물을 한쪽으로 배치할 수 있어요. 더블클릭하면 가운데로.</p>
+ <p class="lead">카메라 뷰와 앵글을 조정해서 촬영 전에 구도를 미리 볼 수 있어요.<br>AI 영상·이미지 생성 레퍼런스나 스토리보드로 활용해 보세요.</p>
+</div>
+<div class="app"><div class="shell">
+ <aside class="side">
+  <details class="sec" open><summary>인물</summary>
+   <div class="row"><span>인원</span><div class="seg" id="cnt"><button data-v="1" aria-pressed="true">1인</button><button data-v="2" aria-pressed="false">2인</button></div></div>
+   <label class="row"><span>성별</span><select id="castSel"></select></label>
+  </details>
+  <details class="sec" open><summary>카메라</summary>
+   <div id="panel"></div>
+   <div class="row"><span>렌즈 화각</span></div>
+   <div class="lensbar"><input type="range" id="flr" min="2.64" max="5.3" step="0.01" aria-label="렌즈 화각"><b id="flv">35mm</b></div>
+  </details>
+  <details class="sec" open><summary>도면</summary>
    <div class="maps">
-    <figure class="map"><figcaption><b>탑뷰</b>카메라·인물 위치 / 인물 앞 점 = 방향 / ⊕ = 보는 곳</figcaption><svg id="top" viewBox="0 0 400 300"></svg></figure>
-    <figure class="map"><figcaption><b>사이드뷰</b>카메라 높이·거리 / ⊕ = 보는 곳 (얼굴에 자석)</figcaption><svg id="side" viewBox="0 0 400 300"></svg></figure>
+    <figure class="map"><figcaption><b>탑뷰</b>카메라·인물을 끌어서 위치 조절<br>인물 앞 작은 점 = 바라보는 방향, ⊕ = 카메라가 보는 곳</figcaption><svg id="top" viewBox="0 0 400 300"></svg></figure>
+    <figure class="map"><figcaption><b>사이드뷰</b>카메라를 끌어서 높이·거리 조절<br>⊕를 끌면 보는 높이 (얼굴에 자석)</figcaption><svg id="side" viewBox="0 0 400 300"></svg></figure>
    </div>
+  </details>
+  <details class="sec" open><summary>화면</summary>
+   <label class="row"><span>비율</span><select id="arSel"><option value="169">16:9 가로</option><option value="916">9:16 세로 (릴스·쇼츠)</option><option value="11">1:1 정사각</option></select></label>
+   <label class="row"><span>화면 속 샷 이름</span><span class="sw"><input type="checkbox" id="lbChk" checked><i></i></span></label>
+   <label class="row"><span>3분할 격자</span><span class="sw"><input type="checkbox" id="gdChk"><i></i></span></label>
+  </details>
+  <details class="sec"><summary>사용법</summary>
+   <ol class="howto">
+    <li><div><b>인물 고르기</b>1인·2인과 성별을 골라요.<br>2인은 탑뷰에서 인물을 끌어 위치를 바꿔요.</div></li>
+    <li><div><b>구도 고르기</b>샷 사이즈, 앵글, 인물 방향, 무빙을 골라요.<br>렌즈 화각은 슬라이더로 조절해요.</div></li>
+    <li><div><b>직접 다듬기</b>도면의 카메라를 끌면 위치가 바뀌어요.<br>미리보기 화면을 끌면 인물을 한쪽으로 치우치게 배치해요.</div></li>
+    <li><div><b>저장하고 복사</b>카메라 버튼으로 이미지를 저장하고,<br>영어 프롬프트를 복사해 같이 붙여 쓰세요.</div></li>
+   </ol>
+  </details>
+ </aside>
+ <main class="stage">
+  <div class="pill"><span id="pillTxt">여자 1인 · 16:9</span><span class="live">Live</span></div>
+  <div class="view"><canvas id="main"></canvas></div>
+  <div class="tools">
+   <div class="tg">
+    <button class="tb" id="reset" type="button" title="초기화" aria-label="초기화"><svg viewBox="0 0 24 24"><path d="M9 14 4 9l5-5"/><path d="M4 9h11a5 5 0 0 1 0 10h-3"/></svg></button>
+    <button class="tb" id="center" type="button" title="구도 가운데로" aria-label="구도 가운데로"><svg viewBox="0 0 24 24"><path d="M3 11 12 4l9 7"/><path d="M5 10v10h14V10"/></svg></button>
+    <button class="tb" id="shot" type="button" title="이미지 저장" aria-label="이미지 저장"><svg viewBox="0 0 24 24"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg></button>
+   </div>
+   <div class="tg"><button class="tb" id="copy" type="button"><svg viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V5a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h3"/></svg><span>프롬프트 복사</span></button></div>
   </div>
- </div>
- <div class="panel" id="panel"></div>
+  <p class="hint">미리보기를 끌면 인물을 한쪽으로 배치할 수 있어요. 더블클릭하면 가운데로 돌아와요.</p>
+  <canvas id="strip" hidden></canvas>
+  <div class="out">
+   <p class="sum"><span id="sum"></span><span class="badge" id="free" hidden>직접 조정 중</span></p>
+   <div class="pr"><code id="prompt"></code></div>
+  </div>
+ </main>
 </div></div>
+<div class="toast" id="toast" role="status"></div>
 
 <script>
 {
@@ -204,7 +211,7 @@ function boot(){
  const key=new THREE.DirectionalLight(0xffffff,2.6);key.position.set(4,8,5);key.castShadow=true;key.shadow.mapSize.set(2048,2048);Object.assign(key.shadow.camera,{left:-12,right:12,top:12,bottom:-12,far:40});key.shadow.bias=-.0005;S.add(key);
  const fill=new THREE.DirectionalLight(0xdfe6ff,.8);fill.position.set(-6,3,3);S.add(fill);
  const cols=[0xb4b7c0,0x8ea3b9,0xcdb894,0xa3a6af];
- [[-6,-5,4],[-3,-8.5,5.5],[.4,-11,6],[3.6,-7,4.5],[6.6,-4,5],[-9.5,-1.5,3.5],[9.5,-.5,4],[-6.5,-14,6],[6,-15,6.5],[-12,-8,5],[12,-9,5]].forEach(([x,z,h],i)=>add(new THREE.BoxGeometry(.6,h,.6),M(cols[i%4]),[x,h/2,z]));
+ [[-6,-5,4],[-3,-8.5,5.5],[3.6,-7,4.5],[6.6,-4,5],[-9.5,-1.5,3.5],[9.5,-.5,4],[-6.5,-14,6],[6,-15,6.5],[-12,-8,5],[12,-9,5]].forEach(([x,z,h],i)=>add(new THREE.BoxGeometry(.6,h,.6),M(cols[i%4]),[x,h/2,z]));
  add(new THREE.BoxGeometry(.5,.5,.5),M(0x8ea3b9),[-1.9,.25,-2.1]);
  add(new THREE.CylinderGeometry(.25,.25,.8,24),M(0xcdb894),[2.2,.4,-2.6]);
  const P=new THREE.Group();S.add(P);
@@ -303,8 +310,8 @@ function boot(){
  const esc=s=>s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 
  const panel=document.getElementById('panel');
- panel.innerHTML=G.map(g=>`<div class="grp"><h2>${g.t}<small id="v-${g.k}"></small></h2><div class="chips">${g.o.map((o,i)=>`<button type="button" class="chip" data-k="${g.k}" data-i="${i}" aria-pressed="false"><canvas></canvas><b>${esc(o[0])}</b><small>${esc(o[1])}</small></button>`).join('')}</div></div>`).join('')+'<p class="note">무빙은 위에 움직임 미리보기, 아래에 시작 → 끝 프레임이 나와요. 영상 생성 때 두 프레임을 캡쳐해서 넣으면 돼요. 도면의 빨간 점선은 카메라가 지나가는 경로예요.</p>';
- const chips=[...panel.querySelectorAll('.chip')],flr=document.getElementById('flr'),flv=document.getElementById('flv');
+ panel.innerHTML=G.filter(g=>g.k!=='lens').map(g=>`<label class="row"><span>${g.t.replace(' · 높이','')}</span><select data-k="${g.k}">${g.o.map((o,i)=>`<option value="${i}">${esc(o[0])}${o[1]&&o[1]!==o[0]?' · '+esc(o[1]):''}</option>`).join('')}</select></label>`).join('');
+ const chips=[],toast=t=>{const el=document.getElementById('toast');el.textContent=t;el.classList.add('on');clearTimeout(toast.t);toast.t=setTimeout(()=>el.classList.remove('on'),1600)},flr=document.getElementById('flr'),flv=document.getElementById('flv');
  flr.addEventListener('input',()=>{let mm=Math.round(Math.exp(+flr.value));const st=[14,16,18,20,24,28,35,40,50,65,70,85,100,105,135,150,200];mm=st.reduce((a,b)=>Math.abs(b-mm)<Math.abs(a-mm)?b:a);sel.fl=mm;dragging=1;fast()});flr.addEventListener('change',()=>{dragging=null;req()});
  const main=document.getElementById('main'),strip=document.getElementById('strip');
  const isMove=()=>opt('move',sel)[4]!==null;
@@ -350,7 +357,7 @@ function boot(){
   const y=H/2,a=W+Gp*.18,b=W+Gp*.82,hs=Gp*.16;x.strokeStyle='#121316';x.lineWidth=Math.max(3,Gp*.05);x.lineCap='round';x.beginPath();x.moveTo(a,y);x.lineTo(b,y);x.moveTo(b-hs,y-hs);x.lineTo(b,y);x.lineTo(b-hs,y+hs);x.stroke();
   const n=names(sel);label(x,w,H,n.ko,n.en,k)};
  const drawThumbs=()=>{const [tw,th]=TH[ar];R.setSize(tw,th,false);for(const c of chips){const k=c.dataset.k,s={...sel,[k]:+c.dataset.i};if(k==='lens')delete s.fl;const cv=c.querySelector('canvas');if(cv.width!==tw||cv.height!==th){cv.width=tw;cv.height=th}const mv=opt('move',s)[4];cv.getContext('2d').drawImage(shoot(solve(s,tw/th,mv&&mv!=='hand'?(mv==='orbit'?.25:1):0,free&&(k==='lens'||k==='move')),tw,th),0,0)}};
- const ui=()=>{if(free)classify();for(const c of chips)c.setAttribute('aria-pressed',!(c.dataset.k==='lens'&&sel.fl)&&sel[c.dataset.k]===+c.dataset.i);const mm=sel.fl||opt('lens',sel)[4];flr.value=Math.log(mm);flv.textContent=mm+'mm';G.forEach(g=>document.getElementById('v-'+g.k).textContent=g.k==='lens'&&sel.fl?sel.fl+'mm':g.o[sel[g.k]][1]);const n=names(sel);document.getElementById('sum').textContent=n.ko;document.getElementById('free').hidden=!free;document.getElementById('prompt').textContent=n.pr};
+ const ui=()=>{if(free)classify();for(const s of panel.querySelectorAll('select'))s.value=sel[s.dataset.k];const mm=sel.fl||opt('lens',sel)[4];flr.value=Math.log(mm);flv.textContent=mm+'mm';document.getElementById('pillTxt').textContent=CASTS[sel.cast||'w'][0]+' · '+{169:'16:9',916:'9:16',11:'1:1'}[ar]+' · '+(sel.fl||opt('lens',sel)[4])+'mm';const n=names(sel);document.getElementById('sum').textContent=n.ko;document.getElementById('free').hidden=!free;document.getElementById('prompt').textContent=n.pr};
  let pend=0,dragging=null;
  const all=()=>{pend=0;[W,H]=AR[ar];ui();drawThumbs();R.setSize(W,H,false);main.width=W;main.height=H;drawStrip();drawMain(performance.now()/1000)};
  const req=()=>{if(!pend){pend=1;requestAnimationFrame(all)}};
@@ -382,9 +389,12 @@ function boot(){
   const end=()=>{if(dragging){dragging=null;req()}};sv.addEventListener('pointerup',end);sv.addEventListener('pointercancel',end);
  }
 
- panel.addEventListener('click',e=>{const c=e.target.closest('.chip');if(!c)return;const k=c.dataset.k;if(k==='lens')delete sel.fl;if(k!=='lens'&&k!=='move'){free=false;AIMP=null;LOOK.yaw=LOOK.pitch=0}sel[k]=+c.dataset.i;req()});
+ panel.addEventListener('change',e=>{const c=e.target.closest('select');if(!c)return;const k=c.dataset.k;if(k!=='move'){free=false;AIMP=null;LOOK.yaw=LOOK.pitch=0}sel[k]=+c.value;req()});
  const seg=(id,fn)=>document.getElementById(id).addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;for(const x of b.parentNode.children)x.setAttribute('aria-pressed',x===b);fn(b.dataset.v);req()});
- seg('ar',v=>{ar=v;document.body.dataset.ar=v});seg('gd',v=>{thirds=v==='1'});seg('lb',v=>{lab=v==='1'});
+ const arSel=document.getElementById('arSel');arSel.addEventListener('change',()=>{ar=arSel.value;document.body.dataset.ar=ar;req()});
+ document.getElementById('gdChk').addEventListener('change',e=>{thirds=e.target.checked;req()});document.getElementById('lbChk').addEventListener('change',e=>{lab=e.target.checked;req()});
+ document.getElementById('center').addEventListener('click',()=>{LOOK.yaw=LOOK.pitch=0;AIMP=null;req()});
+ document.getElementById('shot').addEventListener('click',()=>{try{const a=document.createElement('a');a.download='camera-angle-'+Date.now()+'.png';a.href=main.toDataURL('image/png');document.body.appendChild(a);a.click();a.remove();toast('이미지를 저장했어요')}catch(_){toast('저장이 막혀 있어요. 화면을 캡쳐해 주세요')}});
  document.getElementById('reset').addEventListener('click',()=>{free=false;LOOK.yaw=LOOK.pitch=0;AIMP=null;reset();req()});
  // 화면 드래그 → 카메라 고개(구도) 이동
  let lk=null;
@@ -392,7 +402,7 @@ function boot(){
  main.addEventListener('pointermove',e=>{if(!lk)return;const r=main.getBoundingClientRect();LOOK.yaw=Math.max(-60,Math.min(60,lk.yaw+(e.clientX-lk.x)/r.width*lk.hf));LOOK.pitch=Math.max(-45,Math.min(45,lk.pitch+(e.clientY-lk.y)/r.height*lk.vf));fast()});
  const lkEnd=()=>{if(lk){lk=null;dragging=null;bake();req()}};main.addEventListener('pointerup',lkEnd);main.addEventListener('pointercancel',lkEnd);
  main.addEventListener('dblclick',()=>{LOOK.yaw=LOOK.pitch=0;AIMP=null;req()});
- document.getElementById('copy').addEventListener('click',async e=>{const b=e.currentTarget,el=document.getElementById('prompt');try{await navigator.clipboard.writeText(el.textContent)}catch(_){const r=document.createRange();r.selectNodeContents(el);const s=getSelection();s.removeAllRanges();s.addRange(r);try{document.execCommand('copy')}catch(_){}}b.textContent='복사됨';setTimeout(()=>b.textContent='복사',1400)});
+ document.getElementById('copy').addEventListener('click',async e=>{const b=e.currentTarget,el=document.getElementById('prompt');try{await navigator.clipboard.writeText(el.textContent)}catch(_){const r=document.createRange();r.selectNodeContents(el);const s=getSelection();s.removeAllRanges();s.addRange(r);try{document.execCommand('copy')}catch(_){}}toast('프롬프트를 복사했어요')});
 
  // 사람 모델 불러오기 (여자/남자, 실패하면 기본 마네킹 유지)
  const FZ0=G[0].o.map(o=>o[7]),MODELS={},FILES={w:'person',m:'male'};let cur=P;
@@ -409,8 +419,9 @@ function boot(){
  const setCast=v=>{sel.cast=v;const ks=CASTS[v][3],prev=ACT.length===2&&ks.length===2?ACT:null;ACT=ks.map((k,i)=>({k,x:prev?prev[i].x:(ks.length>1?(i?.42:-.42):0),z:prev?prev[i].z:0,r:prev?prev[i].r:0}));AIMP=null;buildCast();req();
   [...new Set(ks)].forEach(k=>loadModel(k).then(m=>{LOADED[k]=m;if(sel.cast===v){buildCast();req()}}).catch(e=>console.warn(e)))};
  setCast('w');
- const syncCast=()=>{const n=String(ACT.length);for(const b of document.querySelectorAll('#cast button')){b.hidden=b.dataset.n!==n;b.setAttribute('aria-pressed',b.dataset.v===sel.cast)}for(const b of document.querySelectorAll('#cnt button'))b.setAttribute('aria-pressed',b.dataset.v===n)};
- seg('cast',v=>{setCast(v);syncCast()});seg('cnt',v=>{if(String(ACT.length)!==v)setCast(v==='1'?(ACT[0].k||'w'):'mw');syncCast()});syncCast();}
+ const castSel=document.getElementById('castSel'),CK={1:['w','m'],2:['ww','mm','mw','wm']},CL={w:'여자',m:'남자',ww:'여 + 여',mm:'남 + 남',mw:'남 + 여 (남자 왼쪽)',wm:'여 + 남 (여자 왼쪽)'};
+ const syncCast=()=>{const n=String(ACT.length);castSel.innerHTML=CK[n].map(k=>`<option value="${k}">${CL[k]}</option>`).join('');castSel.value=sel.cast;for(const b of document.querySelectorAll('#cnt button'))b.setAttribute('aria-pressed',b.dataset.v===n)};
+ castSel.addEventListener('change',()=>{setCast(castSel.value);syncCast()});seg('cnt',v=>{if(String(ACT.length)!==v)setCast(v==='1'?(ACT[0].k||'w'):'mw');syncCast()});syncCast();}
 window.__boot=boot;
 }
 </script>
