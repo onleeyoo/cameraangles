@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>카메라 앵글 시뮬레이터</title>
 <meta name="description" content="카메라 뷰와 앵글을 조정해서 촬영 전에 구도를 미리 볼 수 있는 시뮬레이터. AI 영상·이미지 생성 레퍼런스나 스토리보드로 활용하세요.">
 <meta property="og:title" content="카메라 앵글 시뮬레이터">
@@ -21,8 +21,8 @@
 *{box-sizing:border-box;min-width:0}
 body{margin:0;background:var(--app);color:var(--ink);font:15px/1.6 "Noto Sans KR","Apple SD Gothic Neo",system-ui,sans-serif;overflow-x:clip;word-break:keep-all;overflow-wrap:break-word}
 p,li,figcaption{text-wrap:pretty}
-.top{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--app) 88%,transparent);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
-.topin{max-width:1400px;margin:0 auto;padding:12px max(3vw,16px);display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:60px}
+.top{position:sticky;top:0;z-index:20;padding-top:env(safe-area-inset-top);background:var(--app);border-bottom:1px solid var(--line)}
+.topin{max-width:1400px;margin:0 auto;padding:12px max(3vw,16px,env(safe-area-inset-right)) 12px max(3vw,16px,env(safe-area-inset-left));display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:60px}
 .howbtn{display:inline-flex;align-items:center;gap:6px;font:inherit;font-size:14.5px;font-weight:500;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:12px;min-height:40px;padding:0 14px;cursor:pointer;flex:none}
 .howbtn svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round}
 .modal{position:fixed;inset:0;z-index:50;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;padding:16px}.modal[hidden]{display:none}
@@ -35,7 +35,7 @@ h1 i{font-style:normal;display:inline-block;width:.45em;height:.45em;border-radi
 .lead{max-width:1400px;margin:14px auto 0;padding:0 max(3vw,16px);color:var(--sub)}
 .app{max-width:1400px;margin:14px auto 40px;padding:0 max(3vw,16px)}
 .shell{display:grid;grid-template-columns:360px minmax(0,1fr);background:var(--bg);border:1px solid var(--line);border-radius:24px;overflow:hidden;min-height:760px}
-.side{border-right:1px solid var(--line);padding:18px 18px 24px;display:flex;flex-direction:column;gap:6px;max-height:calc(100vh - 92px);overflow:auto;position:sticky;top:76px;align-self:start}
+.side{border-right:1px solid var(--line);padding:18px 18px 24px;display:flex;flex-direction:column;gap:6px;max-height:calc(100vh - var(--hh,64px) - 28px);overflow:auto;position:sticky;top:calc(var(--hh,64px) + 12px);align-self:start}
 .sec{border-bottom:1px solid var(--line);padding:6px 0 14px}.sec:last-child{border-bottom:0}
 .sec>summary{list-style:none;display:flex;justify-content:space-between;align-items:center;font-weight:700;font-size:16px;padding:10px 2px;cursor:pointer}
 .sec>summary::-webkit-details-marker{display:none}
@@ -55,7 +55,7 @@ select{font:inherit;font-size:14.5px;color:var(--ink);background:var(--card);bor
 .maps{display:grid;gap:10px}
 .map{margin:0;background:var(--card);border-radius:14px;padding:10px 10px 4px}
 .map figcaption{font-size:13px;line-height:1.45;color:var(--sub);margin-bottom:2px}.map figcaption b{color:var(--ink);font-size:14px;margin-right:6px}
-.map svg{display:block;width:100%;height:auto;touch-action:none;user-select:none}
+.map svg{display:block;width:100%;height:auto;touch-action:pan-y;user-select:none;-webkit-user-select:none}
 .map .h{cursor:grab}.map .h:active{cursor:grabbing}
 .ink{stroke:var(--ink);fill:none}.fink{fill:var(--ink)}.sub{fill:var(--sub);font:12px "Noto Sans KR",sans-serif}.ring{stroke:var(--line);fill:none}
 .fov{stroke:var(--sub);stroke-dasharray:4 4;fill:none}.path{stroke:var(--rec);stroke-width:2.5;stroke-dasharray:6 5;fill:none}
@@ -93,10 +93,10 @@ body:not([data-ar="169"]) .view{background:#141518}
  .shell{display:flex;flex-direction:column;overflow:clip}
  .stage{display:contents}
  .pill{display:none}.lead{display:none}.app{margin-top:10px}.topin{min-height:54px;padding-top:8px;padding-bottom:8px}h1{font-size:21px}
- .view{order:1;position:sticky;top:54px;z-index:5;max-width:none;border-radius:0;box-shadow:0 8px 20px rgba(0,0,0,.18)}
+ .view{order:1;position:sticky;top:var(--hh,54px);z-index:5;max-width:none;border-radius:0;box-shadow:0 8px 20px rgba(0,0,0,.18)}
  .view canvas{max-height:42vh}body[data-ar="916"] .view{width:100%}body[data-ar="916"] .view canvas{height:42vh;width:auto}
  .tools{order:2;align-self:center;margin-top:14px}#strip{order:3;margin:12px 16px 0;width:calc(100% - 32px)}.out{order:4;padding:14px 16px 6px;max-width:none}.hint{order:5;padding:0 16px 18px}
- .tools{gap:6px}.tools .tb span{display:none}.tools .seg button{padding:0 12px}.tools .tb{padding:0 10px}
+ .tools{gap:5px;flex-wrap:nowrap}.tools .tb span{display:none}.tools .seg button{padding:0 9px;font-size:13.5px}.tools .tb{padding:0 9px}.tools .tb.txt{padding:0 7px;font-size:13.5px}.tools .tg,.tools .seg{padding:3px}
  .side{order:6;position:static;max-height:none;border-right:0;border-top:1px solid var(--line)}
 }
 @media(prefers-reduced-motion:reduce){*{transition:none!important}}
@@ -138,8 +138,8 @@ body:not([data-ar="169"]) .view{background:#141518}
   <div class="view"><canvas id="main"></canvas><div class="loading" id="loading"><i></i>인물 불러오는 중…</div></div>
   <div class="tools">
    <div class="tg">
-    <button class="tb" id="reset" type="button" title="초기화" aria-label="초기화"><svg viewBox="0 0 24 24"><path d="M9 14 4 9l5-5"/><path d="M4 9h11a5 5 0 0 1 0 10h-3"/></svg></button>
-    <button class="tb" id="center" type="button" title="인물을 가운데로" aria-label="인물을 가운데로"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="7"/><circle cx="12" cy="12" r="1.5"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4"/></svg></button>
+    <button class="tb txt" id="reset" type="button" title="모든 설정을 처음으로">초기화</button>
+    <button class="tb txt" id="center" type="button" title="한쪽으로 옮긴 인물을 다시 가운데로">가운데로</button>
    </div>
    <div class="seg" id="arSeg" aria-label="화면 비율"><button data-v="169" aria-pressed="true">16:9</button><button data-v="916" aria-pressed="false">9:16</button><button data-v="11" aria-pressed="false">1:1</button></div>
    <div class="tg"><button class="tb" id="shot" type="button" title="이미지 저장" aria-label="이미지 저장"><svg viewBox="0 0 24 24"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg><span>저장</span></button></div>
@@ -160,7 +160,7 @@ body:not([data-ar="169"]) .view{background:#141518}
     <li><div><b>인물 정하기</b>1인·2인과 성별을 골라요.<br>2인은 탑뷰에서 인물을 끌어 위치를 바꿔요.</div></li>
     <li><div><b>저장하고 복사</b>카메라 버튼으로 이미지를 저장하고,<br>프롬프트를 복사해 같이 붙여 쓰세요.</div></li>
    </ol>
- <ul class="mtips"><li>미리보기를 끌면 인물을 한쪽으로 치우치게 배치해요.</li><li>가운데 버튼이나 더블클릭으로 구도를 가운데로 되돌려요.</li><li>화면 속 샷 이름을 끄면 글자 없는 깨끗한 이미지를 저장해요.</li><li>9:16은 릴스·쇼츠용 세로 화면이에요.</li></ul>
+ <ul class="mtips"><li>미리보기를 끌면 인물을 한쪽으로 치우치게 배치해요.</li><li>‘가운데로’ 버튼이나 더블클릭으로 인물을 다시 가운데로 되돌려요.</li><li>화면 속 샷 이름을 끄면 글자 없는 깨끗한 이미지를 저장해요.</li><li>9:16은 릴스·쇼츠용 세로 화면이에요.</li></ul>
 </div></div>
 
 <script>
@@ -410,6 +410,7 @@ function boot(){
    if(dragging.h==='g'){let y=Math.max(.05,Math.min(1.9,Math.expm1(Math.max(0,(SG-p.y)/HY)*LH)));if(Math.abs(p.y-sy(FACE))<14)y=FACE;AIMP.y=y}
    else{const dx=p.x-TC.x,dy=p.y-TC.y,r=Math.hypot(dx,dy);if(r<14){const g=gcen();AIMP.x=g.x;AIMP.z=g.z}else{const d=dOf(r);AIMP.x=dx/r*d;AIMP.z=dy/r*d}}}
   fast()};
+ for(const sv of[svT,svS])sv.addEventListener('touchstart',e=>{if(e.target.closest('.h'))e.preventDefault()},{passive:false});
  for(const sv of[svT,svS]){
   sv.addEventListener('pointerdown',e=>{const h=e.target.closest('.h');if(!h)return;e.preventDefault();if(h.dataset.h==='t'||h.dataset.h==='s')toFree();dragging={sv,h:h.dataset.h};sv.setPointerCapture(e.pointerId);onMove(e)});
   sv.addEventListener('pointermove',onMove);
@@ -420,6 +421,7 @@ function boot(){
  const seg=(id,fn)=>document.getElementById(id).addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;for(const x of b.parentNode.children)x.setAttribute('aria-pressed',x===b);fn(b.dataset.v);req()});
  seg('arSeg',v=>{ar=v;document.body.dataset.ar=v});
  document.getElementById('gdChk').addEventListener('change',e=>{thirds=e.target.checked;req()});document.getElementById('lbChk').addEventListener('change',e=>{lab=e.target.checked;req()});
+ {const hd=document.querySelector('.top'),setH=()=>document.documentElement.style.setProperty('--hh',hd.getBoundingClientRect().height+'px');setH();const hro=new ResizeObserver(setH);hro.observe(hd)}
  const hm=document.getElementById('howModal');document.getElementById('howOpen').addEventListener('click',()=>{hm.hidden=false;document.getElementById('howClose').focus()});
  const hmClose=()=>{hm.hidden=true};document.getElementById('howClose').addEventListener('click',hmClose);hm.addEventListener('click',e=>{if(e.target===hm)hmClose()});addEventListener('keydown',e=>{if(e.key==='Escape')hmClose()});
  document.getElementById('center').addEventListener('click',()=>{LOOK.yaw=LOOK.pitch=0;AIMP=null;req()});
