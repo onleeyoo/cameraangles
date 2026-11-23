@@ -64,6 +64,8 @@ select{font:inherit;font-size:14.5px;color:var(--ink);background:var(--card);bor
 .view canvas{display:block;width:100%;height:auto;max-height:68vh;object-fit:contain;cursor:grab;touch-action:none}.view canvas:active{cursor:grabbing}
 body[data-ar="916"] .view{width:auto;max-width:100%}body[data-ar="916"] .view canvas{width:auto;height:68vh;max-width:100%}
 body[data-ar="11"] .view{max-width:620px}
+.loading{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;gap:10px;background:rgba(220,221,226,.82);color:#16171a;font-weight:500;font-size:15px;backdrop-filter:blur(6px)}.loading[hidden]{display:none}
+.loading i{width:18px;height:18px;border-radius:50%;border:2.5px solid rgba(0,0,0,.15);border-top-color:var(--rec);animation:sp .8s linear infinite}@keyframes sp{to{transform:rotate(360deg)}}
 .tools{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
 .tg{display:inline-flex;background:var(--bg);border:1px solid var(--line);border-radius:16px;padding:4px;gap:2px}
 .tb{display:inline-flex;align-items:center;gap:6px;font:inherit;font-size:14px;color:var(--ink);background:transparent;border:0;border-radius:12px;min-width:44px;min-height:44px;padding:0 12px;cursor:pointer}
@@ -119,7 +121,7 @@ body[data-ar="11"] .view{max-width:620px}
  </aside>
  <main class="stage">
   <div class="pill"><span id="pillTxt">여자 1인 · 16:9</span><span class="live">Live</span></div>
-  <div class="view"><canvas id="main"></canvas></div>
+  <div class="view"><canvas id="main"></canvas><div class="loading" id="loading"><i></i>인물 불러오는 중…</div></div>
   <div class="tools">
    <div class="tg">
     <button class="tb" id="reset" type="button" title="초기화" aria-label="초기화"><svg viewBox="0 0 24 24"><path d="M9 14 4 9l5-5"/><path d="M4 9h11a5 5 0 0 1 0 10h-3"/></svg></button>
@@ -214,7 +216,7 @@ function boot(){
  [[-6,-5,4],[-3,-8.5,5.5],[3.6,-7,4.5],[6.6,-4,5],[-9.5,-1.5,3.5],[9.5,-.5,4],[-6.5,-14,6],[6,-15,6.5],[-12,-8,5],[12,-9,5]].forEach(([x,z,h],i)=>add(new THREE.BoxGeometry(.6,h,.6),M(cols[i%4]),[x,h/2,z]));
  add(new THREE.BoxGeometry(.5,.5,.5),M(0x8ea3b9),[-1.9,.25,-2.1]);
  add(new THREE.CylinderGeometry(.25,.25,.8,24),M(0xcdb894),[2.2,.4,-2.6]);
- const P=new THREE.Group();S.add(P);
+ const P=new THREE.Group();
  const skin=M(0xf0c6a3),shirt=M(0xe5533d),pants=M(0x2c3a55),dark=M(0x1d1a18),hair=new THREE.MeshStandardMaterial({color:0x2a201b,roughness:.9,side:THREE.DoubleSide}),white=M(0xf7f3ee),cap=(r,l)=>new THREE.CapsuleGeometry(r,l,8,20),sph=r=>new THREE.SphereGeometry(r,24,16),o={to:P};
  for(const s of[-1,1]){
   add(cap(.075,.72),pants,[s*.1,.47,0],o);
@@ -414,10 +416,11 @@ function boot(){
   m.scale.setScalar(sc);m.position.set(-(bx.min.x+sz.x/2)*sc,-bx.min.y*sc,-(bx.min.z+sz.z/2)*sc);m.updateMatrixWorld(true);
   const hit=new THREE.Raycaster(V(0,1.66,5),V(0,0,-1)).intersectObject(m,true)[0];m.userData.ez=hit?hit.point.z-.01:.114;return m}));
  const LOADED={},CASTG=new THREE.Group();S.add(CASTG);
- const buildCast=()=>{S.remove(P);CASTG.clear();ACT.forEach(a=>{const g=new THREE.Group();g.add((LOADED[a.k]||P).clone());CASTG.add(g);a.g=g});moveActors();const m0=LOADED[ACT[0].k];if(m0)G[0].o.forEach((o,i)=>{if(FZ0[i])o[7]=+(FZ0[i]/.114*m0.userData.ez).toFixed(3)})};
+ const FAILED={},ld=document.getElementById('loading');
+ const buildCast=()=>{CASTG.clear();let wait=false;ACT.forEach(a=>{const g=new THREE.Group(),src=LOADED[a.k]||(FAILED[a.k]?P:null);if(src)g.add(src.clone());else wait=true;CASTG.add(g);a.g=g});ld.hidden=!wait;moveActors();const m0=LOADED[ACT[0].k];if(m0)G[0].o.forEach((o,i)=>{if(FZ0[i])o[7]=+(FZ0[i]/.114*m0.userData.ez).toFixed(3)})};
  moveActors=()=>ACT.forEach(a=>{if(a.g){a.g.position.set(a.x,0,a.z);a.g.rotation.y=a.r}});
  const setCast=v=>{sel.cast=v;const ks=CASTS[v][3],prev=ACT.length===2&&ks.length===2?ACT:null;ACT=ks.map((k,i)=>({k,x:prev?prev[i].x:(ks.length>1?(i?.42:-.42):0),z:prev?prev[i].z:0,r:prev?prev[i].r:0}));AIMP=null;buildCast();req();
-  [...new Set(ks)].forEach(k=>loadModel(k).then(m=>{LOADED[k]=m;if(sel.cast===v){buildCast();req()}}).catch(e=>console.warn(e)))};
+  [...new Set(ks)].forEach(k=>loadModel(k).then(m=>{LOADED[k]=m;if(sel.cast===v){buildCast();req()}}).catch(e=>{console.warn(e);FAILED[k]=1;if(sel.cast===v){buildCast();req()}}))};
  setCast('w');
  const castSel=document.getElementById('castSel'),CK={1:['w','m'],2:['ww','mm','mw','wm']},CL={w:'여자',m:'남자',ww:'여 + 여',mm:'남 + 남',mw:'남 + 여 (남자 왼쪽)',wm:'여 + 남 (여자 왼쪽)'};
  const syncCast=()=>{const n=String(ACT.length);castSel.innerHTML=CK[n].map(k=>`<option value="${k}">${CL[k]}</option>`).join('');castSel.value=sel.cast;for(const b of document.querySelectorAll('#cnt button'))b.setAttribute('aria-pressed',b.dataset.v===n)};
