@@ -90,6 +90,7 @@ body[data-ar="916"] .chips{--tw:84px}
     <p class="sum"><span id="sum"></span><span class="badge" id="free" hidden>직접 조정 중</span></p>
     <div class="pr"><code id="prompt"></code><button class="btn" id="copy" type="button">복사</button></div>
     <div class="bar">
+     <div><span>인물</span><div class="seg" id="who"><button data-v="w" aria-pressed="true">여자</button><button data-v="m" aria-pressed="false">남자</button></div></div>
      <div><span>비율</span><div class="seg" id="ar"><button data-v="169" aria-pressed="true">16:9</button><button data-v="916" aria-pressed="false">9:16</button><button data-v="11" aria-pressed="false">1:1</button></div></div>
      <div><span>화면 속 이름</span><div class="seg" id="lb"><button data-v="1" aria-pressed="true">표시</button><button data-v="0" aria-pressed="false">숨김</button></div></div>
      <div><span>3분할 격자</span><div class="seg" id="gd"><button data-v="1" aria-pressed="false">표시</button><button data-v="0" aria-pressed="true">숨김</button></div></div>
@@ -354,16 +355,18 @@ function boot(){
  main.addEventListener('dblclick',()=>{LOOK.yaw=LOOK.pitch=0;AIMP=null;req()});
  document.getElementById('copy').addEventListener('click',async e=>{const b=e.currentTarget,el=document.getElementById('prompt');try{await navigator.clipboard.writeText(el.textContent)}catch(_){const r=document.createRange();r.selectNodeContents(el);const s=getSelection();s.removeAllRanges();s.addRange(r);try{document.execCommand('copy')}catch(_){}}b.textContent='복사됨';setTimeout(()=>b.textContent='복사',1400)});
 
- // 사람 모델 불러오기 (실패하면 기본 마네킹 유지)
- fetch('person.glb').then(r=>{if(!r.ok)throw 0;return r.arrayBuffer()}).catch(()=>fetch('person.b64.txt').then(r=>{if(!r.ok)throw 0;return r.text()}).then(t=>{const s=atob(t.trim()),u=new Uint8Array(s.length);for(let i=0;i<s.length;i++)u[i]=s.charCodeAt(i);return u.buffer})).then(buf=>new Promise((ok,no)=>new window.GLTFLoader().parse(buf,'',ok,no))).then(g=>{
+ // 사람 모델 불러오기 (여자/남자, 실패하면 기본 마네킹 유지)
+ const FZ0=G[0].o.map(o=>o[7]),MODELS={},FILES={w:'person',m:'male'};let cur=P;
+ const b64=f=>fetch(f+'.b64.txt').then(r=>{if(!r.ok)throw 0;return r.text()}).then(t=>{const s=atob(t.trim()),u=new Uint8Array(s.length);for(let i=0;i<s.length;i++)u[i]=s.charCodeAt(i);return u.buffer});
+ const loadModel=k=>MODELS[k]||(MODELS[k]=fetch(FILES[k]+'.glb').then(r=>{if(!r.ok)throw 0;return r.arrayBuffer()}).catch(()=>b64(FILES[k])).then(buf=>new Promise((ok,no)=>new window.GLTFLoader().parse(buf,'',ok,no))).then(g=>{
   const m=g.scene;m.traverse(o=>{if(o.isMesh){o.castShadow=true;o.receiveShadow=true;if(o.material){o.material.roughness=.85;o.material.metalness=0}}});
   m.updateMatrixWorld(true);
   const bx=new THREE.Box3().setFromObject(m),sz=bx.getSize(V(0,0,0)),sc=1.815/sz.y;
   m.scale.setScalar(sc);m.position.set(-(bx.min.x+sz.x/2)*sc,-bx.min.y*sc,-(bx.min.z+sz.z/2)*sc);m.updateMatrixWorld(true);
-  const rc=new THREE.Raycaster(V(0,1.66,5),V(0,0,-1)),hit=rc.intersectObject(m,true)[0];
-  if(hit){const ez=hit.point.z-.01;G[0].o.forEach(o=>{if(o[7])o[7]=+(o[7]/.114*ez).toFixed(3)})}
-  S.remove(P);S.add(m);req();
- }).catch(e=>console.warn(e));}
+  const hit=new THREE.Raycaster(V(0,1.66,5),V(0,0,-1)).intersectObject(m,true)[0];m.userData.ez=hit?hit.point.z-.01:.114;return m}));
+ const useModel=k=>{const btn=document.querySelector('#who button[data-v="'+k+'"]');loadModel(k).then(m=>{if(sel.who!==k)return;S.remove(cur);S.add(m);cur=m;G[0].o.forEach((o,i)=>{if(FZ0[i])o[7]=+(FZ0[i]/.114*m.userData.ez).toFixed(3)});req()}).catch(e=>{console.warn(e);if(btn)btn.textContent+=' (불러오기 실패)'})};
+ sel.who='w';useModel('w');
+ seg('who',v=>{sel.who=v;useModel(v)});}
 window.__boot=boot;
 }
 </script>
