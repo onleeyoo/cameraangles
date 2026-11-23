@@ -5,7 +5,8 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>카메라 앵글 시뮬레이터</title>
 <meta name="description" content="카메라 뷰와 앵글을 조정해서 촬영 전에 구도를 미리 볼 수 있는 시뮬레이터. AI 영상·이미지 생성 레퍼런스나 스토리보드로 활용하세요.">
-<meta property="og:title" content="카메라 앵글 시뮬레이터">
+<meta property="og:title" content="카메라 앵글 시뮬레이터 by 유정PD">
+<meta name="author" content="유정PD (@yooj2_2), 0202 Production">
 <meta property="og:description" content="카메라 뷰와 앵글을 조정해서 구도를 미리 보는 시뮬레이터 — AI 영상 생성 레퍼런스·스토리보드용">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect x='4' y='18' width='40' height='32' rx='7' fill='%23121316'/%3E%3Cpath d='M44 28l16-9v30l-16-9z' fill='%23121316'/%3E%3Ccircle cx='20' cy='34' r='8' fill='%23fff'/%3E%3Ccircle cx='20' cy='34' r='4' fill='%23e5322d'/%3E%3Ccircle cx='36' cy='12' r='6' fill='%23e5322d'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -23,6 +24,13 @@ body{margin:0;background:var(--app);color:var(--ink);font:15px/1.6 "Noto Sans KR
 p,li,figcaption{text-wrap:pretty}
 .top{position:sticky;top:0;z-index:20;padding-top:env(safe-area-inset-top);background:var(--app);border-bottom:1px solid var(--line)}
 .topin{max-width:1400px;margin:0 auto;padding:12px max(3vw,16px,env(safe-area-inset-right)) 12px max(3vw,16px,env(safe-area-inset-left));display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:60px}
+.brand{display:flex;align-items:baseline;gap:10px;min-width:0}.by{color:var(--sub);font-size:14px;font-weight:500;text-decoration:none;white-space:nowrap}.by:hover{color:var(--rec)}
+.hbtns{display:flex;gap:8px;flex:none}.howbtn.ig{text-decoration:none}.howbtn.ig svg{stroke-width:1.8}
+.sig{color:var(--ink);font-weight:500;white-space:nowrap}
+.foot{border-top:1px solid var(--line);margin-top:8px}.fin{max-width:1400px;margin:0 auto;padding:22px max(3vw,16px) calc(28px + env(safe-area-inset-bottom));display:flex;flex-wrap:wrap;gap:10px 28px;align-items:center;justify-content:space-between;font-size:14px;color:var(--sub)}
+.fin>div:first-child{display:flex;flex-direction:column;gap:2px}.fin b{color:var(--ink);font-size:15px}.fin p{margin:0;flex-basis:100%;font-size:13.5px}
+.flinks{display:flex;gap:16px;flex-wrap:wrap}.flinks a{display:inline-flex;align-items:center;gap:6px;color:var(--ink);text-decoration:none;font-weight:500}.flinks a:hover{color:var(--rec)}.flinks svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.8}
+.mmaker{margin:14px 0 0;font-size:14px;color:var(--sub)}.mmaker a{color:var(--ink);font-weight:500}
 .howbtn{display:inline-flex;align-items:center;gap:6px;font:inherit;font-size:14.5px;font-weight:500;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:12px;min-height:40px;padding:0 14px;cursor:pointer;flex:none}
 .howbtn svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round}
 .modal{position:fixed;inset:0;z-index:50;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;padding:16px}.modal[hidden]{display:none}
@@ -92,7 +100,7 @@ body:not([data-ar="169"]) .view{background:#141518}
 @media(max-width:980px){
  .shell{display:flex;flex-direction:column;overflow:clip}
  .stage{display:contents}
- .pill{display:none}.lead{display:none}.app{margin-top:10px}.topin{min-height:54px;padding-top:8px;padding-bottom:8px}h1{font-size:21px}
+ .pill{display:none}.lead{display:none}.by{display:none}.howbtn.ig span{display:none}.howbtn.ig{padding:0 10px}.app{margin-top:10px}.topin{min-height:54px;padding-top:8px;padding-bottom:8px}h1{font-size:18px;white-space:nowrap}.topin .howbtn{padding:0 11px;font-size:14px}
  .view{order:1;position:sticky;top:var(--hh,54px);z-index:5;max-width:none;border-radius:0;box-shadow:0 8px 20px rgba(0,0,0,.18)}
  .view canvas{max-height:42vh}body[data-ar="916"] .view{width:100%}body[data-ar="916"] .view canvas{height:42vh;width:auto}
  .tools{order:2;align-self:center;margin-top:14px}#strip{order:3;margin:12px 16px 0;width:calc(100% - 32px)}.out{order:4;padding:14px 16px 6px;max-width:none}.hint{order:5;padding:0 16px 18px}
@@ -104,10 +112,11 @@ body:not([data-ar="169"]) .view{background:#141518}
 </head>
 <body data-ar="169">
 <header class="top"><div class="topin">
- <h1><i></i>카메라 앵글 시뮬레이터</h1>
- <button class="howbtn" id="howOpen" type="button"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .9-1 1.6v.6"/><path d="M12 17.5h.01"/></svg>사용방법</button>
+ <div class="brand"><h1><i></i>카메라 앵글 시뮬레이터</h1><a class="by" href="https://www.instagram.com/yooj2_2/" target="_blank" rel="noopener">by 유정PD</a></div>
+ <div class="hbtns"><a class="howbtn ig" href="https://www.instagram.com/yooj2_2/" target="_blank" rel="noopener" aria-label="유정PD 인스타그램 @yooj2_2"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg><span>@yooj2_2</span></a>
+ <button class="howbtn" id="howOpen" type="button"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .9-1 1.6v.6"/><path d="M12 17.5h.01"/></svg>사용방법</button></div>
 </div></header>
-<p class="lead">카메라 뷰와 앵글을 조정해서 촬영 전에 구도를 미리 볼 수 있어요.<br>AI 영상·이미지 생성 레퍼런스나 스토리보드로 활용해 보세요.</p>
+<p class="lead">AI로 영상 만들 때 구도 설명하는 게 어렵고 귀찮아서 직접 만들었어요.<br>카메라 방향·거리·화각을 조정하면 그 구도의 프롬프트가 실시간으로 만들어져요. 그대로 복사하거나, 캡쳐해서 레퍼런스로 쓰세요. <b class="sig">— 유정PD</b></p>
 <div class="app"><div class="shell">
  <aside class="side">
   <details class="sec" open><summary>도면으로 조정</summary>
@@ -130,6 +139,7 @@ body:not([data-ar="169"]) .view{background:#141518}
   </details>
   <details class="sec"><summary>화면 표시</summary>
    <label class="row"><span>화면 속 샷 이름</span><span class="sw"><input type="checkbox" id="lbChk" checked><i></i></span></label>
+   <label class="row"><span>출처 워터마크</span><span class="sw"><input type="checkbox" id="wmChk" checked><i></i></span></label>
    <label class="row"><span>3분할 격자</span><span class="sw"><input type="checkbox" id="gdChk"><i></i></span></label>
   </details>
  </aside>
@@ -151,6 +161,13 @@ body:not([data-ar="169"]) .view{background:#141518}
   </div>
  </main>
 </div></div>
+<footer class="foot">
+ <div class="fin">
+  <div><b>카메라 앵글 시뮬레이터</b><span>Made by 유정PD · 공이공이 프로덕션 (0202 Production)</span></div>
+  <div class="flinks"><a href="https://www.instagram.com/yooj2_2/" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>인스타그램 @yooj2_2</a><a href="https://0202production.com" target="_blank" rel="noopener">0202production.com</a></div>
+  <p>기능 제안이나 오류는 인스타 DM으로 보내주세요. 무료로 쓰셔도 되고, 공유할 때 출처(@yooj2_2)만 남겨주세요.</p>
+ </div>
+</footer>
 <div class="toast" id="toast" role="status"></div>
 <div class="modal" id="howModal" hidden><div class="mbox" role="dialog" aria-modal="true" aria-labelledby="howTitle">
  <div class="mhead"><h2 id="howTitle">사용방법</h2><button class="mx" id="howClose" type="button" aria-label="닫기">×</button></div>
@@ -160,6 +177,7 @@ body:not([data-ar="169"]) .view{background:#141518}
     <li><div><b>인물 정하기</b>1인·2인과 성별을 골라요.<br>2인은 탑뷰에서 인물을 끌어 위치를 바꿔요.</div></li>
     <li><div><b>저장하고 복사</b>카메라 버튼으로 이미지를 저장하고,<br>프롬프트를 복사해 같이 붙여 쓰세요.</div></li>
    </ol>
+ <p class="mmaker">만든 사람: <a href="https://www.instagram.com/yooj2_2/" target="_blank" rel="noopener">유정PD @yooj2_2</a> · 0202 Production</p>
  <ul class="mtips"><li>미리보기를 끌면 인물을 한쪽으로 치우치게 배치해요.</li><li>‘가운데로’ 버튼이나 더블클릭으로 인물을 다시 가운데로 되돌려요.</li><li>화면 속 샷 이름을 끄면 글자 없는 깨끗한 이미지를 저장해요.</li><li>9:16은 릴스·쇼츠용 세로 화면이에요.</li></ul>
 </div></div>
 
@@ -330,6 +348,7 @@ function boot(){
   const K={l:['왼쪽','Left','on the left third of the frame, negative space on the right'],r:['오른쪽','Right','on the right third of the frame, negative space on the left'],t:['위쪽','Top','placed high in the frame'],b:['아래쪽','Bottom','placed low in the frame with headroom above']};
   const ks=[hx,vy].filter(Boolean);return['인물 '+ks.map(k=>K[k][0]).join('·')+' 배치','Subject '+ks.map(k=>K[k][1]).join('-'),'subject positioned '+ks.map(k=>K[k][2]).join(', ')]};
  const names=s=>{const a=ORD.map(k=>k==='lens'&&s.fl?[s.fl+'mm',s.fl+'mm',s.fl+'mm','shot on a '+s.fl+'mm lens',s.fl]:opt(k,s)).filter(o=>o[4]!==null);const r={ko:a.map((o,i)=>ORD.filter(k=>k==='move'?opt(k,s)[4]!==null:1)[i]==='lens'?o[1]:o[0]).join(' · '),en:a.map(o=>o[2]).join(' · '),pr:a.map(o=>o[3]).join(', ')};const C=CASTS[s.cast||'w'];r.ko=C[0]+' · '+r.ko;r.en=C[1]+' · '+r.en;r.pr=C[2]+', '+r.pr;const q=s===sel&&comp();if(q){r.ko+=' · '+q[0];r.en+=' · '+q[1];r.pr+=', '+q[2]}return r};
+ let wm=true;const wmark=(x,w,h)=>{if(!wm)return;const fs=Math.round(Math.min(w,h)*.028);x.font=`600 ${fs}px ${FONT}`;x.textBaseline='top';x.textAlign='right';x.fillStyle='rgba(255,255,255,.7)';x.fillText('cameraangles.0202production.com · @yooj2_2',w-fs*.9+1,fs*.8+1);x.fillStyle='rgba(22,23,26,.55)';x.fillText('cameraangles.0202production.com · @yooj2_2',w-fs*.9,fs*.8);x.textAlign='left'};
  const label=(x,w,h,ko,en,k=1)=>{if(!lab)return;let fs=Math.round(Math.min(W,H)*.06*k);x.font=`700 ${fs}px ${FONT}`;while(x.measureText(ko).width>w-fs*1.4&&fs>10){fs--;x.font=`700 ${fs}px ${FONT}`}const bh=fs*2.9,g=x.createLinearGradient(0,h-bh*1.3,0,h);g.addColorStop(0,'rgba(0,0,0,0)');g.addColorStop(1,'rgba(0,0,0,.62)');x.fillStyle=g;x.fillRect(0,h-bh*1.3,w,bh*1.3);x.fillStyle='#fff';x.textBaseline='alphabetic';x.fillText(ko,fs*.7,h-fs*1.3);x.font=`500 ${Math.round(fs*.6)}px ${FONT}`;x.globalAlpha=.85;x.fillText(en,fs*.7,h-fs*.5);x.globalAlpha=1};
  const chip=(x,px,txt,k)=>{const fs=Math.round(Math.min(W,H)*.05*k);x.font=`700 ${fs}px ${FONT}`;const tw=x.measureText(txt).width;x.fillStyle=txt==='끝'?'#e5322d':'#121316';x.fillRect(px+fs*.5,fs*.5,tw+fs,fs*1.6);x.fillStyle='#fff';x.textBaseline='middle';x.fillText(txt,px+fs,fs*1.32)};
  const esc=s=>s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -378,7 +397,7 @@ function boot(){
  }
 
  const tOf=(mv,s)=>{if(mv==='hand')return s;if(mv==='orbit')return(s/9)%1;const ph=(s/3.4)%2,u=ph<1?ph:2-ph,v=Math.min(1,Math.max(0,(u-.1)/.8));return v*v*(3-2*v)};
- const drawMain=s=>{const n=names(sel),mv=opt('move',sel)[4],x=main.getContext('2d'),c=solve(sel,W/H,mv?tOf(mv,s):0);x.drawImage(shoot(c,W,H),0,0);drawMaps(c);if(thirds){x.strokeStyle='rgba(255,255,255,.75)';x.lineWidth=Math.max(1.5,W/500);x.beginPath();for(const f of[1/3,2/3]){x.moveTo(W*f,0);x.lineTo(W*f,H);x.moveTo(0,H*f);x.lineTo(W,H*f)}x.stroke()}label(x,W,H,n.ko,n.en)};
+ const drawMain=s=>{const n=names(sel),mv=opt('move',sel)[4],x=main.getContext('2d'),c=solve(sel,W/H,mv?tOf(mv,s):0);x.drawImage(shoot(c,W,H),0,0);drawMaps(c);if(thirds){x.strokeStyle='rgba(255,255,255,.75)';x.lineWidth=Math.max(1.5,W/500);x.beginPath();for(const f of[1/3,2/3]){x.moveTo(W*f,0);x.lineTo(W*f,H);x.moveTo(0,H*f);x.lineTo(W,H*f)}x.stroke()}label(x,W,H,n.ko,n.en);wmark(x,W,H)};
  const drawStrip=()=>{const mv=opt('move',sel)[4];strip.hidden=!mv||mv==='hand';if(strip.hidden)return;const t1=mv==='orbit'?.25:1,Gp=Math.round(W*.16),w=W*2+Gp,k=w/W,x=strip.getContext('2d');strip.width=w;strip.height=H;x.fillStyle='#f1f2f5';x.fillRect(0,0,w,H);
   x.drawImage(shoot(solve(sel,W/H,0),W,H),0,0);x.drawImage(shoot(solve(sel,W/H,t1),W,H),W+Gp,0);chip(x,0,'시작',k);chip(x,W+Gp,'끝',k);
   const y=H/2,a=W+Gp*.18,b=W+Gp*.82,hs=Gp*.16;x.strokeStyle='#121316';x.lineWidth=Math.max(3,Gp*.05);x.lineCap='round';x.beginPath();x.moveTo(a,y);x.lineTo(b,y);x.moveTo(b-hs,y-hs);x.lineTo(b,y);x.lineTo(b-hs,y+hs);x.stroke();
@@ -420,7 +439,7 @@ function boot(){
  document.querySelector('.side').addEventListener('change',e=>{const c=e.target.closest('select[data-k]');if(!c)return;const k=c.dataset.k;if(k!=='move'){free=false;AIMP=null;LOOK.yaw=LOOK.pitch=0}sel[k]=+c.value;req()});
  const seg=(id,fn)=>document.getElementById(id).addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;for(const x of b.parentNode.children)x.setAttribute('aria-pressed',x===b);fn(b.dataset.v);req()});
  seg('arSeg',v=>{ar=v;document.body.dataset.ar=v});
- document.getElementById('gdChk').addEventListener('change',e=>{thirds=e.target.checked;req()});document.getElementById('lbChk').addEventListener('change',e=>{lab=e.target.checked;req()});
+ document.getElementById('gdChk').addEventListener('change',e=>{thirds=e.target.checked;req()});document.getElementById('wmChk').addEventListener('change',e=>{wm=e.target.checked;req()});document.getElementById('lbChk').addEventListener('change',e=>{lab=e.target.checked;req()});
  {const hd=document.querySelector('.top'),setH=()=>document.documentElement.style.setProperty('--hh',hd.getBoundingClientRect().height+'px');setH();const hro=new ResizeObserver(setH);hro.observe(hd)}
  const hm=document.getElementById('howModal');document.getElementById('howOpen').addEventListener('click',()=>{hm.hidden=false;document.getElementById('howClose').focus()});
  const hmClose=()=>{hm.hidden=true};document.getElementById('howClose').addEventListener('click',hmClose);hm.addEventListener('click',e=>{if(e.target===hm)hmClose()});addEventListener('keydown',e=>{if(e.key==='Escape')hmClose()});
