@@ -38,7 +38,7 @@ body[data-ar="916"] .view canvas{width:auto;max-width:100%}
 .ink{stroke:var(--ink);fill:none}.fink{fill:var(--ink)}.sub{fill:var(--sub);font:12px "Noto Sans KR",sans-serif}.ring{stroke:var(--line);fill:none}
 .fov{stroke:var(--sub);stroke-dasharray:4 4;fill:none}.path{stroke:var(--rec);stroke-width:2.5;stroke-dasharray:6 5;fill:none}
 .cam rect{fill:var(--bg);stroke:var(--ink);stroke-width:2}.cam path{fill:var(--ink)}.cam .hit{fill:transparent;stroke:none}
-.snap{pointer-events:none;fill:none;stroke:var(--sub);stroke-width:1.5;stroke-dasharray:3 3}.aim{stroke:var(--rec);stroke-width:2;fill:none}.ret circle:nth-child(2){fill:var(--bg);stroke:var(--rec);stroke-width:2.5}.ret path{stroke:var(--rec);stroke-width:2.5}.ret .dot{fill:var(--rec)}
+.rot circle:last-child{fill:var(--bg);stroke:var(--ink);stroke-width:2}.act{cursor:grab}.snap{pointer-events:none;fill:none;stroke:var(--sub);stroke-width:1.5;stroke-dasharray:3 3}.aim{stroke:var(--rec);stroke-width:2;fill:none}.ret circle:nth-child(2){fill:var(--bg);stroke:var(--rec);stroke-width:2.5}.ret path{stroke:var(--rec);stroke-width:2.5}.ret .dot{fill:var(--rec)}
 .view{position:relative}.view canvas{cursor:grab;touch-action:none}.view canvas:active{cursor:grabbing}
 .lensbar{display:flex;align-items:center;gap:12px}.lensbar span{font-size:14px;color:var(--sub);flex:none}.lensbar input{flex:1;accent-color:var(--rec);height:32px}.lensbar b{flex:none;min-width:64px;text-align:right;font-variant-numeric:tabular-nums}
 .hint{font-size:13px;color:var(--sub);margin:-4px 0 0}
@@ -47,7 +47,7 @@ body[data-ar="916"] .view canvas{width:auto;max-width:100%}
 .badge[hidden]{display:none}
 .bar{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center}
 .bar span{font-size:14px;color:var(--sub);margin-right:6px}
-.seg{display:inline-flex;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.seg{display:inline-flex;flex-wrap:wrap;border:1px solid var(--line);border-radius:10px;overflow:hidden}
 .seg button{font:500 15px/1 inherit;font-family:inherit;color:var(--ink);background:transparent;border:0;min-height:40px;padding:0 14px;cursor:pointer}
 .seg button+button{border-left:1px solid var(--line)}
 .seg button[aria-pressed=true]{background:var(--ink);color:var(--bg)}
@@ -83,14 +83,14 @@ body[data-ar="916"] .chips{--tw:84px}
    <p class="hint">화면을 끌면 카메라 고개가 돌아가서 인물을 한쪽으로 배치할 수 있어요. 더블클릭하면 가운데로.</p>
    <canvas id="strip" hidden></canvas>
    <div class="maps">
-    <figure class="map"><figcaption><b>탑뷰</b>카메라 방향·거리 / ⊕ = 보는 곳 (인물에 자석)</figcaption><svg id="top" viewBox="0 0 400 300"></svg></figure>
+    <figure class="map"><figcaption><b>탑뷰</b>카메라·인물 위치 / 인물 앞 점 = 방향 / ⊕ = 보는 곳</figcaption><svg id="top" viewBox="0 0 400 300"></svg></figure>
     <figure class="map"><figcaption><b>사이드뷰</b>카메라 높이·거리 / ⊕ = 보는 곳 (얼굴에 자석)</figcaption><svg id="side" viewBox="0 0 400 300"></svg></figure>
    </div>
    <div class="out">
     <p class="sum"><span id="sum"></span><span class="badge" id="free" hidden>직접 조정 중</span></p>
     <div class="pr"><code id="prompt"></code><button class="btn" id="copy" type="button">복사</button></div>
     <div class="bar">
-     <div><span>인물</span><div class="seg" id="who"><button data-v="w" aria-pressed="true">여자</button><button data-v="m" aria-pressed="false">남자</button></div></div>
+     <div><span>인물</span><div class="seg" id="cast"><button data-v="w" aria-pressed="true">여자</button><button data-v="m" aria-pressed="false">남자</button><button data-v="ww" aria-pressed="false">여+여</button><button data-v="mm" aria-pressed="false">남+남</button><button data-v="mw" aria-pressed="false">남+여</button></div></div>
      <div><span>비율</span><div class="seg" id="ar"><button data-v="169" aria-pressed="true">16:9</button><button data-v="916" aria-pressed="false">9:16</button><button data-v="11" aria-pressed="false">1:1</button></div></div>
      <div><span>화면 속 이름</span><div class="seg" id="lb"><button data-v="1" aria-pressed="true">표시</button><button data-v="0" aria-pressed="false">숨김</button></div></div>
      <div><span>3분할 격자</span><div class="seg" id="gd"><button data-v="1" aria-pressed="false">표시</button><button data-v="0" aria-pressed="true">숨김</button></div></div>
@@ -202,13 +202,18 @@ function boot(){
 
  // 카메라 계산: 프리셋(사이즈·앵글·방향) 또는 도면으로 직접 옮긴 값(F) → 기본 카메라, 그 위에 무빙
  const opt=(k,s)=>G.find(g=>g.k===k).o[s[k]];
- let free=false;const LOOK={yaw:0,pitch:0};let AIMP=null;const F={az:0,dist:3,h:1.6,ty:1.4,roll:0};
+ let free=false;const LOOK={yaw:0,pitch:0};let AIMP=null;
+ const CASTS={w:['여자 1인','Woman','a young Korean woman',['w']],m:['남자 1인','Man','a young Korean man',['m']],ww:['2인 여여','Two Women','two-shot of two young Korean women',['w','w']],mm:['2인 남남','Two Men','two-shot of two young Korean men',['m','m']],mw:['2인 남녀','Man & Woman','two-shot of a young Korean man and woman',['m','w']]};
+ let ACT=[{k:'w',x:0,z:0,r:0}],moveActors=()=>{};sel.cast='w';
+ const gcen=()=>{let x=0,z=0;ACT.forEach(a=>{x+=a.x;z+=a.z});return{x:x/ACT.length,z:z/ACT.length}};const F={az:0,dist:3,h:1.6,ty:1.4,roll:0};
  function base(s,ar,useFree){
   let fov=vf(s.fl||opt('lens',s)[4]);
-  if(useFree){const az=F.az*D,fw=V(Math.sin(az),0,Math.cos(az)),fz=F.ty>1.5?.08:0;return{pos:V(fw.x*F.dist,F.h,fw.z*F.dist),T:V(fw.x*fz,F.ty,fw.z*fz),fov,roll:F.roll,fw,rt:V(fw.z,0,-fw.x)}}
+  const g=gcen();
+  if(useFree){const az=F.az*D,fw=V(Math.sin(az),0,Math.cos(az)),fz=F.ty>1.5?.08:0;return{pos:V(fw.x*F.dist,F.h,fw.z*F.dist),T:V(g.x+fw.x*fz,F.ty,g.z+fw.z*fz),fov,roll:F.roll,fw,rt:V(fw.z,0,-fw.x)}}
   const [,,,,b,tp,hw,fz]=opt('size',s),A=opt('angle',s),az=opt('dir',s)[4]*D;
-  const c=(b+tp)/2,hh=(tp-b)/2,tv=Math.tan(fov*D/2),d=Math.max(hh/tv,hw/(tv*ar))*1.04;
-  const fw=V(Math.sin(az),0,Math.cos(az)),rt=V(fw.z,0,-fw.x),T=V(fw.x*fz,c,fw.z*fz);
+  const fw=V(Math.sin(az),0,Math.cos(az)),rt=V(fw.z,0,-fw.x);let sp=0;ACT.forEach(a=>{sp=Math.max(sp,Math.abs((a.x-g.x)*rt.x+(a.z-g.z)*rt.z))});const hw2=Math.max(hw,sp?sp+Math.min(hw,.35):0);
+  const c=(b+tp)/2,hh=(tp-b)/2,tv=Math.tan(fov*D/2),d=Math.max(hh/tv,hw2/(tv*ar))*1.04;
+  const T=V(g.x+fw.x*fz,c,g.z+fw.z*fz);
   let pos;
   if(A[4]==='h')pos=T.clone().addScaledVector(fw,d).setY(A[5]);
   else{const el=A[5]*D;let dd=d;
@@ -263,7 +268,7 @@ function boot(){
  const comp=()=>{if(!LOOK.yaw&&!LOOK.pitch&&!AIMP)return null;const c=solve(sel,W/H,0);aim(c,W,H);const p=base(sel,W/H,free).T.project(cam),hx=p.x<-.2?'l':p.x>.2?'r':'',vy=p.y>.25?'t':p.y<-.25?'b':'';if(!hx&&!vy)return null;
   const K={l:['왼쪽','Left','on the left third of the frame, negative space on the right'],r:['오른쪽','Right','on the right third of the frame, negative space on the left'],t:['위쪽','Top','placed high in the frame'],b:['아래쪽','Bottom','placed low in the frame with headroom above']};
   const ks=[hx,vy].filter(Boolean);return['인물 '+ks.map(k=>K[k][0]).join('·')+' 배치','Subject '+ks.map(k=>K[k][1]).join('-'),'subject positioned '+ks.map(k=>K[k][2]).join(', ')]};
- const names=s=>{const a=ORD.map(k=>k==='lens'&&s.fl?[s.fl+'mm',s.fl+'mm',s.fl+'mm','shot on a '+s.fl+'mm lens',s.fl]:opt(k,s)).filter(o=>o[4]!==null);const r={ko:a.map((o,i)=>ORD.filter(k=>k==='move'?opt(k,s)[4]!==null:1)[i]==='lens'?o[1]:o[0]).join(' · '),en:a.map(o=>o[2]).join(' · '),pr:a.map(o=>o[3]).join(', ')};const q=s===sel&&comp();if(q){r.ko+=' · '+q[0];r.en+=' · '+q[1];r.pr+=', '+q[2]}return r};
+ const names=s=>{const a=ORD.map(k=>k==='lens'&&s.fl?[s.fl+'mm',s.fl+'mm',s.fl+'mm','shot on a '+s.fl+'mm lens',s.fl]:opt(k,s)).filter(o=>o[4]!==null);const r={ko:a.map((o,i)=>ORD.filter(k=>k==='move'?opt(k,s)[4]!==null:1)[i]==='lens'?o[1]:o[0]).join(' · '),en:a.map(o=>o[2]).join(' · '),pr:a.map(o=>o[3]).join(', ')};const C=CASTS[s.cast||'w'];r.ko=C[0]+' · '+r.ko;r.en=C[1]+' · '+r.en;r.pr=C[2]+', '+r.pr;const q=s===sel&&comp();if(q){r.ko+=' · '+q[0];r.en+=' · '+q[1];r.pr+=', '+q[2]}return r};
  const label=(x,w,h,ko,en,k=1)=>{if(!lab)return;let fs=Math.round(Math.min(W,H)*.06*k);x.font=`700 ${fs}px ${FONT}`;while(x.measureText(ko).width>w-fs*1.4&&fs>10){fs--;x.font=`700 ${fs}px ${FONT}`}const bh=fs*2.9,g=x.createLinearGradient(0,h-bh*1.3,0,h);g.addColorStop(0,'rgba(0,0,0,0)');g.addColorStop(1,'rgba(0,0,0,.62)');x.fillStyle=g;x.fillRect(0,h-bh*1.3,w,bh*1.3);x.fillStyle='#fff';x.textBaseline='alphabetic';x.fillText(ko,fs*.7,h-fs*1.3);x.font=`500 ${Math.round(fs*.6)}px ${FONT}`;x.globalAlpha=.85;x.fillText(en,fs*.7,h-fs*.5);x.globalAlpha=1};
  const chip=(x,px,txt,k)=>{const fs=Math.round(Math.min(W,H)*.05*k);x.font=`700 ${fs}px ${FONT}`;const tw=x.measureText(txt).width;x.fillStyle=txt==='끝'?'#e5322d':'#121316';x.fillRect(px+fs*.5,fs*.5,tw+fs,fs*1.6);x.fillStyle='#fff';x.textBaseline='middle';x.fillText(txt,px+fs,fs*1.32)};
  const esc=s=>s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -277,13 +282,13 @@ function boot(){
 
  // ---------- 도면 ----------
  const NS='http://www.w3.org/2000/svg',svT=document.getElementById('top'),svS=document.getElementById('side');
- const TC={x:200,y:150},TR=135,LD=Math.log1p(30),SX=340,SG=272,RX=300,HY=245,LH=Math.log1p(16);
- const rOf=d=>TR*Math.min(1,Math.log1p(d)/LD),dOf=r=>Math.expm1(Math.min(r,TR)/TR*LD);
+ const TC={x:200,y:150},TR=135,LD=Math.log1p(120),SX=340,SG=272,RX=300,HY=245,LH=Math.log1p(16);
+ const rOf=d=>TR*Math.min(1,Math.log1p(d/.25)/LD),dOf=r=>.25*Math.expm1(Math.min(r,TR)/TR*LD);
  const sx=d=>SX-RX*Math.min(1,Math.log1p(d)/LD),sy=h=>SG-HY*Math.min(1,Math.log1p(Math.max(0,h))/LH);
  const tP=p=>{const d=Math.hypot(p.x,p.z),k=d>1e-4?rOf(d)/d:0;return[TC.x+p.x*k,TC.y+p.z*k]};
  const sP=p=>[sx(Math.hypot(p.x,p.z)),sy(p.y)];
  const ringT=[1,3,10,30].map(d=>`<circle class="ring" cx="${TC.x}" cy="${TC.y}" r="${rOf(d).toFixed(1)}"/><text class="sub" x="${TC.x+4}" y="${(TC.y-rOf(d)-3).toFixed(1)}">${d}m</text>`).join('');
- svT.innerHTML=`<defs><marker id="arw" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#e5322d"/></marker></defs>${ringT}<g transform="translate(${TC.x} ${TC.y})" style="pointer-events:none"><ellipse class="fink" rx="11" ry="5"/><circle class="fink" r="5.5" cy="-1"/><path class="fink" d="M-3 5L0 10L3 5z"/></g><g id="tdyn"></g><text class="sub" x="10" y="290">정면 ↓</text>`;
+ svT.innerHTML=`<defs><marker id="arw" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#e5322d"/></marker></defs>${ringT}<g id="tdyn"></g><text class="sub" x="10" y="290">정면 ↓</text>`;
  
  const ticks=[.5,1,2,5,10].map(h=>`<line class="ring" x1="22" x2="${SX+40}" y1="${sy(h)}" y2="${sy(h)}"/><text class="sub" x="2" y="${sy(h)+4}">${h}m</text>`).join('');
  const pr=(h)=>sy(h).toFixed(1);
@@ -291,6 +296,8 @@ function boot(){
  const camIcon=(x,y,deg,id)=>`<g class="cam h" data-h="${id}" transform="translate(${x.toFixed(1)} ${y.toFixed(1)}) rotate(${deg.toFixed(1)})"><circle class="hit" r="24"/><rect x="-13" y="-9" width="19" height="18" rx="3"/><path d="M6 -5L15 -10V10L6 5z"/><circle r="3.5" cx="-3.5" cy="0" class="fink"/></g>`;
  const fovL=(x,y,deg,half,len)=>[-half,half].map(a=>{const r=(deg+a)*D;return`<line class="fov" x1="${x.toFixed(1)}" y1="${y.toFixed(1)}" x2="${(x+Math.cos(r)*len).toFixed(1)}" y2="${(y+Math.sin(r)*len).toFixed(1)}"/>`}).join('');
  const v3=new THREE.Vector3(),FACE=1.6;
+ const actors=()=>ACT.map((a,i)=>{const [x,y]=tP(V(a.x,0,a.z)),fx=Math.sin(a.r),fy=Math.cos(a.r),lb=ACT.length>1?(i?'B':'A')+' '+(a.k==='w'?'여':'남'):(a.k==='w'?'여':'남');
+  return `<g class="act h" data-h="p${i}" transform="translate(${x.toFixed(1)} ${y.toFixed(1)})"><circle r="16" fill="transparent"/><g transform="rotate(${(-a.r/D).toFixed(1)})"><ellipse class="fink" rx="11" ry="5"/><circle class="fink" r="5.5" cy="-1"/><path class="fink" d="M-3 5L0 10L3 5z"/></g></g><text class="sub" text-anchor="middle" x="${x.toFixed(1)}" y="${(y-14).toFixed(1)}">${lb}</text><g class="rot h" data-h="r${i}" transform="translate(${(x+fx*26).toFixed(1)} ${(y+fy*26).toFixed(1)})"><circle r="12" fill="transparent"/><circle r="4.5"/></g>`}).join('');
  const ret=(x,y,hd)=>`<g class="ret${hd?' h':''}"${hd?` data-h="${hd}"`:''} transform="translate(${x.toFixed(1)} ${y.toFixed(1)})"><circle r="20" fill="transparent"/><circle r="8"/><path d="M-13 0H-4M4 0H13M0 -13V-4M0 4V13"/><circle r="2" class="dot"/></g>`;
  function drawMaps(c){
   const dir=cam.getWorldDirection(v3),mv=opt('move',sel)[4];
@@ -302,8 +309,8 @@ function boot(){
   document.getElementById('tdyn').innerHTML=fovL(tx,ty,ta,Math.min(hf,80),Math.hypot(tx-TC.x,ty-TC.y)+40)+path+camIcon(tx,ty,ta,'t');
   const [cx,cy]=sP(c.pos),hd=Math.hypot(dir.x,dir.z),sa=Math.atan2(-dir.y,hd)/D*(cx<=SX?1:1);
   const ap=c.pos.clone().addScaledVector(dir,c.pos.distanceTo(c.tgt));
-  const KP=60,ar2=Math.min(1,TR/Math.max(1e-6,Math.hypot(ap.x,ap.z)*KP)),[ax,ay]=[TC.x+ap.x*KP*ar2,TC.y+ap.z*KP*ar2],[sx2,sy2]=[SX,sy(ap.y)];
-  document.getElementById('tdyn').innerHTML+=`<circle class="snap" cx="${TC.x}" cy="${TC.y}" r="14"/><line class="aim" x1="${tx.toFixed(1)}" y1="${ty.toFixed(1)}" x2="${ax.toFixed(1)}" y2="${ay.toFixed(1)}"/>`+ret(ax,ay,'a');
+  const [ax,ay]=tP(ap),[sx2,sy2]=[SX,sy(ap.y)];
+  const gc=gcen(),[gx,gy]=tP(V(gc.x,0,gc.z));document.getElementById('tdyn').innerHTML+=actors()+`<circle class="snap" cx="${gx.toFixed(1)}" cy="${gy.toFixed(1)}" r="14"/><line class="aim" x1="${tx.toFixed(1)}" y1="${ty.toFixed(1)}" x2="${ax.toFixed(1)}" y2="${ay.toFixed(1)}"/>`+ret(ax,ay,'a');
   document.getElementById('sdyn').innerHTML=fovL(cx,cy,sa,Math.min(c.fov/2,80),Math.max(60,SX-cx+40))+pathS+`<circle class="snap" cx="${SX}" cy="${sy(FACE).toFixed(1)}" r="14"/><line class="aim" x1="${cx.toFixed(1)}" y1="${cy.toFixed(1)}" x2="${sx2}" y2="${sy2.toFixed(1)}"/>`+camIcon(cx,cy,sa,'s')+ret(sx2,sy2,'g');
  }
 
@@ -332,10 +339,13 @@ function boot(){
  const onMove=e=>{if(!dragging)return;const p=svgPt(dragging.sv,e);
   if(dragging.h==='t'){const dx=p.x-TC.x,dy=p.y-TC.y;F.dist=Math.max(.15,dOf(Math.hypot(dx,dy)));F.az=Math.atan2(dx,dy)/D}
   else if(dragging.h==='s'){F.dist=Math.max(.15,Math.expm1(Math.max(0,Math.min(1,(SX-p.x)/RX))*LD));F.h=Math.max(.04,Math.expm1(Math.max(0,Math.min(1,(SG-p.y)/HY))*LH))}
+  else if(/^[pr]\d/.test(dragging.h)){const a=ACT[+dragging.h[1]];
+   if(dragging.h[0]==='p'){const dx=p.x-TC.x,dy=p.y-TC.y,r=Math.hypot(dx,dy),d=r<3?0:dOf(r);a.x=r?dx/r*d:0;a.z=r?dy/r*d:0}
+   else{const [x0,y0]=tP(V(a.x,0,a.z));a.r=Math.atan2(p.x-x0,p.y-y0)}moveActors()}
   else{const T0=base(sel,W/H,free).T;
    bake();if(!AIMP)AIMP=T0.clone();
    if(dragging.h==='g'){let y=Math.max(.05,Math.min(1.9,Math.expm1(Math.max(0,(SG-p.y)/HY)*LH)));if(Math.abs(p.y-sy(FACE))<14)y=FACE;AIMP.y=y}
-   else{const dx=p.x-TC.x,dy=p.y-TC.y,r=Math.hypot(dx,dy);if(r<14){AIMP.x=T0.x;AIMP.z=T0.z}else{AIMP.x=dx/60;AIMP.z=dy/60}}}
+   else{const dx=p.x-TC.x,dy=p.y-TC.y,r=Math.hypot(dx,dy);if(r<14){const g=gcen();AIMP.x=g.x;AIMP.z=g.z}else{const d=dOf(r);AIMP.x=dx/r*d;AIMP.z=dy/r*d}}}
   fast()};
  for(const sv of[svT,svS]){
   sv.addEventListener('pointerdown',e=>{const h=e.target.closest('.h');if(!h)return;e.preventDefault();if(h.dataset.h==='t'||h.dataset.h==='s')toFree();dragging={sv,h:h.dataset.h};sv.setPointerCapture(e.pointerId);onMove(e)});
@@ -359,14 +369,18 @@ function boot(){
  const FZ0=G[0].o.map(o=>o[7]),MODELS={},FILES={w:'person',m:'male'};let cur=P;
  const b64=f=>fetch(f+'.b64.txt').then(r=>{if(!r.ok)throw 0;return r.text()}).then(t=>{const s=atob(t.trim()),u=new Uint8Array(s.length);for(let i=0;i<s.length;i++)u[i]=s.charCodeAt(i);return u.buffer});
  const loadModel=k=>MODELS[k]||(MODELS[k]=fetch(FILES[k]+'.glb').then(r=>{if(!r.ok)throw 0;return r.arrayBuffer()}).catch(()=>b64(FILES[k])).then(buf=>new Promise((ok,no)=>new window.GLTFLoader().parse(buf,'',ok,no))).then(g=>{
-  const m=g.scene;m.traverse(o=>{if(o.isMesh){o.castShadow=true;o.receiveShadow=true;if(o.material){o.material.roughness=.85;o.material.metalness=0}}});
+  const m=g.scene;m.traverse(o=>{if(o.isMesh){o.castShadow=true;o.receiveShadow=true;if(o.material){const mt=o.material;mt.roughness=1;mt.metalness=0;if(mt.map){mt.color.setScalar(.6);mt.emissive.setRGB(1,1,1);mt.emissiveMap=mt.map;mt.emissiveIntensity=.5}mt.needsUpdate=true}}});
   m.updateMatrixWorld(true);
   const bx=new THREE.Box3().setFromObject(m),sz=bx.getSize(V(0,0,0)),sc=1.815/sz.y;
   m.scale.setScalar(sc);m.position.set(-(bx.min.x+sz.x/2)*sc,-bx.min.y*sc,-(bx.min.z+sz.z/2)*sc);m.updateMatrixWorld(true);
   const hit=new THREE.Raycaster(V(0,1.66,5),V(0,0,-1)).intersectObject(m,true)[0];m.userData.ez=hit?hit.point.z-.01:.114;return m}));
- const useModel=k=>{const btn=document.querySelector('#who button[data-v="'+k+'"]');loadModel(k).then(m=>{if(sel.who!==k)return;S.remove(cur);S.add(m);cur=m;G[0].o.forEach((o,i)=>{if(FZ0[i])o[7]=+(FZ0[i]/.114*m.userData.ez).toFixed(3)});req()}).catch(e=>{console.warn(e);if(btn)btn.textContent+=' (불러오기 실패)'})};
- sel.who='w';useModel('w');
- seg('who',v=>{sel.who=v;useModel(v)});}
+ const LOADED={},CASTG=new THREE.Group();S.add(CASTG);
+ const buildCast=()=>{S.remove(P);CASTG.clear();ACT.forEach(a=>{const g=new THREE.Group();g.add((LOADED[a.k]||P).clone());CASTG.add(g);a.g=g});moveActors();const m0=LOADED[ACT[0].k];if(m0)G[0].o.forEach((o,i)=>{if(FZ0[i])o[7]=+(FZ0[i]/.114*m0.userData.ez).toFixed(3)})};
+ moveActors=()=>ACT.forEach(a=>{if(a.g){a.g.position.set(a.x,0,a.z);a.g.rotation.y=a.r}});
+ const setCast=v=>{sel.cast=v;const ks=CASTS[v][3],prev=ACT.length===2&&ks.length===2?ACT:null;ACT=ks.map((k,i)=>({k,x:prev?prev[i].x:(ks.length>1?(i?.42:-.42):0),z:prev?prev[i].z:0,r:prev?prev[i].r:0}));AIMP=null;buildCast();req();
+  [...new Set(ks)].forEach(k=>loadModel(k).then(m=>{LOADED[k]=m;if(sel.cast===v){buildCast();req()}}).catch(e=>console.warn(e)))};
+ setCast('w');
+ seg('cast',v=>setCast(v));}
 window.__boot=boot;
 }
 </script>
