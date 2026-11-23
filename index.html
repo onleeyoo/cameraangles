@@ -282,7 +282,7 @@ function boot(){
  const tP=p=>{const d=Math.hypot(p.x,p.z),k=d>1e-4?rOf(d)/d:0;return[TC.x+p.x*k,TC.y+p.z*k]};
  const sP=p=>[sx(Math.hypot(p.x,p.z)),sy(p.y)];
  const ringT=[1,3,10,30].map(d=>`<circle class="ring" cx="${TC.x}" cy="${TC.y}" r="${rOf(d).toFixed(1)}"/><text class="sub" x="${TC.x+4}" y="${(TC.y-rOf(d)-3).toFixed(1)}">${d}m</text>`).join('');
- svT.innerHTML=`<defs><marker id="ar" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#e5322d"/></marker></defs>${ringT}<g transform="translate(${TC.x} ${TC.y})" style="pointer-events:none"><ellipse class="fink" rx="11" ry="5"/><circle class="fink" r="5.5" cy="-1"/><path class="fink" d="M-3 5L0 10L3 5z"/></g><g id="tdyn"></g><text class="sub" x="10" y="290">정면 ↓</text>`;
+ svT.innerHTML=`<defs><marker id="arw" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#e5322d"/></marker></defs>${ringT}<g transform="translate(${TC.x} ${TC.y})" style="pointer-events:none"><ellipse class="fink" rx="11" ry="5"/><circle class="fink" r="5.5" cy="-1"/><path class="fink" d="M-3 5L0 10L3 5z"/></g><g id="tdyn"></g><text class="sub" x="10" y="290">정면 ↓</text>`;
  
  const ticks=[.5,1,2,5,10].map(h=>`<line class="ring" x1="22" x2="${SX+40}" y1="${sy(h)}" y2="${sy(h)}"/><text class="sub" x="2" y="${sy(h)+4}">${h}m</text>`).join('');
  const pr=(h)=>sy(h).toFixed(1);
@@ -295,7 +295,7 @@ function boot(){
   const dir=cam.getWorldDirection(v3),mv=opt('move',sel)[4];
   let path='',pathS='';
   if(mv&&mv!=='hand'){const pts=[],ptS=[];for(let i=0;i<=24;i++){const q=solve(sel,W/H,i/24);pts.push(tP(q.pos));ptS.push(sP(q.pos))}const f=a=>a.map(p=>p.map(v=>v.toFixed(1)).join(',')).join(' ');
-   if(!['pan','tilt','zin','zout','roll'].includes(mv)){path=`<polyline class="path" points="${f(pts)}" marker-end="url(#ar)"/>`;pathS=`<polyline class="path" points="${f(ptS)}" marker-end="url(#ar)"/>`}}
+   if(!['pan','tilt','zin','zout','roll'].includes(mv)){path=`<polyline class="path" points="${f(pts)}" marker-end="url(#arw)"/>`;pathS=`<polyline class="path" points="${f(ptS)}" marker-end="url(#arw)"/>`}}
   const hf=Math.atan(Math.tan(c.fov*D/2)*W/H)/D;
   const [tx,ty]=tP(c.pos),ta=Math.atan2(dir.z,dir.x)/D;
   document.getElementById('tdyn').innerHTML=fovL(tx,ty,ta,Math.min(hf,80),Math.hypot(tx-TC.x,ty-TC.y)+40)+path+camIcon(tx,ty,ta,'t');
