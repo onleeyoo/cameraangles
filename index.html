@@ -11,6 +11,18 @@
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect x='4' y='18' width='40' height='32' rx='7' fill='%23121316'/%3E%3Cpath d='M44 28l16-9v30l-16-9z' fill='%23121316'/%3E%3Ccircle cx='20' cy='34' r='8' fill='%23fff'/%3E%3Ccircle cx='20' cy='34' r='4' fill='%23e5322d'/%3E%3Ccircle cx='36' cy='12' r='6' fill='%23e5322d'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
+<script>
+/* 접속 통계 (Supabase · 개인정보 없이 무작위 ID만) */
+(()=>{const U='https://dmpfjmcxnvslzsjvhmjh.supabase.co/rest/v1/rpc/',K='sb_publishable_b5QV7bNDUPFeE9l0qCDmbg_lu8CW3CD',off=/^(localhost|127\.|0\.0\.0\.0)/.test(location.hostname)||location.protocol==='file:'||/[?&]notrack/.test(location.search);
+const call=(f,b)=>{if(off)return;try{fetch(U+f,{method:'POST',keepalive:true,headers:{'apikey':K,'Content-Type':'application/json'},body:JSON.stringify(b)}).catch(()=>{})}catch(e){}};
+window.__ev=e=>call('c0202_ev',{p_ev:e});
+let id;try{id=localStorage.getItem('ca-id');if(!id){id=crypto.randomUUID();localStorage.setItem('ca-id',id)}}catch(e){id=crypto.randomUUID()}
+const ua=navigator.userAgent,dev=/iPad|Tablet/i.test(ua)?'tablet':/Mobi|Android|iPhone/i.test(ua)?'mobile':'desktop';
+const q=new URLSearchParams(location.search);let ref=q.get('utm_source')||q.get('ref')||'';
+if(!ref&&document.referrer){try{const h=new URL(document.referrer).hostname.replace(/^www\.|^m\.|^l\./,'');if(h!==location.hostname)ref=h}catch(e){}}
+if(/instagram/i.test(ua)&&!ref)ref='instagram (앱)';if(/KAKAOTALK/i.test(ua)&&!ref)ref='kakaotalk (앱)';if(/Threads|Barcelona/i.test(ua)&&!ref)ref='threads (앱)';
+call('c0202_hit',{p_id:id,p_dev:dev,p_ref:ref})})();
+</script>
 <script>try{const t=localStorage.getItem("ca-theme");if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
 <style>
 /* LAYOUT: 큰 제목+설명 / 컨트롤 한 줄(인물·화면비·초기화) / 미리보기 카드(버튼바+AI 프롬프트) + 오른쪽 설정 패널 / 아래 탑뷰·사이드뷰 나란히
@@ -514,15 +526,15 @@ function boot(){
  // 녹화 (자동: 프리셋 무빙 한 번 / 수동: 내가 조작하는 화면)
  const stopRec=()=>{if(!REC||REC.done)return;REC.done=1;try{REC.mr.stop()}catch(e){}};
  const startRec=async auto=>{if(REC)return;if(!exCv.captureStream||!window.MediaRecorder){toast('이 브라우저는 영상 저장이 안 돼요. 크롬에서 열어주세요');return}const L=await ready();const mv=opt('move',sel)[4],dur=auto?(mv==='orbit'?9:mv==='hand'?4:4.4):120;const types=['video/mp4;codecs=avc1','video/mp4','video/webm;codecs=vp9','video/webm'],mt=types.find(t=>MediaRecorder.isTypeSupported(t))||'';const st=exCv.captureStream(30),ch=[];let mr;try{mr=new MediaRecorder(st,mt?{mimeType:mt,videoBitsPerSecond:8e6}:{videoBitsPerSecond:8e6})}catch(_){toast('녹화를 시작하지 못했어요');return}
-  mr.ondataavailable=e=>{if(e.data.size)ch.push(e.data)};mr.onstop=()=>{st.getTracks().forEach(t=>t.stop());const ext=(mr.mimeType||mt).includes('mp4')?'mp4':'webm',bl=new Blob(ch,{type:mr.mimeType||mt||'video/webm'}),u=URL.createObjectURL(bl);dl(u,'camera-angle-'+Date.now()+'.'+ext);setTimeout(()=>URL.revokeObjectURL(u),4000);REC=null;shotBtn.disabled=false;recBtn.disabled=false;recBtn.classList.remove('on');recBtn.querySelector('span').textContent='무빙 녹화';shotLbl();toast('영상을 저장했어요 ('+ext.toUpperCase()+')')};
+  mr.ondataavailable=e=>{if(e.data.size)ch.push(e.data)};mr.onstop=()=>{st.getTracks().forEach(t=>t.stop());const ext=(mr.mimeType||mt).includes('mp4')?'mp4':'webm',bl=new Blob(ch,{type:mr.mimeType||mt||'video/webm'}),u=URL.createObjectURL(bl);dl(u,'camera-angle-'+Date.now()+'.'+ext);setTimeout(()=>URL.revokeObjectURL(u),4000);REC=null;shotBtn.disabled=false;recBtn.disabled=false;recBtn.classList.remove('on');recBtn.querySelector('span').textContent='무빙 녹화';shotLbl();toast('영상을 저장했어요 ('+ext.toUpperCase()+')');window.__ev&&window.__ev(auto?'video_save':'rec')};
   const fmt=e=>Math.floor(e/60)+':'+String(Math.floor(e%60)).padStart(2,'0');
   REC={t0:null,lf:0,dur,mr,done:0,auto,L,tick:e=>{recBtn.querySelector('span').textContent='정지 '+fmt(e)}};mr.start(250);
   if(auto){shotBtn.disabled=true;recBtn.disabled=true;shotBtn.querySelector('span').textContent='녹화 중… '+Math.round(dur)+'초'}else{shotBtn.disabled=true;recBtn.classList.add('on');recBtn.querySelector('span').textContent='정지 0:00';toast('녹화를 시작했어요. 화면·도면을 움직이고 정지를 누르세요 (최대 2분)')}};
  recBtn.addEventListener('click',()=>{if(REC&&!REC.auto){stopRec();return}startRec(false)});
  const shotLbl=()=>{if(REC)return;shotBtn.querySelector('span').textContent=isMove()?'영상 저장':'이미지 저장';shotBtn.title=isMove()?'무빙을 영상으로 저장':'이미지 저장'};
  window.__shotLbl=shotLbl;shotLbl();
- shotBtn.addEventListener('click',async()=>{if(isMove()){startRec(true);return}try{await ready();dl(exCv.toDataURL('image/png'),'camera-angle-'+Date.now()+'.png');toast('이미지를 저장했어요')}catch(_){toast('저장이 막혀 있어요. 화면을 캡쳐해 주세요')}});
- document.getElementById('cpimg').addEventListener('click',async()=>{try{if(!navigator.clipboard||!window.ClipboardItem)throw 0;await navigator.clipboard.write([new ClipboardItem({'image/png':ready().then(()=>new Promise((ok,no)=>exCv.toBlob(b=>b?ok(b):no(),'image/png')))})]);toast('이미지를 복사했어요. 카톡 등에 붙여넣으세요')}catch(_){toast('이 브라우저는 이미지 복사가 막혀 있어요. 저장을 써 주세요')}});
+ shotBtn.addEventListener('click',async()=>{if(isMove()){startRec(true);return}try{await ready();dl(exCv.toDataURL('image/png'),'camera-angle-'+Date.now()+'.png');window.__ev&&window.__ev('img_save');toast('이미지를 저장했어요')}catch(_){toast('저장이 막혀 있어요. 화면을 캡쳐해 주세요')}});
+ document.getElementById('cpimg').addEventListener('click',async()=>{try{if(!navigator.clipboard||!window.ClipboardItem)throw 0;await navigator.clipboard.write([new ClipboardItem({'image/png':ready().then(()=>new Promise((ok,no)=>exCv.toBlob(b=>b?ok(b):no(),'image/png')))})]);toast('이미지를 복사했어요. 카톡 등에 붙여넣으세요');window.__ev&&window.__ev('img_copy');}catch(_){toast('이 브라우저는 이미지 복사가 막혀 있어요. 저장을 써 주세요')}});
  document.getElementById('reset').addEventListener('click',()=>{free=false;setT(0);LOOK.yaw=LOOK.pitch=0;AIMP=null;reset();req()});
  // 화면 드래그 → 카메라 고개(구도) 이동
  let lk=null;
@@ -530,7 +542,7 @@ function boot(){
  main.addEventListener('pointermove',e=>{if(!lk)return;const r=main.getBoundingClientRect();LOOK.yaw=Math.max(-60,Math.min(60,lk.yaw+(e.clientX-lk.x)/r.width*lk.hf));LOOK.pitch=Math.max(-45,Math.min(45,lk.pitch+(e.clientY-lk.y)/r.height*lk.vf));fast()});
  const lkEnd=()=>{if(lk){lk=null;dragging=null;bake();req()}};main.addEventListener('pointerup',lkEnd);main.addEventListener('pointercancel',lkEnd);
  main.addEventListener('dblclick',()=>{LOOK.yaw=LOOK.pitch=0;AIMP=null;req()});
- document.getElementById('copy').addEventListener('click',async e=>{const b=e.currentTarget,el=document.getElementById('prompt');try{await navigator.clipboard.writeText(el.textContent)}catch(_){const r=document.createRange();r.selectNodeContents(el);const s=getSelection();s.removeAllRanges();s.addRange(r);try{document.execCommand('copy')}catch(_){}}toast('프롬프트를 복사했어요');const sp=b.querySelector('span');if(sp){sp.textContent='복사됨';setTimeout(()=>sp.textContent='복사',1400)}});
+ document.getElementById('copy').addEventListener('click',async e=>{const b=e.currentTarget,el=document.getElementById('prompt');try{await navigator.clipboard.writeText(el.textContent)}catch(_){const r=document.createRange();r.selectNodeContents(el);const s=getSelection();s.removeAllRanges();s.addRange(r);try{document.execCommand('copy')}catch(_){}}toast('프롬프트를 복사했어요');window.__ev&&window.__ev('prompt_copy');const sp=b.querySelector('span');if(sp){sp.textContent='복사됨';setTimeout(()=>sp.textContent='복사',1400)}});
 
  // 사람 모델 불러오기 (여자/남자, 실패하면 기본 마네킹 유지)
  const FZ0=G[0].o.map(o=>o[7]),MODELS={},FILES={w:'person',m:'male'};let cur=P;
