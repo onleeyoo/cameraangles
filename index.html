@@ -283,18 +283,18 @@ function boot(){
  const opt=(k,s)=>G.find(g=>g.k===k).o[s[k]];
  let free=false;const LOOK={yaw:0,pitch:0};let AIMP=null;
  const CASTS={w:['여자 1인','Woman','a young Korean woman',['w']],m:['남자 1인','Man','a young Korean man',['m']],ww:['2인 여여','Two Women','two-shot of two young Korean women',['w','w']],mm:['2인 남남','Two Men','two-shot of two young Korean men',['m','m']],mw:['2인 남여','Man & Woman','two-shot of a young Korean man and woman',['m','w']],wm:['2인 여남','Woman & Man','two-shot of a young Korean woman and man',['w','m']]};
- let ACT=[{k:'w',x:0,z:0,r:0}],moveActors=()=>{};sel.cast='w';
+ let ACT=[{k:'w',x:0,z:0,r:0}],moveActors=()=>{},HSv=1;const HEIGHT={w:1.70,m:1.80};sel.cast='w';
  const gcen=()=>{let x=0,z=0;ACT.forEach(a=>{x+=a.x;z+=a.z});return{x:x/ACT.length,z:z/ACT.length}};const F={az:0,dist:3,h:1.6,ty:1.4,roll:0};
  function base(s,ar,useFree){
   let fov=vf(s.fl||opt('lens',s)[4]);
   const g=gcen();
   if(useFree){const az=F.az*D,fw=V(Math.sin(az),0,Math.cos(az)),fz=F.ty>1.5?.08:0;return{pos:V(fw.x*F.dist,F.h,fw.z*F.dist),T:V(g.x+fw.x*fz,F.ty,g.z+fw.z*fz),fov,roll:F.roll,fw,rt:V(fw.z,0,-fw.x)}}
-  const [,,,,b,tp,hw,fz]=opt('size',s),A=opt('angle',s),az=opt('dir',s)[4]*D;
+  let [,,,,b,tp,hw,fz]=opt('size',s);const A=opt('angle',s),az=opt('dir',s)[4]*D;b*=HSv;tp*=HSv;
   const fw=V(Math.sin(az),0,Math.cos(az)),rt=V(fw.z,0,-fw.x);let sp=0;ACT.forEach(a=>{sp=Math.max(sp,Math.abs((a.x-g.x)*rt.x+(a.z-g.z)*rt.z))});const hw2=Math.max(hw,sp?sp+Math.min(hw,.35):0);
   const c=(b+tp)/2,hh=(tp-b)/2,tv=Math.tan(fov*D/2),d=Math.max(hh/tv,hw2/(tv*ar))*1.04;
   const T=V(g.x+fw.x*fz,c,g.z+fw.z*fz);
   let pos;
-  if(A[4]==='h')pos=T.clone().addScaledVector(fw,d).setY(A[5]);
+  if(A[4]==='h')pos=T.clone().addScaledVector(fw,d).setY(A[5]*HSv);
   else{const el=A[5]*D;let dd=d;
    if(T.y+dd*Math.sin(el)<.05){dd=(T.y-.05)/-Math.sin(el);fov=Math.min(125,2*Math.atan(Math.tan(fov*D/2)*d/dd)/D)}
    pos=T.clone().addScaledVector(fw,dd*Math.cos(el)).add(V(0,dd*Math.sin(el),0))}
@@ -393,7 +393,7 @@ function boot(){
   const ap=c.pos.clone().addScaledVector(dir,c.pos.distanceTo(c.tgt));
   const [ax,ay]=tP(ap),[sx2,sy2]=[SX,sy(ap.y)];
   const gc=gcen(),[gx,gy]=tP(V(gc.x,0,gc.z));document.getElementById('tdyn').innerHTML+=actors()+`<circle class="snap" cx="${gx.toFixed(1)}" cy="${gy.toFixed(1)}" r="14"/><line class="aim" x1="${tx.toFixed(1)}" y1="${ty.toFixed(1)}" x2="${ax.toFixed(1)}" y2="${ay.toFixed(1)}"/>`+ret(ax,ay,'a');
-  document.getElementById('sdyn').innerHTML=fovL(cx,cy,sa,Math.min(c.fov/2,80),Math.max(60,SX-cx+40))+pathS+`<circle class="snap" cx="${SX}" cy="${sy(FACE).toFixed(1)}" r="14"/><line class="aim" x1="${cx.toFixed(1)}" y1="${cy.toFixed(1)}" x2="${sx2}" y2="${sy2.toFixed(1)}"/>`+camIcon(cx,cy,sa,'s')+ret(sx2,sy2,'g');
+  document.getElementById('sdyn').innerHTML=fovL(cx,cy,sa,Math.min(c.fov/2,80),Math.max(60,SX-cx+40))+pathS+`<circle class="snap" cx="${SX}" cy="${sy(FACE*HSv).toFixed(1)}" r="14"/><line class="aim" x1="${cx.toFixed(1)}" y1="${cy.toFixed(1)}" x2="${sx2}" y2="${sy2.toFixed(1)}"/>`+camIcon(cx,cy,sa,'s')+ret(sx2,sy2,'g');
  }
 
  const tOf=(mv,s)=>{if(mv==='hand')return s;if(mv==='orbit')return(s/9)%1;const ph=(s/3.4)%2,u=ph<1?ph:2-ph,v=Math.min(1,Math.max(0,(u-.1)/.8));return v*v*(3-2*v)};
@@ -426,7 +426,7 @@ function boot(){
    else{const [x0,y0]=tP(V(a.x,0,a.z));a.r=Math.atan2(p.x-x0,p.y-y0)}moveActors()}
   else{const T0=base(sel,W/H,free).T;
    bake();if(!AIMP)AIMP=T0.clone();
-   if(dragging.h==='g'){let y=Math.max(.05,Math.min(1.9,Math.expm1(Math.max(0,(SG-p.y)/HY)*LH)));if(Math.abs(p.y-sy(FACE))<14)y=FACE;AIMP.y=y}
+   if(dragging.h==='g'){let y=Math.max(.05,Math.min(1.9,Math.expm1(Math.max(0,(SG-p.y)/HY)*LH)));if(Math.abs(p.y-sy(FACE*HSv))<14)y=FACE*HSv;AIMP.y=y}
    else{const dx=p.x-TC.x,dy=p.y-TC.y,r=Math.hypot(dx,dy);if(r<14){const g=gcen();AIMP.x=g.x;AIMP.z=g.z}else{const d=dOf(r);AIMP.x=dx/r*d;AIMP.z=dy/r*d}}}
   fast()};
  for(const sv of[svT,svS])sv.addEventListener('touchstart',e=>{if(e.target.closest('.h'))e.preventDefault()},{passive:false});
@@ -460,12 +460,12 @@ function boot(){
  const loadModel=k=>MODELS[k]||(MODELS[k]=fetch(FILES[k]+'.glb').then(r=>{if(!r.ok)throw 0;return r.arrayBuffer()}).catch(()=>b64(FILES[k])).then(buf=>new Promise((ok,no)=>new window.GLTFLoader().parse(buf,'',ok,no))).then(g=>{
   const m=g.scene;m.traverse(o=>{if(o.isMesh){o.castShadow=true;o.receiveShadow=true;if(o.material){const mt=o.material;mt.roughness=1;mt.metalness=0;if(mt.map){mt.color.setScalar(.6);mt.emissive.setRGB(1,1,1);mt.emissiveMap=mt.map;mt.emissiveIntensity=.5}mt.needsUpdate=true}}});
   m.updateMatrixWorld(true);
-  const bx=new THREE.Box3().setFromObject(m),sz=bx.getSize(V(0,0,0)),sc=1.815/sz.y;
+  const bx=new THREE.Box3().setFromObject(m),sz=bx.getSize(V(0,0,0)),sc=HEIGHT[k]/sz.y;m.userData.h=HEIGHT[k];
   m.scale.setScalar(sc);m.position.set(-(bx.min.x+sz.x/2)*sc,-bx.min.y*sc,-(bx.min.z+sz.z/2)*sc);m.updateMatrixWorld(true);
-  const hit=new THREE.Raycaster(V(0,1.66,5),V(0,0,-1)).intersectObject(m,true)[0];m.userData.ez=hit?hit.point.z-.01:.114;return m}));
+  const hit=new THREE.Raycaster(V(0,HEIGHT[k]*.915,5),V(0,0,-1)).intersectObject(m,true)[0];m.userData.ez=hit?hit.point.z-.01:.114;return m}));
  const LOADED={},CASTG=new THREE.Group();S.add(CASTG);
  const FAILED={},ld=document.getElementById('loading');
- const buildCast=()=>{CASTG.clear();let wait=false;ACT.forEach(a=>{const g=new THREE.Group(),src=LOADED[a.k]||(FAILED[a.k]?P:null);if(src)g.add(src.clone());else wait=true;CASTG.add(g);a.g=g});ld.hidden=!wait;moveActors();const m0=LOADED[ACT[0].k];if(m0)G[0].o.forEach((o,i)=>{if(FZ0[i])o[7]=+(FZ0[i]/.114*m0.userData.ez).toFixed(3)})};
+ const buildCast=()=>{CASTG.clear();HSv=Math.max(...ACT.map(a=>HEIGHT[a.k]))/1.815;let wait=false;ACT.forEach(a=>{const g=new THREE.Group(),src=LOADED[a.k]||(FAILED[a.k]?P:null);if(src)g.add(src.clone());else wait=true;CASTG.add(g);a.g=g});ld.hidden=!wait;moveActors();const m0=LOADED[ACT[0].k];if(m0)G[0].o.forEach((o,i)=>{if(FZ0[i])o[7]=+(FZ0[i]/.114*m0.userData.ez).toFixed(3)})};
  moveActors=()=>ACT.forEach(a=>{if(a.g){a.g.position.set(a.x,0,a.z);a.g.rotation.y=a.r}});
  const setCast=v=>{sel.cast=v;const ks=CASTS[v][3],prev=ACT.length===2&&ks.length===2?ACT:null;ACT=ks.map((k,i)=>({k,x:prev?prev[i].x:(ks.length>1?(i?.42:-.42):0),z:prev?prev[i].z:0,r:prev?prev[i].r:0}));AIMP=null;buildCast();req();
   [...new Set(ks)].forEach(k=>loadModel(k).then(m=>{LOADED[k]=m;if(sel.cast===v){buildCast();req()}}).catch(e=>{console.warn(e);FAILED[k]=1;if(sel.cast===v){buildCast();req()}}))};
