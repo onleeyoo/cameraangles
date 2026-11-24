@@ -107,6 +107,29 @@ body:not([data-ar="169"]) .view{background:#141518}
  .tools{gap:5px;flex-wrap:nowrap}.tools .tb span{display:none}.tools .seg button{padding:0 9px;font-size:13.5px}.tools .tb{padding:0 9px}.tools .tb.txt{padding:0 7px;font-size:13.5px}.tools .tg,.tools .seg{padding:3px}
  .side{order:6;position:static;max-height:none;border-right:0;border-top:1px solid var(--line)}
 }
+
+/* clean floating-card layout: preview left (fixed), controls right (scroll) */
+:root{--app:light-dark(#eef0f4,#0e0f11);--card:light-dark(#f4f5f8,#202227);--sh:0 1px 2px rgba(20,22,30,.04),0 10px 30px rgba(20,22,30,.07)}
+body{background:var(--app)}
+.top{background:color-mix(in srgb,var(--app) 88%,transparent);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:0}
+.howbtn{border:0;background:var(--bg);box-shadow:var(--sh);border-radius:14px}
+@media(min-width:981px){
+ .app{margin-bottom:24px}
+ .shell{grid-template-columns:minmax(0,1fr) 380px;gap:16px;background:transparent;border:0;border-radius:0;overflow:visible;min-height:0;height:calc(100vh - var(--hh,64px) - 28px);position:sticky;top:calc(var(--hh,64px) + 12px)}
+ .stage{order:1;background:var(--bg);border-radius:28px;box-shadow:var(--sh);overflow:auto;justify-content:flex-start;padding:20px 24px 22px;scrollbar-width:thin}
+ .side{order:2;position:static;max-height:none;height:100%;overflow:auto;border:0;background:var(--bg);border-radius:28px;box-shadow:var(--sh);padding:12px 16px 20px;gap:10px;scrollbar-width:thin;overscroll-behavior:contain}
+ .view canvas{max-height:calc(100vh - var(--hh,64px) - 300px)}
+ body[data-ar="916"] .view canvas{height:calc(100vh - var(--hh,64px) - 300px)}
+}
+.sec{border:0;background:var(--card);border-radius:18px;padding:2px 14px 12px}.sec:not([open]){padding-bottom:2px}
+select,.seg{background:var(--bg)}select{border-color:transparent;box-shadow:0 1px 2px rgba(0,0,0,.06)}
+.map{background:var(--bg);border-radius:14px}
+.view{box-shadow:0 10px 30px rgba(20,22,30,.12);border-radius:20px}
+.pill,.tg,.tools .seg{border:0;background:var(--card);box-shadow:none}
+.pr code{background:var(--card);border:0}
+.btn{border-radius:12px}
+.foot{border-top:0}
+@media(max-width:980px){.stage{background:transparent}.side{background:transparent;padding:14px 12px 24px;gap:10px}.sec{background:var(--bg);box-shadow:var(--sh)}}
 @media(prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 </head>
@@ -116,7 +139,7 @@ body:not([data-ar="169"]) .view{background:#141518}
  <div class="hbtns"><a class="howbtn ig" href="https://www.instagram.com/yooj2_2/" target="_blank" rel="noopener" aria-label="유정PD 인스타그램 @yooj2_2"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg><span>@yooj2_2</span></a>
  <button class="howbtn" id="howOpen" type="button"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .9-1 1.6v.6"/><path d="M12 17.5h.01"/></svg>사용방법</button></div>
 </div></header>
-<p class="lead">AI로 영상 만들 때 구도 설명하는 게 어렵고 귀찮아서 직접 만들었어요.<br>카메라 방향·거리·화각을 조정하면 그 구도의 프롬프트가 실시간으로 만들어져요. 그대로 복사하거나, 캡쳐해서 레퍼런스로 쓰세요. <b class="sig">— 유정PD</b></p>
+<p class="lead">AI로 영상 만들 때 구도 설명하는 게 어렵고 귀찮아서 직접 만들었어요.<br>카메라 방향·거리·화각을 조정하면 그 구도의 프롬프트가 실시간으로 만들어져요. 그대로 복사하거나, 캡쳐해서 레퍼런스로 쓰세요.</p>
 <div class="app"><div class="shell">
  <aside class="side">
   <details class="sec" open><summary>도면으로 조정</summary>
@@ -139,7 +162,6 @@ body:not([data-ar="169"]) .view{background:#141518}
   </details>
   <details class="sec"><summary>화면 표시</summary>
    <label class="row"><span>화면 속 샷 이름</span><span class="sw"><input type="checkbox" id="lbChk" checked><i></i></span></label>
-   <label class="row"><span>출처 워터마크</span><span class="sw"><input type="checkbox" id="wmChk" checked><i></i></span></label>
    <label class="row"><span>3분할 격자</span><span class="sw"><input type="checkbox" id="gdChk"><i></i></span></label>
   </details>
  </aside>
@@ -152,7 +174,7 @@ body:not([data-ar="169"]) .view{background:#141518}
     <button class="tb txt" id="center" type="button" title="한쪽으로 옮긴 인물을 다시 가운데로">가운데로</button>
    </div>
    <div class="seg" id="arSeg" aria-label="화면 비율"><button data-v="169" aria-pressed="true">16:9</button><button data-v="916" aria-pressed="false">9:16</button><button data-v="11" aria-pressed="false">1:1</button></div>
-   <div class="tg"><button class="tb" id="shot" type="button" title="이미지 저장" aria-label="이미지 저장"><svg viewBox="0 0 24 24"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg><span>저장</span></button></div>
+   <div class="tg"><button class="tb" id="shot" type="button" title="이미지 저장" aria-label="이미지 저장"><svg viewBox="0 0 24 24"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg><span>저장</span></button><button class="tb" id="cpimg" type="button" title="이미지 복사" aria-label="이미지 복사"><svg viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></svg><span>복사</span></button></div>
   </div>
   <canvas id="strip" hidden></canvas>
   <div class="out">
@@ -397,7 +419,7 @@ function boot(){
  }
 
  const tOf=(mv,s)=>{if(mv==='hand')return s;if(mv==='orbit')return(s/9)%1;const ph=(s/3.4)%2,u=ph<1?ph:2-ph,v=Math.min(1,Math.max(0,(u-.1)/.8));return v*v*(3-2*v)};
- const drawMain=s=>{const n=names(sel),mv=opt('move',sel)[4],x=main.getContext('2d'),c=solve(sel,W/H,mv?tOf(mv,s):0);x.drawImage(shoot(c,W,H),0,0);drawMaps(c);if(thirds){x.strokeStyle='rgba(255,255,255,.75)';x.lineWidth=Math.max(1.5,W/500);x.beginPath();for(const f of[1/3,2/3]){x.moveTo(W*f,0);x.lineTo(W*f,H);x.moveTo(0,H*f);x.lineTo(W,H*f)}x.stroke()}label(x,W,H,n.ko,n.en);wmark(x,W,H)};
+ const drawMain=s=>{const n=names(sel),mv=opt('move',sel)[4],x=main.getContext('2d'),c=solve(sel,W/H,mv?tOf(mv,s):0);x.drawImage(shoot(c,W,H),0,0);drawMaps(c);if(thirds){x.strokeStyle='rgba(255,255,255,.75)';x.lineWidth=Math.max(1.5,W/500);x.beginPath();for(const f of[1/3,2/3]){x.moveTo(W*f,0);x.lineTo(W*f,H);x.moveTo(0,H*f);x.lineTo(W,H*f)}x.stroke()}label(x,W,H,n.ko,n.en)};
  const drawStrip=()=>{const mv=opt('move',sel)[4];strip.hidden=!mv||mv==='hand';if(strip.hidden)return;const t1=mv==='orbit'?.25:1,Gp=Math.round(W*.16),w=W*2+Gp,k=w/W,x=strip.getContext('2d');strip.width=w;strip.height=H;x.fillStyle='#f1f2f5';x.fillRect(0,0,w,H);
   x.drawImage(shoot(solve(sel,W/H,0),W,H),0,0);x.drawImage(shoot(solve(sel,W/H,t1),W,H),W+Gp,0);chip(x,0,'시작',k);chip(x,W+Gp,'끝',k);
   const y=H/2,a=W+Gp*.18,b=W+Gp*.82,hs=Gp*.16;x.strokeStyle='#121316';x.lineWidth=Math.max(3,Gp*.05);x.lineCap='round';x.beginPath();x.moveTo(a,y);x.lineTo(b,y);x.moveTo(b-hs,y-hs);x.lineTo(b,y);x.lineTo(b-hs,y+hs);x.stroke();
@@ -439,12 +461,13 @@ function boot(){
  document.querySelector('.side').addEventListener('change',e=>{const c=e.target.closest('select[data-k]');if(!c)return;const k=c.dataset.k;if(k!=='move'){free=false;AIMP=null;LOOK.yaw=LOOK.pitch=0}sel[k]=+c.value;req()});
  const seg=(id,fn)=>document.getElementById(id).addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;for(const x of b.parentNode.children)x.setAttribute('aria-pressed',x===b);fn(b.dataset.v);req()});
  seg('arSeg',v=>{ar=v;document.body.dataset.ar=v});
- document.getElementById('gdChk').addEventListener('change',e=>{thirds=e.target.checked;req()});document.getElementById('wmChk').addEventListener('change',e=>{wm=e.target.checked;req()});document.getElementById('lbChk').addEventListener('change',e=>{lab=e.target.checked;req()});
+ document.getElementById('gdChk').addEventListener('change',e=>{thirds=e.target.checked;req()});document.getElementById('lbChk').addEventListener('change',e=>{lab=e.target.checked;req()});
  {const hd=document.querySelector('.top'),setH=()=>document.documentElement.style.setProperty('--hh',hd.getBoundingClientRect().height+'px');setH();const hro=new ResizeObserver(setH);hro.observe(hd)}
  const hm=document.getElementById('howModal');document.getElementById('howOpen').addEventListener('click',()=>{hm.hidden=false;document.getElementById('howClose').focus()});
  const hmClose=()=>{hm.hidden=true};document.getElementById('howClose').addEventListener('click',hmClose);hm.addEventListener('click',e=>{if(e.target===hm)hmClose()});addEventListener('keydown',e=>{if(e.key==='Escape')hmClose()});
  document.getElementById('center').addEventListener('click',()=>{LOOK.yaw=LOOK.pitch=0;AIMP=null;req()});
  document.getElementById('shot').addEventListener('click',()=>{try{const a=document.createElement('a');a.download='camera-angle-'+Date.now()+'.png';a.href=main.toDataURL('image/png');document.body.appendChild(a);a.click();a.remove();toast('이미지를 저장했어요')}catch(_){toast('저장이 막혀 있어요. 화면을 캡쳐해 주세요')}});
+ document.getElementById('cpimg').addEventListener('click',async()=>{try{if(!navigator.clipboard||!window.ClipboardItem)throw 0;await navigator.clipboard.write([new ClipboardItem({'image/png':new Promise((ok,no)=>main.toBlob(b=>b?ok(b):no(),'image/png'))})]);toast('이미지를 복사했어요. 카톡 등에 붙여넣으세요')}catch(_){toast('이 브라우저는 이미지 복사가 막혀 있어요. 저장을 써 주세요')}});
  document.getElementById('reset').addEventListener('click',()=>{free=false;LOOK.yaw=LOOK.pitch=0;AIMP=null;reset();req()});
  // 화면 드래그 → 카메라 고개(구도) 이동
  let lk=null;
