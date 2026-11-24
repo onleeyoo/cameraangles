@@ -130,13 +130,42 @@ select,.seg{background:var(--bg)}select{border-color:transparent;box-shadow:0 1p
 .btn{border-radius:12px}
 .foot{border-top:0}
 @media(max-width:980px){.stage{background:transparent}.side{background:transparent;padding:14px 12px 24px;gap:10px}.sec{background:var(--bg);box-shadow:var(--sh)}}
+
+/* THEME: 라임 + 블랙 포인트, 흰 카드 (car-rental dashboard 레퍼런스) */
+:root{--acc:#dff24b;--app:light-dark(#e9ebee,#0e0f11);--bg:light-dark(#ffffff,#17181b);--card:light-dark(#f2f3f5,#202227);--on:light-dark(#111214,#dff24b);--onT:light-dark(#dff24b,#111214);--chip:light-dark(rgba(17,18,20,.14),rgba(255,255,255,.16));--sh:0 1px 2px rgba(20,22,30,.03),0 12px 32px rgba(20,22,30,.06)}
+h1{font-weight:400;letter-spacing:-.03em}h1 b{font-weight:800}
+h1 i{background:var(--acc);box-shadow:0 0 0 2px var(--on);width:.4em;height:.4em}
+.by{font-weight:500}
+.nav{background:var(--acc);border-radius:20px;padding:5px;gap:5px;box-shadow:var(--sh)}
+.nav .howbtn{box-shadow:none;border-radius:15px;background:transparent;color:#111214;border:1px solid rgba(17,18,20,.22);min-height:38px}
+.nav .howbtn.ig{background:#111214;color:var(--acc);border-color:#111214}
+.lead{font-size:15px}
+.stage,.side{border-radius:32px!important}
+.sec{background:var(--card);border-radius:22px}
+.sec>summary{font-size:15.5px;font-weight:700}
+.map{border-radius:18px}
+.seg button[aria-pressed=true],.tools .seg button[aria-pressed=true]{background:var(--on);color:var(--onT);box-shadow:none}
+.pill,.tg,.tools .seg{background:transparent;border:1px solid var(--chip)!important;border-radius:16px}
+.pill{border-radius:99px;font-weight:500}.pill .live{color:var(--ink)}.pill .live::before{background:var(--acc);box-shadow:0 0 0 1.5px var(--on)}
+.tb:hover{background:var(--card)}
+.sw input:checked+i{background:var(--on)}.sw input:checked+i::after{background:var(--acc)}
+.lensbar input{accent-color:var(--on)}
+.btn{background:var(--on);color:var(--onT);border-radius:14px}
+.pr code{border-radius:16px}
+.howto li::before{background:var(--acc);color:#111214;box-shadow:0 0 0 1.5px #111214}
+.loading i{border-top-color:#111214}
+.sum{font-size:18px;letter-spacing:-.01em}
+.mbox{border-radius:28px}
+.toast{background:#111214;color:var(--acc)}
+.flinks a:hover,.by:hover{color:var(--ink);text-decoration:underline}
+@media(max-width:980px){.nav{padding:4px;gap:4px;border-radius:16px}.nav .howbtn{min-height:36px;border-radius:12px}}
 @media(prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 </head>
 <body data-ar="169">
 <header class="top"><div class="topin">
- <div class="brand"><h1><i></i>카메라 앵글 시뮬레이터</h1><a class="by" href="https://www.instagram.com/yooj2_2/" target="_blank" rel="noopener">by 유정PD</a></div>
- <div class="hbtns"><a class="howbtn ig" href="https://www.instagram.com/yooj2_2/" target="_blank" rel="noopener" aria-label="유정PD 인스타그램 @yooj2_2"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg><span>@yooj2_2</span></a>
+ <div class="brand"><h1><i></i>카메라 앵글 <b>시뮬레이터</b></h1><a class="by" href="https://www.instagram.com/yooj2_2/" target="_blank" rel="noopener">by 유정PD</a></div>
+ <div class="hbtns nav"><a class="howbtn ig" href="https://www.instagram.com/yooj2_2/" target="_blank" rel="noopener" aria-label="유정PD 인스타그램 @yooj2_2"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg><span>@yooj2_2</span></a>
  <button class="howbtn" id="howOpen" type="button"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .9-1 1.6v.6"/><path d="M12 17.5h.01"/></svg>사용방법</button></div>
 </div></header>
 <p class="lead">AI로 영상 만들 때 구도 설명하는 게 어렵고 귀찮아서 직접 만들었어요.<br>카메라 방향·거리·화각을 조정하면 그 구도의 프롬프트가 실시간으로 만들어져요. 그대로 복사하거나, 캡쳐해서 레퍼런스로 쓰세요.</p>
