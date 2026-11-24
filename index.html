@@ -125,7 +125,7 @@ body:not([data-ar="169"]) .view{background:#141518}
 @media(min-width:1181px) and (max-height:820px){.topin{min-height:50px;padding-top:6px;padding-bottom:6px}.nb{height:36px}.lgm{width:34px;height:34px}.hero{padding:8px 2px 10px;display:flex;align-items:baseline;gap:18px;flex-wrap:wrap}h1{font-size:30px}.lead{margin:0;font-size:13.5px}.seg button{min-height:34px}select{min-height:40px}.ib{height:40px}.shell{gap:10px 16px}}
 
 .thm .i-moon{display:none}:root[data-theme=dark] .thm .i-sun,:root:not([data-theme]) .thm .i-sun{display:none}:root[data-theme=dark] .thm .i-moon,:root:not([data-theme]) .thm .i-moon{display:block}@media(prefers-color-scheme:light){:root:not([data-theme]) .thm .i-moon{display:none}:root:not([data-theme]) .thm .i-sun{display:block}}
-.tgl em{font-style:normal}.map figcaption .ib.sm svg{width:16px;height:16px;max-height:none;display:block;margin:0;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round}.map figcaption .ib.sm{color:var(--ink);font-weight:500}.ib.sm{height:34px;padding:0 10px;font-size:13px;border-radius:11px}.ib.sm svg{width:16px;height:16px}.map figcaption{display:flex;justify-content:space-between;align-items:center;min-height:30px}.snapt{font-size:13px;color:var(--sub);gap:6px}.snapt .sw{width:34px;height:20px}.snapt .sw i::after{width:14px;height:14px}.snapt .sw input:checked+i::after{transform:translateX(14px)}
+.tgl em{font-style:normal}#castSel{width:6.4em;flex:none}.map figcaption .ib.sm svg{width:16px;height:16px;max-height:none;display:block;margin:0;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round}.map figcaption .ib.sm{color:var(--ink);font-weight:500}.ib.sm{height:34px;padding:0 10px;font-size:13px;border-radius:11px}.ib.sm svg{width:16px;height:16px}.map figcaption{display:flex;justify-content:space-between;align-items:center;min-height:30px}.snapt{font-size:13px;color:var(--sub);gap:6px}.snapt .sw{width:34px;height:20px}.snapt .sw i::after{width:14px;height:14px}.snapt .sw input:checked+i::after{transform:translateX(14px)}
 @media(min-width:1181px){
  .ctrl{flex-wrap:nowrap;gap:14px 22px}.ctrl .cg{flex:none}.tg2{gap:14px}
 }
@@ -548,7 +548,7 @@ function boot(){
  const setCast=v=>{sel.cast=v;const ks=CASTS[v][3],prev=ACT.length===2&&ks.length===2?ACT:null;ACT=ks.map((k,i)=>({k,x:prev?prev[i].x:(ks.length>1?(i?.42:-.42):0),z:prev?prev[i].z:0,r:prev?prev[i].r:0}));AIMP=null;buildCast();req();
   [...new Set(ks)].forEach(k=>loadModel(k).then(m=>{LOADED[k]=m;if(sel.cast===v){buildCast();req()}}).catch(e=>{console.warn(e);FAILED[k]=1;if(sel.cast===v){buildCast();req()}}))};
  setCast('w');
- const castSel=document.getElementById('castSel'),CK={1:['w','m'],2:['ww','mm','mw','wm']},CL={w:'여자',m:'남자',ww:'여 + 여',mm:'남 + 남',mw:'남 + 여 (남자 왼쪽)',wm:'여 + 남 (여자 왼쪽)'};
+ const castSel=document.getElementById('castSel'),CK={1:['w','m'],2:['ww','mm','mw','wm']},CL={w:'여자',m:'남자',ww:'여 + 여',mm:'남 + 남',mw:'남 + 여',wm:'여 + 남'};
  const syncCast=()=>{const n=String(ACT.length);castSel.innerHTML=CK[n].map(k=>`<option value="${k}">${CL[k]}</option>`).join('');castSel.value=sel.cast;for(const b of document.querySelectorAll('#cnt button'))b.setAttribute('aria-pressed',b.dataset.v===n)};
  castSel.addEventListener('change',()=>{setCast(castSel.value);syncCast()});seg('cnt',v=>{if(String(ACT.length)!==v)setCast(v==='1'?(ACT[0].k||'w'):'mw');syncCast()});syncCast();}
 window.__boot=boot;
