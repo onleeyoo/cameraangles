@@ -101,7 +101,7 @@ body:not([data-ar="169"]) .view{background:#141518}
 .howto li{counter-increment:s;display:grid;grid-template-columns:24px 1fr;gap:10px;font-size:14px;color:var(--sub);line-height:1.6}
 .howto li::before{content:counter(s);width:24px;height:24px;border-radius:50%;background:var(--ink);color:var(--bg);font-weight:700;font-size:13px;display:grid;place-items:center;margin-top:1px}
 .howto b{display:block;color:var(--ink);font-size:14.5px}
-.foot{margin-top:28px;background:light-dark(#dfe1e5,#1d1f23)}.fin p a.kko{color:var(--ink);font-weight:700;text-decoration:underline;text-underline-offset:3px}.fin{max-width:1440px;margin:0 auto;padding:22px max(2.4vw,16px) calc(28px + env(safe-area-inset-bottom));display:flex;flex-wrap:wrap;gap:10px 28px;align-items:center;justify-content:space-between;font-size:14px;color:var(--sub)}
+.foot[hidden]{display:none}.foot{margin-top:28px;background:light-dark(#dfe1e5,#1d1f23)}.fin p a.kko{color:var(--ink);font-weight:700;text-decoration:underline;text-underline-offset:3px}.fin{max-width:1440px;margin:0 auto;padding:22px max(2.4vw,16px) calc(28px + env(safe-area-inset-bottom));display:flex;flex-wrap:wrap;gap:10px 28px;align-items:center;justify-content:space-between;font-size:14px;color:var(--sub)}
 .fin>div:first-child{display:flex;flex-direction:column;gap:2px}.fin b{color:var(--ink);font-size:15px}.fin p{margin:0;flex-basis:100%;font-size:13.5px}
 .flinks{display:flex;gap:16px;flex-wrap:wrap}.flinks a{display:inline-flex;align-items:center;gap:6px;color:var(--ink);text-decoration:none;font-weight:500}.flinks svg{width:18px;height:18px}
 .toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:14px;font-size:14px;opacity:0;transition:opacity .2s;pointer-events:none;z-index:60}.toast.on{opacity:1}
@@ -194,7 +194,7 @@ body:not([data-ar="169"]) .view{background:#141518}
  </aside>
  </div>
 </div>
-<footer class="foot">
+<footer class="foot" hidden>
  <div class="fin">
   <div><b>카메라 앵글 시뮬레이터</b><span>Made by 유정PD · 공이공이 프로덕션 (0202 Production)</span></div>
   <div class="flinks"><a href="https://www.instagram.com/yooj2_2/" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>인스타그램 @yooj2_2</a><a href="https://pf.kakao.com/_cLTxnX" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M12 4C7 4 3 7.1 3 11c0 2.5 1.7 4.7 4.2 6l-.9 3.3 3.8-2.5c.6.1 1.2.2 1.9.2 5 0 9-3.1 9-7s-4-7-9-7z"/></svg>카카오톡 채널</a><a href="https://0202production.com" target="_blank" rel="noopener">0202production.com</a></div>
