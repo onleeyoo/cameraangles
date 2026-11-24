@@ -122,6 +122,14 @@ body:not([data-ar="169"]) .view{background:#141518}
  .row{min-height:46px;padding:4px 0}.side h2{font-size:17px}
 }
 @media(min-width:1181px) and (max-height:820px){.topin{min-height:50px;padding-top:6px;padding-bottom:6px}.nb{height:36px}.lgm{width:34px;height:34px}.hero{padding:8px 2px 10px;display:flex;align-items:baseline;gap:18px;flex-wrap:wrap}h1{font-size:30px}.lead{margin:0;font-size:13.5px}.seg button{min-height:34px}select{min-height:40px}.ib{height:40px}.shell{gap:10px 16px}}
+
+.tgl em{font-style:normal}.map figcaption{display:flex;justify-content:space-between;align-items:center;min-height:30px}.snapt{font-size:13px;color:var(--sub);gap:6px}.snapt .sw{width:34px;height:20px}.snapt .sw i::after{width:14px;height:14px}.snapt .sw input:checked+i::after{transform:translateX(14px)}
+@media(min-width:1181px){
+ .ctrl{flex-wrap:nowrap;gap:14px 22px}.ctrl .cg{flex:none}.tg2{gap:14px}
+}
+@media(min-width:1181px) and (max-width:1500px){.ctrl{gap:16px}.ctrl #reset span{display:none}.ctrl #reset{padding:0 11px}}
+@media(min-width:1181px) and (max-width:1360px){.tgl em{display:none}.cl{font-size:15px}.ctrl{gap:12px}.cg{gap:8px}}
+@media(min-width:1181px) and (max-width:1260px){.ctrl .seg button{padding:0 10px}.ctrl select{padding-right:26px;background-position:calc(100% - 13px) 50%,calc(100% - 8px) 50%}}
 @media(max-width:1080px){
  .shell{display:flex;flex-direction:column;gap:14px;align-items:stretch}
  .mainc,.pcard{display:contents}
@@ -154,7 +162,7 @@ body:not([data-ar="169"]) .view{background:#141518}
   <div class="ctrl">
    <div class="cg"><span class="cl">인물</span><div class="seg" id="cnt"><button data-v="1" aria-pressed="true">1인</button><button data-v="2" aria-pressed="false">2인</button></div><select id="castSel" aria-label="성별"></select></div>
    <div class="cg"><span class="cl">화면비</span><div class="seg" id="arSeg" aria-label="화면 비율"><button data-v="169" aria-pressed="true">16:9</button><button data-v="916" aria-pressed="false">9:16</button><button data-v="11" aria-pressed="false">1:1</button></div></div>
-   <div class="cg tg2"><label class="tgl"><span class="sw"><input type="checkbox" id="gdChk"><i></i></span>3분할 격자</label><label class="tgl"><span class="sw"><input type="checkbox" id="lbChk" checked><i></i></span>화면 속 샷 이름</label></div>
+   <div class="cg tg2"><label class="tgl"><span class="sw"><input type="checkbox" id="gdChk"><i></i></span><span><em>3분할 </em>격자</span></label><label class="tgl"><span class="sw"><input type="checkbox" id="lbChk" checked><i></i></span><span><em>화면 속 </em>샷 이름</span></label></div>
    <button class="ib" id="reset" type="button" title="모든 설정을 처음으로"><svg viewBox="0 0 24 24"><path d="M4 12a8 8 0 1 0 2.4-5.7"/><path d="M4 4v4h4"/></svg><span>초기화</span></button>
   </div>
   <article class="pcard">
@@ -169,8 +177,8 @@ body:not([data-ar="169"]) .view{background:#141518}
    </div>
   </article>
   <div class="maps">
-   <figure class="map"><figcaption><b>탑뷰</b></figcaption><svg id="top" viewBox="0 0 400 300"></svg></figure>
-   <figure class="map"><figcaption><b>사이드뷰</b></figcaption><svg id="side" viewBox="0 0 400 300"></svg></figure>
+   <figure class="map"><figcaption><b>탑뷰</b><label class="tgl snapt"><span class="sw"><input type="checkbox" class="snapChk" checked><i></i></span><span>자석 스냅</span></label></figcaption><svg id="top" viewBox="0 0 400 300"></svg></figure>
+   <figure class="map"><figcaption><b>사이드뷰</b><label class="tgl snapt"><span class="sw"><input type="checkbox" class="snapChk" checked><i></i></span><span>자석 스냅</span></label></figcaption><svg id="side" viewBox="0 0 400 300"></svg></figure>
   </div>
  </section>
  <aside class="side">
@@ -398,7 +406,7 @@ function boot(){
  svS.innerHTML=`${ticks}<line class="ink" x1="20" x2="392" y1="${SG}" y2="${SG}" stroke-width="2"/><g class="fink" style="pointer-events:none"><circle cx="${SX}" cy="${pr(1.66)}" r="${((sy(1.55)-sy(1.78))/2).toFixed(1)}"/><rect x="${SX-8}" y="${pr(1.52)}" width="16" height="${(sy(.86)-sy(1.52)).toFixed(1)}" rx="6"/><rect x="${SX-7}" y="${pr(.9)}" width="14" height="${(SG-sy(.9)).toFixed(1)}" rx="3"/></g><g id="sdyn"></g><text class="sub" x="${SX-14}" y="${SG+16}">인물</text>`;
  const camIcon=(x,y,deg,id)=>`<g class="cam h" data-h="${id}" transform="translate(${x.toFixed(1)} ${y.toFixed(1)}) rotate(${deg.toFixed(1)})"><circle class="hit" r="24"/><rect x="-13" y="-9" width="19" height="18" rx="3"/><path d="M6 -5L15 -10V10L6 5z"/><circle r="3.5" cx="-3.5" cy="0" class="fink"/></g>`;
  const fovL=(x,y,deg,half,len)=>[-half,half].map(a=>{const r=(deg+a)*D;return`<line class="fov" x1="${x.toFixed(1)}" y1="${y.toFixed(1)}" x2="${(x+Math.cos(r)*len).toFixed(1)}" y2="${(y+Math.sin(r)*len).toFixed(1)}"/>`}).join('');
- const v3=new THREE.Vector3(),FACE=1.6;
+ const v3=new THREE.Vector3(),FACE=1.6;let SNAP=true;
  const actors=()=>ACT.map((a,i)=>{const [x,y]=tP(V(a.x,0,a.z)),fx=Math.sin(a.r),fy=Math.cos(a.r),lb=ACT.length>1?(i?'B':'A')+' '+(a.k==='w'?'여':'남'):(a.k==='w'?'여':'남');
   return `<g class="act h" data-h="p${i}" transform="translate(${x.toFixed(1)} ${y.toFixed(1)})"><circle r="16" fill="transparent"/><g transform="rotate(${(-a.r/D).toFixed(1)})"><ellipse class="fink" rx="11" ry="5"/><circle class="fink" r="5.5" cy="-1"/><path class="fink" d="M-3 5L0 10L3 5z"/></g></g><text class="sub" text-anchor="middle" x="${x.toFixed(1)}" y="${(y-14).toFixed(1)}">${lb}</text><g class="rot h" data-h="r${i}" transform="translate(${(x+fx*26).toFixed(1)} ${(y+fy*26).toFixed(1)})"><circle r="12" fill="transparent"/><circle r="4.5"/></g>`}).join('');
  const ret=(x,y,hd)=>`<g class="ret${hd?' h':''}"${hd?` data-h="${hd}"`:''} transform="translate(${x.toFixed(1)} ${y.toFixed(1)})"><circle r="20" fill="transparent"/><circle r="8"/><path d="M-13 0H-4M4 0H13M0 -13V-4M0 4V13"/><circle r="2" class="dot"/></g>`;
@@ -413,8 +421,8 @@ function boot(){
   const [cx,cy]=sP(c.pos),hd=Math.hypot(dir.x,dir.z),sa=Math.atan2(-dir.y,hd)/D*(cx<=SX?1:1);
   const ap=c.pos.clone().addScaledVector(dir,c.pos.distanceTo(c.tgt));
   const [ax,ay]=tP(ap),[sx2,sy2]=[SX,sy(ap.y)];
-  const gc=gcen(),[gx,gy]=tP(V(gc.x,0,gc.z));document.getElementById('tdyn').innerHTML+=actors()+`<circle class="snap" cx="${gx.toFixed(1)}" cy="${gy.toFixed(1)}" r="14"/><line class="aim" x1="${tx.toFixed(1)}" y1="${ty.toFixed(1)}" x2="${ax.toFixed(1)}" y2="${ay.toFixed(1)}"/>`+ret(ax,ay,'a');
-  document.getElementById('sdyn').innerHTML=fovL(cx,cy,sa,Math.min(c.fov/2,80),Math.max(60,SX-cx+40))+pathS+`<circle class="snap" cx="${SX}" cy="${sy(FACE*HSv).toFixed(1)}" r="14"/><line class="aim" x1="${cx.toFixed(1)}" y1="${cy.toFixed(1)}" x2="${sx2}" y2="${sy2.toFixed(1)}"/>`+camIcon(cx,cy,sa,'s')+ret(sx2,sy2,'g');
+  const gc=gcen(),[gx,gy]=tP(V(gc.x,0,gc.z));document.getElementById('tdyn').innerHTML+=actors()+(SNAP?`<circle class="snap" cx="${gx.toFixed(1)}" cy="${gy.toFixed(1)}" r="14"/>`:``)+`<line class="aim" x1="${tx.toFixed(1)}" y1="${ty.toFixed(1)}" x2="${ax.toFixed(1)}" y2="${ay.toFixed(1)}"/>`+ret(ax,ay,'a');
+  document.getElementById('sdyn').innerHTML=fovL(cx,cy,sa,Math.min(c.fov/2,80),Math.max(60,SX-cx+40))+pathS+(SNAP?`<circle class="snap" cx="${SX}" cy="${sy(FACE*HSv).toFixed(1)}" r="14"/>`:``)+`<line class="aim" x1="${cx.toFixed(1)}" y1="${cy.toFixed(1)}" x2="${sx2}" y2="${sy2.toFixed(1)}"/>`+camIcon(cx,cy,sa,'s')+ret(sx2,sy2,'g');
  }
 
  const tOf=(mv,s)=>{if(mv==='hand')return s;if(mv==='orbit')return(s/9)%1;const ph=(s/3.4)%2,u=ph<1?ph:2-ph,v=Math.min(1,Math.max(0,(u-.1)/.8));return v*v*(3-2*v)};
@@ -448,8 +456,8 @@ function boot(){
    else{const [x0,y0]=tP(V(a.x,0,a.z));a.r=Math.atan2(p.x-x0,p.y-y0)}moveActors()}
   else{const T0=base(sel,W/H,free).T;
    bake();if(!AIMP)AIMP=T0.clone();
-   if(dragging.h==='g'){let y=Math.max(.05,Math.min(1.9,Math.expm1(Math.max(0,(SG-p.y)/HY)*LH)));if(Math.abs(p.y-sy(FACE*HSv))<14)y=FACE*HSv;AIMP.y=y}
-   else{const dx=p.x-TC.x,dy=p.y-TC.y,r=Math.hypot(dx,dy);if(r<14){const g=gcen();AIMP.x=g.x;AIMP.z=g.z}else{const d=dOf(r);AIMP.x=dx/r*d;AIMP.z=dy/r*d}}}
+   if(dragging.h==='g'){let y=Math.max(.05,Math.min(1.9,Math.expm1(Math.max(0,(SG-p.y)/HY)*LH)));if(SNAP&&Math.abs(p.y-sy(FACE*HSv))<14)y=FACE*HSv;AIMP.y=y}
+   else{const dx=p.x-TC.x,dy=p.y-TC.y,r=Math.hypot(dx,dy);if(SNAP&&r<14){const g=gcen();AIMP.x=g.x;AIMP.z=g.z}else{const d=dOf(r);AIMP.x=dx/r*d;AIMP.z=dy/r*d}}}
   fast()};
  for(const sv of[svT,svS])sv.addEventListener('touchstart',e=>{if(e.target.closest('.h'))e.preventDefault()},{passive:false});
  for(const sv of[svT,svS]){
@@ -462,6 +470,7 @@ function boot(){
  const seg=(id,fn)=>document.getElementById(id).addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;for(const x of b.parentNode.children)x.setAttribute('aria-pressed',x===b);fn(b.dataset.v);req()});
  seg('arSeg',v=>{ar=v;document.body.dataset.ar=v});
  document.getElementById('gdChk').addEventListener('change',e=>{thirds=e.target.checked;req()});document.getElementById('lbChk').addEventListener('change',e=>{lab=e.target.checked;req()});
+ document.querySelectorAll('.snapChk').forEach(c=>c.addEventListener('change',e=>{SNAP=e.target.checked;document.querySelectorAll('.snapChk').forEach(o=>o.checked=SNAP);req()}));
  {const fit=()=>{if(innerWidth<1181)return;const c=document.getElementById('main'),pc=document.querySelector('.pcard'),y=scrollY,ct=c.getBoundingClientRect().top+y,pb=pc.getBoundingClientRect().bottom+y,cb=c.getBoundingClientRect().bottom+y;const R=document.documentElement.style;R.setProperty('--fixT',ct+'px');R.setProperty('--fixB',(pb-cb)+'px')};addEventListener('resize',fit);new ResizeObserver(fit).observe(document.querySelector('.ctrl'));new ResizeObserver(fit).observe(document.querySelector('.qcard'));setTimeout(fit,50)}
  {const hd=document.querySelector('.top'),setH=()=>document.documentElement.style.setProperty('--hh',hd.getBoundingClientRect().height+'px');setH();const hro=new ResizeObserver(setH);hro.observe(hd)}
  const hm=document.getElementById('howModal');document.getElementById('howOpen').addEventListener('click',()=>{hm.hidden=false;document.getElementById('howClose').focus()});
