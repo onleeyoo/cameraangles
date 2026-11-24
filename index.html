@@ -131,33 +131,23 @@ select,.seg{background:var(--bg)}select{border-color:transparent;box-shadow:0 1p
 .foot{border-top:0}
 @media(max-width:980px){.stage{background:transparent}.side{background:transparent;padding:14px 12px 24px;gap:10px}.sec{background:var(--bg);box-shadow:var(--sh)}}
 
-/* THEME: 라임 + 블랙 포인트, 흰 카드 (car-rental dashboard 레퍼런스) */
-:root{--acc:#dff24b;--app:light-dark(#e9ebee,#0e0f11);--bg:light-dark(#ffffff,#17181b);--card:light-dark(#f2f3f5,#202227);--on:light-dark(#111214,#dff24b);--onT:light-dark(#dff24b,#111214);--chip:light-dark(rgba(17,18,20,.14),rgba(255,255,255,.16));--sh:0 1px 2px rgba(20,22,30,.03),0 12px 32px rgba(20,22,30,.06)}
+/* UX: 흰 카드 + 칩형 버튼 (메인 컬러는 기존 빨강·블랙 유지) */
+:root{--on:var(--ink);--onT:var(--bg);--chip:light-dark(rgba(17,18,20,.14),rgba(255,255,255,.16));--sh:0 1px 2px rgba(20,22,30,.03),0 12px 32px rgba(20,22,30,.06)}
 h1{font-weight:400;letter-spacing:-.03em}h1 b{font-weight:800}
-h1 i{background:var(--acc);box-shadow:0 0 0 2px var(--on);width:.4em;height:.4em}
-.by{font-weight:500}
-.nav{background:var(--acc);border-radius:20px;padding:5px;gap:5px;box-shadow:var(--sh)}
-.nav .howbtn{box-shadow:none;border-radius:15px;background:transparent;color:#111214;border:1px solid rgba(17,18,20,.22);min-height:38px}
-.nav .howbtn.ig{background:#111214;color:var(--acc);border-color:#111214}
-.lead{font-size:15px}
+.nav{background:var(--bg);border-radius:20px;padding:5px;gap:5px;box-shadow:var(--sh)}
+.nav .howbtn{box-shadow:none;border-radius:15px;background:transparent;border:1px solid var(--chip);min-height:38px}
+.nav .howbtn.ig{background:var(--ink);color:var(--bg);border-color:var(--ink)}
 .stage,.side{border-radius:32px!important}
 .sec{background:var(--card);border-radius:22px}
-.sec>summary{font-size:15.5px;font-weight:700}
 .map{border-radius:18px}
 .seg button[aria-pressed=true],.tools .seg button[aria-pressed=true]{background:var(--on);color:var(--onT);box-shadow:none}
 .pill,.tg,.tools .seg{background:transparent;border:1px solid var(--chip)!important;border-radius:16px}
-.pill{border-radius:99px;font-weight:500}.pill .live{color:var(--ink)}.pill .live::before{background:var(--acc);box-shadow:0 0 0 1.5px var(--on)}
+.pill{border-radius:99px;font-weight:500}
 .tb:hover{background:var(--card)}
-.sw input:checked+i{background:var(--on)}.sw input:checked+i::after{background:var(--acc)}
-.lensbar input{accent-color:var(--on)}
-.btn{background:var(--on);color:var(--onT);border-radius:14px}
+.btn{border-radius:14px}
 .pr code{border-radius:16px}
-.howto li::before{background:var(--acc);color:#111214;box-shadow:0 0 0 1.5px #111214}
-.loading i{border-top-color:#111214}
 .sum{font-size:18px;letter-spacing:-.01em}
 .mbox{border-radius:28px}
-.toast{background:#111214;color:var(--acc)}
-.flinks a:hover,.by:hover{color:var(--ink);text-decoration:underline}
 @media(max-width:980px){.nav{padding:4px;gap:4px;border-radius:16px}.nav .howbtn{min-height:36px;border-radius:12px}}
 @media(prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
