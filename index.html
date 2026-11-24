@@ -491,7 +491,7 @@ function boot(){
  const FZ0=G[0].o.map(o=>o[7]),MODELS={},FILES={w:'person',m:'male'};let cur=P;
  const b64=f=>fetch(f+'.b64.txt').then(r=>{if(!r.ok)throw 0;return r.text()}).then(t=>{const s=atob(t.trim()),u=new Uint8Array(s.length);for(let i=0;i<s.length;i++)u[i]=s.charCodeAt(i);return u.buffer});
  const loadModel=k=>MODELS[k]||(MODELS[k]=fetch(FILES[k]+'.glb').then(r=>{if(!r.ok)throw 0;return r.arrayBuffer()}).catch(()=>b64(FILES[k])).then(buf=>new Promise((ok,no)=>new window.GLTFLoader().parse(buf,'',ok,no))).then(g=>{
-  const m=g.scene;m.traverse(o=>{if(o.isMesh){o.castShadow=true;o.receiveShadow=true;if(o.material){const mt=o.material;mt.roughness=1;mt.metalness=0;if(mt.map){mt.color.setScalar(.6);mt.emissive.setRGB(1,1,1);mt.emissiveMap=mt.map;mt.emissiveIntensity=.5}mt.needsUpdate=true}}});
+  const m=g.scene;m.traverse(o=>{if(o.isMesh){o.castShadow=true;o.receiveShadow=true;if(o.material){const mt=o.material;mt.roughness=1;mt.metalness=0;if(mt.map){const M=k==='m';mt.color.setScalar(M?.72:.6);mt.emissive.setRGB(1,1,1);mt.emissiveMap=mt.map;mt.emissiveIntensity=M?.4:.5;mt.map.anisotropy=8}mt.needsUpdate=true}}});
   m.updateMatrixWorld(true);
   const bx=new THREE.Box3().setFromObject(m),sz=bx.getSize(V(0,0,0)),sc=HEIGHT[k]/sz.y;m.userData.h=HEIGHT[k];
   m.scale.setScalar(sc);m.position.set(-(bx.min.x+sz.x/2)*sc,-bx.min.y*sc,-(bx.min.z+sz.z/2)*sc);m.updateMatrixWorld(true);
