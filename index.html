@@ -230,7 +230,7 @@ body:not([data-ar="169"]) .view{background:#141518}
     <li><div><b>사이드뷰로 높이 잡기</b>카메라를 끌어서 높이·거리를 조절해요.<br>⊕를 끌면 보는 높이가 바뀌고, 얼굴 근처에서는 자석처럼 붙어요.</div></li>
     <li><div><b>구도 고르기</b>샷 사이즈, 앵글, 인물 방향을 골라요.<br>렌즈와 무빙은 그 아래에서 바꿔요.</div></li>
     <li><div><b>인물 정하기</b>1인·2인과 성별을 골라요.<br>2인은 탑뷰에서 인물을 끌어 위치를 바꿔요.</div></li>
-    <li><div><b>저장하고 복사</b>이미지 저장·복사로 화면을 가져가요. 무빙을 고르면 영상으로 저장되고,<br>‘무빙 녹화’로 내가 움직이는 화면을 영상으로 남길 수 있어요.<br>저장 버튼 옆 ▾(저장 옵션)에서 샷 정보·탑뷰/사이드뷰·프롬프트를 함께 넣을지 골라요.</div></li>
+    <li><div><b>저장하고 복사</b>이미지 저장·복사로 화면을 가져가요. 무빙을 고르면 영상으로 저장되고,<br>‘무빙 녹화’로 내가 움직이는 화면을 영상으로 남기면, 그 움직임을 분석한 무빙 프롬프트도 자동으로 만들어져요.<br>저장 버튼 옆 ▾(저장 옵션)에서 샷 정보·탑뷰/사이드뷰·프롬프트를 함께 넣을지 골라요.</div></li>
    </ol>
  <p class="mmaker">만든 사람: <a href="https://www.instagram.com/yooj2_2/" target="_blank" rel="noopener">유정PD @yooj2_2</a> · 0202 Production</p>
  <ul class="mtips"><li>미리보기를 끌면 인물을 한쪽으로 치우치게 배치해요.</li><li>‘가운데로’ 버튼이나 더블클릭으로 인물을 다시 가운데로 되돌려요.</li><li>저장 옵션을 모두 끄면 글자 없는 깨끗한 이미지를 저장해요.</li><li>9:16은 릴스·쇼츠용 세로 화면이에요.</li></ul>
@@ -459,13 +459,13 @@ function boot(){
   x.drawImage(shoot(solve(sel,W/H,0),W,H),0,0);x.drawImage(shoot(solve(sel,W/H,t1),W,H),W+Gp,0);chip(x,0,'시작',k);chip(x,W+Gp,'끝',k);
   const y=H/2,a=W+Gp*.18,b=W+Gp*.82,hs=Gp*.16;x.strokeStyle='#121316';x.lineWidth=Math.max(3,Gp*.05);x.lineCap='round';x.beginPath();x.moveTo(a,y);x.lineTo(b,y);x.moveTo(b-hs,y-hs);x.lineTo(b,y);x.lineTo(b-hs,y+hs);x.stroke()};
  const drawThumbs=()=>{const [tw,th]=TH[ar];R.setSize(tw,th,false);for(const c of chips){const k=c.dataset.k,s={...sel,[k]:+c.dataset.i};if(k==='lens')delete s.fl;const cv=c.querySelector('canvas');if(cv.width!==tw||cv.height!==th){cv.width=tw;cv.height=th}const mv=opt('move',s)[4];cv.getContext('2d').drawImage(shoot(solve(s,tw/th,mv&&mv!=='hand'?(mv==='orbit'?.25:1):0,free&&(k==='lens'||k==='move')),tw,th),0,0)}};
- const ui=()=>{if(free)classify();for(const s of document.querySelectorAll('select[data-k]'))s.value=sel[s.dataset.k];const mm=sel.fl||opt('lens',sel)[4];flr.value=Math.log(mm);flv.textContent=mm+'mm';document.getElementById('stL').textContent=mm+'mm';const n=names(sel);document.getElementById('sum').textContent=n.ko.replace(/^[^·]+· /,'');document.getElementById('pillTxt').textContent=CASTS[sel.cast||'w'][0]+' · '+n.en.replace(/^[^·]+· /,'');document.getElementById('prompt').textContent=n.pr;document.getElementById('prompt').title=n.pr;window.__shotLbl&&window.__shotLbl()};
+ const ui=()=>{if(free)classify();for(const s of document.querySelectorAll('select[data-k]'))s.value=sel[s.dataset.k];const mm=sel.fl||opt('lens',sel)[4];flr.value=Math.log(mm);flv.textContent=mm+'mm';document.getElementById('stL').textContent=mm+'mm';const n=names(sel);document.getElementById('sum').textContent=n.ko.replace(/^[^·]+· /,'');document.getElementById('pillTxt').textContent=CASTS[sel.cast||'w'][0]+' · '+n.en.replace(/^[^·]+· /,'');document.getElementById('prompt').textContent=n.pr;document.getElementById('prompt').title=n.pr;if(window.__recPr){window.__recPr=null;document.querySelector('.qlab').firstChild.textContent='프롬프트'}window.__shotLbl&&window.__shotLbl()};
  let pend=0,dragging=null;
  const all=()=>{pend=0;[W,H]=AR[ar];ui();drawThumbs();R.setSize(W,H,false);main.width=W;main.height=H;drawStrip();drawMain(performance.now()/1000)};
  const req=()=>{if(!pend){pend=1;requestAnimationFrame(all)}};
  let fpend=0;const fast=()=>{if(fpend)return;fpend=1;requestAnimationFrame(()=>{fpend=0;ui();drawMain(performance.now()/1000)})};
  const still=matchMedia('(prefers-reduced-motion: reduce)').matches;let last=0;
- let REC=null;const loop=ts=>{requestAnimationFrame(loop);if(REC){if(REC.t0===null)REC.t0=ts;const e=(ts-REC.t0)/1000;if(REC.auto){drawMain(Math.min(e,REC.dur-.001));if(e>=REC.dur)stopRec()}else{if(!(pend||dragging||still||!isMove()||ts-last<33)){last=ts;drawMain(ts/1000)}REC.tick(e);if(e>=REC.dur)stopRec()}if(REC&&ts-REC.lf>=30){REC.lf=ts;compose(REC.L)}return}if(pend||dragging||still||!isMove()||ts-last<33)return;last=ts;drawMain(ts/1000)};
+ let REC=null;const loop=ts=>{requestAnimationFrame(loop);if(REC){if(REC.t0===null)REC.t0=ts;const e=(ts-REC.t0)/1000;if(REC.auto){drawMain(Math.min(e,REC.dur-.001));if(e>=REC.dur)stopRec()}else{if(!(pend||dragging||still||!isMove()||ts-last<33)){last=ts;drawMain(ts/1000)}REC.tick(e);REC.sample&&REC.sample(e,ts);if(e>=REC.dur)stopRec()}if(REC&&ts-REC.lf>=30){REC.lf=ts;compose(REC.L)}return}if(pend||dragging||still||!isMove()||ts-last<33)return;last=ts;drawMain(ts/1000)};
  all();requestAnimationFrame(loop);
  document.fonts&&document.fonts.ready.then(req);
 
@@ -524,11 +524,37 @@ function boot(){
  const ready=async()=>{for(const [id] of mapList())await rasterMap(id);const L=layout();compose(L);return L};
  const dl=(u,name)=>{const a=document.createElement('a');a.download=name;a.href=u;document.body.appendChild(a);a.click();a.remove()};
  // 녹화 (자동: 프리셋 무빙 한 번 / 수동: 내가 조작하는 화면)
+
+ // 녹화한 무빙 → 프롬프트
+ const D2=180/Math.PI,sgnA=(ax,az,bx,bz)=>Math.atan2(ax*bz-az*bx,ax*bx+az*bz)*D2;
+ const camState=ts=>{const mv=opt('move',sel)[4],c=solve(sel,W/H,mv?tOf(mv,ts/1000):0),g=gcen(),fx=c.tgt.x-c.pos.x,fy=c.tgt.y-c.pos.y,fz=c.tgt.z-c.pos.z,fh=Math.hypot(fx,fz)||1e-6,bx=g.x-c.pos.x,bz=g.z-c.pos.z,bh=Math.hypot(bx,bz)||1e-6,fy2=FACE*HSv-c.pos.y;
+  return{dist:bh,az:Math.atan2(c.pos.x-g.x,c.pos.z-g.z)*D2,h:c.pos.y,pan:sgnA(bx,bz,fx,fz)-(c.yaw||0),tilt:(Math.atan2(fy,fh)-Math.atan2(fy2,bh))*D2+(c.pitch||0),mm:sel.fl||opt('lens',sel)[4],roll:(c.roll||0),x:c.pos.x,z:c.pos.z,fx:fx/fh,fz:fz/fh}};
+ const unwrap=a=>{for(let i=1;i<a.length;i++){while(a[i]-a[i-1]>180)a[i]-=360;while(a[i]-a[i-1]<-180)a[i]+=360}return a};
+ const MTH={dist:.15,az:12,h:.25,pan:8,tilt:6,mm:.15,roll:5};
+ const series=S=>({dist:S.map(q=>Math.log(q.dist)),az:unwrap(S.map(q=>q.az)),h:S.map(q=>q.h),pan:unwrap(S.map(q=>q.pan)),tilt:S.map(q=>q.tilt),mm:S.map(q=>Math.log(q.mm)),roll:S.map(q=>q.roll)});
+ const findSplit=(Z,a,b)=>{let best=-1;for(const k in MTH){const v=Z[k],th=k==='dist'||k==='mm'?Math.log(1+MTH[k]):MTH[k];let mi=-1,md=0;for(let i=a+1;i<b;i++){const d=Math.min(Math.abs(v[i]-v[a]),Math.abs(v[i]-v[b]));const out=(v[i]-v[a])*(v[i]-v[b])>0;if(out&&d>th&&d>md){md=d;mi=i}}if(mi>0&&(best<0||mi<best))best=mi}return best};
+ const phase=(S,Z,a,b)=>{const cl=[],q0=S[a],q1=S[b],dr=Math.exp(Z.dist[b]-Z.dist[a]),daz=Z.az[b]-Z.az[a],dh=q1.h-q0.h,dp=Z.pan[b]-Z.pan[a],dt=q1.tilt-q0.tilt,zr=Math.exp(Z.mm[b]-Z.mm[a]),drl=q1.roll-q0.roll;
+  if(Math.abs(daz)>=MTH.az){const lat=(q1.x-q0.x)*(-q0.fz)+(q1.z-q0.z)*q0.fx;cl.push(`arcs ${Math.round(Math.abs(daz))} degrees around the subject to the ${lat>=0?'right':'left'}`)}
+  if(dr<=1-MTH.dist)cl.push(`dollies in toward the subject (${q0.dist.toFixed(1)}m to ${q1.dist.toFixed(1)}m)`);else if(dr>=1+MTH.dist)cl.push(`dollies out away from the subject (${q0.dist.toFixed(1)}m to ${q1.dist.toFixed(1)}m)`);
+  if(Math.abs(dh)>=MTH.h)cl.push(`${dh>0?(dh>1.2?'cranes up':'rises up'):(dh<-1.2?'cranes down':'lowers')} from ${q0.h.toFixed(1)}m to ${q1.h.toFixed(1)}m high`);
+  if(Math.abs(dp)>=MTH.pan)cl.push(`pans ${dp>0?'right':'left'} ${Math.round(Math.abs(dp))} degrees`);
+  if(Math.abs(dt)>=MTH.tilt)cl.push(`tilts ${dt>0?'up':'down'} ${Math.round(Math.abs(dt))} degrees`);
+  if(zr>=1+MTH.mm)cl.push(`zooms in from ${q0.mm}mm to ${q1.mm}mm`);else if(zr<=1/(1+MTH.mm))cl.push(`zooms out from ${q0.mm}mm to ${q1.mm}mm`);
+  if(Math.abs(drl)>=MTH.roll)cl.push(`rolls ${drl>0?'clockwise':'counterclockwise'} into a ${Math.round(Math.abs(q1.roll))}-degree dutch tilt`);
+  if(!cl.length)return null;const dur=q1.t-q0.t,sp=dur>3.2?'slowly':dur<1.2?'quickly':'smoothly';
+  return sp+' '+(cl.length>1?cl.slice(0,-1).join(', ')+' while it '+cl[cl.length-1]:cl[0])};
+ const recPrompt=R=>{const S=R.S;if(!S||S.length<3)return null;const Z=series(S),last=S.length-1;let cuts=[0,last];for(let pass=0;pass<2;pass++){const nc=[cuts[0]];for(let i=1;i<cuts.length;i++){const sp=cuts.length<4?findSplit(Z,cuts[i-1],cuts[i]):-1;if(sp>0)nc.push(sp);nc.push(cuts[i])}cuts=nc}
+  const ph=[];for(let i=1;i<cuts.length;i++){const t=phase(S,Z,cuts[i-1],cuts[i]);if(t)ph.push(t)}
+  const end=R.endSel,ef=[opt('size',end)[3],opt('angle',end)[3]].join(', '),secs=Math.max(1,Math.round(S[last].t-S[0].t));
+  const mv=ph.length?'Camera movement: the camera '+ph.join(', then it ')+`, ending on ${ef}.`:'Camera movement: the camera holds still, static shot.';
+  return `${R.startPr}. ${mv} One continuous ${secs}-second shot, smooth cinematic camera motion.`};
+ const qlab=document.querySelector('.qlab');
+ const showRecPr=t=>{window.__recPr=t;const el=document.getElementById('prompt');el.textContent=t;el.title=t;qlab.firstChild.textContent='프롬프트 · 녹화한 무빙 반영'};
  const stopRec=()=>{if(!REC||REC.done)return;REC.done=1;try{REC.mr.stop()}catch(e){}};
  const startRec=async auto=>{if(REC)return;if(!exCv.captureStream||!window.MediaRecorder){toast('이 브라우저는 영상 저장이 안 돼요. 크롬에서 열어주세요');return}const L=await ready();const mv=opt('move',sel)[4],dur=auto?(mv==='orbit'?9:mv==='hand'?4:4.4):120;const types=['video/mp4;codecs=avc1','video/mp4','video/webm;codecs=vp9','video/webm'],mt=types.find(t=>MediaRecorder.isTypeSupported(t))||'';const st=exCv.captureStream(30),ch=[];let mr;try{mr=new MediaRecorder(st,mt?{mimeType:mt,videoBitsPerSecond:8e6}:{videoBitsPerSecond:8e6})}catch(_){toast('녹화를 시작하지 못했어요');return}
-  mr.ondataavailable=e=>{if(e.data.size)ch.push(e.data)};mr.onstop=()=>{st.getTracks().forEach(t=>t.stop());const ext=(mr.mimeType||mt).includes('mp4')?'mp4':'webm',bl=new Blob(ch,{type:mr.mimeType||mt||'video/webm'}),u=URL.createObjectURL(bl);dl(u,'camera-angle-'+Date.now()+'.'+ext);setTimeout(()=>URL.revokeObjectURL(u),4000);REC=null;shotBtn.disabled=false;recBtn.disabled=false;recBtn.classList.remove('on');recBtn.querySelector('span').textContent='무빙 녹화';shotLbl();toast('영상을 저장했어요 ('+ext.toUpperCase()+')');window.__ev&&window.__ev(auto?'video_save':'rec')};
+  mr.ondataavailable=e=>{if(e.data.size)ch.push(e.data)};mr.onstop=()=>{st.getTracks().forEach(t=>t.stop());const ext=(mr.mimeType||mt).includes('mp4')?'mp4':'webm',bl=new Blob(ch,{type:mr.mimeType||mt||'video/webm'}),u=URL.createObjectURL(bl);dl(u,'camera-angle-'+Date.now()+'.'+ext);setTimeout(()=>URL.revokeObjectURL(u),4000);const R0=REC;REC=null;if(!R0.auto){R0.endSel={...sel};const t=recPrompt(R0);if(t)showRecPr(t)}shotBtn.disabled=false;recBtn.disabled=false;recBtn.classList.remove('on');recBtn.querySelector('span').textContent='무빙 녹화';shotLbl();toast('영상을 저장했어요 ('+ext.toUpperCase()+')');window.__ev&&window.__ev(auto?'video_save':'rec')};
   const fmt=e=>Math.floor(e/60)+':'+String(Math.floor(e%60)).padStart(2,'0');
-  REC={t0:null,lf:0,dur,mr,done:0,auto,L,tick:e=>{recBtn.querySelector('span').textContent='정지 '+fmt(e)}};mr.start(250);
+  REC={t0:null,lf:0,dur,mr,done:0,auto,L,tick:e=>{recBtn.querySelector('span').textContent='정지 '+fmt(e)},S:[],ls:-1,startPr:document.getElementById('prompt').textContent.replace(/\.$/,''),sample:(e,ts)=>{if(e-REC.ls<.1)return;REC.ls=e;const q=camState(ts);q.t=e;REC.S.push(q)}};mr.start(250);
   if(auto){shotBtn.disabled=true;recBtn.disabled=true;shotBtn.querySelector('span').textContent='녹화 중… '+Math.round(dur)+'초'}else{shotBtn.disabled=true;recBtn.classList.add('on');recBtn.querySelector('span').textContent='정지 0:00';toast('녹화를 시작했어요. 화면·도면을 움직이고 정지를 누르세요 (최대 2분)')}};
  recBtn.addEventListener('click',()=>{if(REC&&!REC.auto){stopRec();return}startRec(false)});
  const shotLbl=()=>{if(REC)return;shotBtn.querySelector('span').textContent=isMove()?'영상 저장':'이미지 저장';shotBtn.title=isMove()?'무빙을 영상으로 저장':'이미지 저장'};
