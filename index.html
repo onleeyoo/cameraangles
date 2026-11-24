@@ -325,7 +325,7 @@ function boot(){
  // 카메라 계산: 프리셋(사이즈·앵글·방향) 또는 도면으로 직접 옮긴 값(F) → 기본 카메라, 그 위에 무빙
  const opt=(k,s)=>G.find(g=>g.k===k).o[s[k]];
  let free=false;const LOOK={yaw:0,pitch:0};let AIMP=null;
- const CASTS={w:['여자 1인','Woman','a young Korean woman',['w']],m:['남자 1인','Man','a young Korean man',['m']],ww:['2인 여여','Two Women','two-shot of two young Korean women',['w','w']],mm:['2인 남남','Two Men','two-shot of two young Korean men',['m','m']],mw:['2인 남여','Man & Woman','two-shot of a young Korean man and woman',['m','w']],wm:['2인 여남','Woman & Man','two-shot of a young Korean woman and man',['w','m']]};
+ const CASTS={w:['여자 1인','Woman','a person',['w']],m:['남자 1인','Man','a person',['m']],ww:['2인 여여','Two Women','two-shot of two people',['w','w']],mm:['2인 남남','Two Men','two-shot of two people',['m','m']],mw:['2인 남여','Man & Woman','two-shot of two people',['m','w']],wm:['2인 여남','Woman & Man','two-shot of two people',['w','m']]};
  let ACT=[{k:'w',x:0,z:0,r:0}],moveActors=()=>{},HSv=1;const HEIGHT={w:1.70,m:1.80};sel.cast='w';
  const gcen=()=>{let x=0,z=0;ACT.forEach(a=>{x+=a.x;z+=a.z});return{x:x/ACT.length,z:z/ACT.length}};const F={az:0,dist:3,h:1.6,ty:1.4,roll:0};let TILT=0;
  function base(s,ar,useFree){
