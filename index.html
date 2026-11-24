@@ -72,9 +72,9 @@ body:not([data-ar="169"]) .view{background:#141518}
 .side h2{margin:0 0 8px;font-size:19px;font-weight:800;letter-spacing:-.02em}
 .row{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:6px 0;min-height:52px}
 .row>span{color:var(--sub);font-size:15px;flex:none}
-.lensrow{padding:12px 0 4px}.lensrow>span{color:var(--sub);font-size:15px;display:block;margin-bottom:6px}
+.lensrow{padding:12px 0 4px}#tlv{cursor:pointer;user-select:none}.lensrow>span{color:var(--sub);font-size:15px;display:block;margin-bottom:6px}
 .lensbar{display:flex;align-items:center;gap:12px}.lensbar input{flex:1;accent-color:var(--rec);height:32px}
-#flv{min-width:96px;text-align:center;background:var(--ink);color:var(--bg);border-radius:12px;padding:9px 0;font-size:15px;font-variant-numeric:tabular-nums}
+#flv,#tlv{min-width:96px;text-align:center;background:var(--ink);color:var(--bg);border-radius:12px;padding:9px 0;font-size:15px;font-variant-numeric:tabular-nums}
 .tg2{gap:16px}.tgl{display:inline-flex;align-items:center;gap:8px;font-size:14.5px;font-weight:500;cursor:pointer;white-space:nowrap}.tgl .sw{width:40px;height:24px}.tgl .sw i::after{width:18px;height:18px}.tgl .sw input:checked+i::after{transform:translateX(16px)}
 .sw{position:relative;width:46px;height:28px;flex:none}.sw input{position:absolute;inset:0;opacity:0;cursor:pointer;margin:0}
 .sw i{position:absolute;inset:0;border-radius:99px;background:var(--chip);transition:background .2s;pointer-events:none}.sw i::after{content:'';position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.25);transition:transform .2s}
@@ -186,6 +186,7 @@ body:not([data-ar="169"]) .view{background:#141518}
   <div id="panel"></div>
   <div id="panelMove"></div>
   <div class="lensrow"><span>카메라 화각</span><div class="lensbar"><input type="range" id="flr" min="2.64" max="5.3" step="0.01" aria-label="카메라 화각"><b id="flv">35mm</b></div></div>
+  <div class="lensrow"><span>카메라 기울기 (더치)</span><div class="lensbar"><input type="range" id="tlr" min="-45" max="45" step="1" value="0" aria-label="카메라 기울기"><b id="tlv" title="더블클릭하면 0°">0°</b></div></div>
  </aside>
  </div>
 </div>
@@ -313,7 +314,7 @@ function boot(){
  let free=false;const LOOK={yaw:0,pitch:0};let AIMP=null;
  const CASTS={w:['여자 1인','Woman','a young Korean woman',['w']],m:['남자 1인','Man','a young Korean man',['m']],ww:['2인 여여','Two Women','two-shot of two young Korean women',['w','w']],mm:['2인 남남','Two Men','two-shot of two young Korean men',['m','m']],mw:['2인 남여','Man & Woman','two-shot of a young Korean man and woman',['m','w']],wm:['2인 여남','Woman & Man','two-shot of a young Korean woman and man',['w','m']]};
  let ACT=[{k:'w',x:0,z:0,r:0}],moveActors=()=>{},HSv=1;const HEIGHT={w:1.70,m:1.80};sel.cast='w';
- const gcen=()=>{let x=0,z=0;ACT.forEach(a=>{x+=a.x;z+=a.z});return{x:x/ACT.length,z:z/ACT.length}};const F={az:0,dist:3,h:1.6,ty:1.4,roll:0};
+ const gcen=()=>{let x=0,z=0;ACT.forEach(a=>{x+=a.x;z+=a.z});return{x:x/ACT.length,z:z/ACT.length}};const F={az:0,dist:3,h:1.6,ty:1.4,roll:0};let TILT=0;
  function base(s,ar,useFree){
   let fov=vf(s.fl||opt('lens',s)[4]);
   const g=gcen();
@@ -354,7 +355,7 @@ function boot(){
   if(m.cy||m.cb){pos.y+=m.cy;pos.addScaledVector(fw,m.cb)}
   if(m.lat){pos.addScaledVector(rt,m.lat);T.addScaledVector(rt,m.lat)}
   if(m.vert){pos.y=Math.max(.05,pos.y+m.vert);T.y+=m.vert}
-  let roll=B.roll+m.roll;
+  let roll=B.roll+m.roll+TILT;
   if(m.j!==null){const q=m.j,k=Math.min(.08,d*.03+.02);pos.add(V(nz(q)*k,nz(q+7)*k*.7,nz(q+3)*k));T.add(V(nz(q+11)*k*.8,nz(q+5)*k*.6,0));roll+=nz(q+9)*1.6}
   const h2=Math.hypot(pos.x-T.x,pos.z-T.z),el=Math.atan2(pos.y-T.y,h2)/D;
   return{pos,tgt:T,fov,roll,yaw:m.yaw+LOOK.yaw,pitch:m.pitch+LOOK.pitch,up:el>85?V(-fw.x,0,-fw.z):UP};
@@ -376,7 +377,7 @@ function boot(){
  const comp=()=>{if(!LOOK.yaw&&!LOOK.pitch&&!AIMP)return null;const c=solve(sel,W/H,0);aim(c,W,H);const p=base(sel,W/H,free).T.project(cam),hx=p.x<-.2?'l':p.x>.2?'r':'',vy=p.y>.25?'t':p.y<-.25?'b':'';if(!hx&&!vy)return null;
   const K={l:['왼쪽','Left','on the left third of the frame, negative space on the right'],r:['오른쪽','Right','on the right third of the frame, negative space on the left'],t:['위쪽','Top','placed high in the frame'],b:['아래쪽','Bottom','placed low in the frame with headroom above']};
   const ks=[hx,vy].filter(Boolean);return['인물 '+ks.map(k=>K[k][0]).join('·')+' 배치','Subject '+ks.map(k=>K[k][1]).join('-'),'subject positioned '+ks.map(k=>K[k][2]).join(', ')]};
- const names=s=>{const a=ORD.map(k=>k==='lens'&&s.fl?[s.fl+'mm',s.fl+'mm',s.fl+'mm','shot on a '+s.fl+'mm lens',s.fl]:opt(k,s)).filter(o=>o[4]!==null);const r={ko:a.map((o,i)=>ORD.filter(k=>k==='move'?opt(k,s)[4]!==null:1)[i]==='lens'?o[1]:o[0]).join(' · '),en:a.map(o=>o[2]).join(' · '),pr:a.map(o=>o[3]).join(', ')};const C=CASTS[s.cast||'w'];r.ko=C[0]+' · '+r.ko;r.en=C[1]+' · '+r.en;r.pr=C[2]+', '+r.pr;const q=s===sel&&comp();if(q){r.ko+=' · '+q[0];r.en+=' · '+q[1];r.pr+=', '+q[2]}return r};
+ const names=s=>{const a=ORD.map(k=>k==='lens'&&s.fl?[s.fl+'mm',s.fl+'mm',s.fl+'mm','shot on a '+s.fl+'mm lens',s.fl]:opt(k,s)).filter(o=>o[4]!==null);const r={ko:a.map((o,i)=>ORD.filter(k=>k==='move'?opt(k,s)[4]!==null:1)[i]==='lens'?o[1]:o[0]).join(' · '),en:a.map(o=>o[2]).join(' · '),pr:a.map(o=>o[3]).join(', ')};const C=CASTS[s.cast||'w'];r.ko=C[0]+' · '+r.ko;r.en=C[1]+' · '+r.en;r.pr=C[2]+', '+r.pr;if(s===sel&&TILT){const a=Math.abs(TILT);r.ko+=' · 기울기 '+(TILT>0?'오른쪽 ':'왼쪽 ')+a+'°';r.en+=' · Tilt '+a+'°';r.pr+=', dutch angle, camera tilted '+a+' degrees '+(TILT>0?'clockwise':'counterclockwise')}const q=s===sel&&comp();if(q){r.ko+=' · '+q[0];r.en+=' · '+q[1];r.pr+=', '+q[2]}return r};
  let wm=true;const wmark=(x,w,h)=>{if(!wm)return;const fs=Math.round(Math.min(w,h)*.028);x.font=`600 ${fs}px ${FONT}`;x.textBaseline='top';x.textAlign='right';x.fillStyle='rgba(255,255,255,.7)';x.fillText('cameraangles.0202production.com · @yooj2_2',w-fs*.9+1,fs*.8+1);x.fillStyle='rgba(22,23,26,.55)';x.fillText('cameraangles.0202production.com · @yooj2_2',w-fs*.9,fs*.8);x.textAlign='left'};
  const label=(x,w,h,ko,en,k=1)=>{if(!lab)return;let fs=Math.round(Math.min(W,H)*.06*k);x.font=`700 ${fs}px ${FONT}`;while(x.measureText(ko).width>w-fs*1.4&&fs>10){fs--;x.font=`700 ${fs}px ${FONT}`}const bh=fs*2.9,g=x.createLinearGradient(0,h-bh*1.3,0,h);g.addColorStop(0,'rgba(0,0,0,0)');g.addColorStop(1,'rgba(0,0,0,.62)');x.fillStyle=g;x.fillRect(0,h-bh*1.3,w,bh*1.3);x.fillStyle='#fff';x.textBaseline='alphabetic';x.fillText(ko,fs*.7,h-fs*1.3);x.font=`500 ${Math.round(fs*.6)}px ${FONT}`;x.globalAlpha=.85;x.fillText(en,fs*.7,h-fs*.5);x.globalAlpha=1};
  const chip=(x,px,txt,k)=>{const fs=Math.round(Math.min(W,H)*.05*k);x.font=`700 ${fs}px ${FONT}`;const tw=x.measureText(txt).width;x.fillStyle=txt==='끝'?'#e5322d':'#121316';x.fillRect(px+fs*.5,fs*.5,tw+fs,fs*1.6);x.fillStyle='#fff';x.textBaseline='middle';x.fillText(txt,px+fs,fs*1.32)};
@@ -388,6 +389,7 @@ function boot(){
  panel.innerHTML=G.filter(g=>g.k!=='lens'&&g.k!=='move').map(g=>`<label class="row"><span>${g.t.replace(' · 높이','')}</span><select data-k="${g.k}">${g.o.map((o,i)=>`<option value="${i}">${esc(o[0])}${o[1]&&o[1]!==o[0]?' · '+esc(o[1]):''}</option>`).join('')}</select></label>`).join('');
  const chips=[],toast=t=>{const el=document.getElementById('toast');el.textContent=t;el.classList.add('on');clearTimeout(toast.t);toast.t=setTimeout(()=>el.classList.remove('on'),1600)},flr=document.getElementById('flr'),flv=document.getElementById('flv');
  flr.addEventListener('input',()=>{let mm=Math.round(Math.exp(+flr.value));const st=[14,16,18,20,24,28,35,40,50,65,70,85,100,105,135,150,200];mm=st.reduce((a,b)=>Math.abs(b-mm)<Math.abs(a-mm)?b:a);sel.fl=mm;dragging=1;fast()});flr.addEventListener('change',()=>{dragging=null;req()});
+ const tlr=document.getElementById('tlr'),tlv=document.getElementById('tlv'),setT=v=>{TILT=v;tlr.value=v;tlv.textContent=v+'°'};tlr.addEventListener('input',()=>{let v=+tlr.value;if(Math.abs(v)<2)v=0;setT(v);dragging=1;fast()});tlr.addEventListener('change',()=>{dragging=null;req()});tlv.addEventListener('dblclick',()=>{setT(0);req()});
  const main=document.getElementById('main'),strip=document.getElementById('strip');
  const isMove=()=>opt('move',sel)[4]!==null;
 
@@ -478,7 +480,7 @@ function boot(){
  document.getElementById('center').addEventListener('click',()=>{LOOK.yaw=LOOK.pitch=0;AIMP=null;req()});
  document.getElementById('shot').addEventListener('click',()=>{try{const a=document.createElement('a');a.download='camera-angle-'+Date.now()+'.png';a.href=main.toDataURL('image/png');document.body.appendChild(a);a.click();a.remove();toast('이미지를 저장했어요')}catch(_){toast('저장이 막혀 있어요. 화면을 캡쳐해 주세요')}});
  document.getElementById('cpimg').addEventListener('click',async()=>{try{if(!navigator.clipboard||!window.ClipboardItem)throw 0;await navigator.clipboard.write([new ClipboardItem({'image/png':new Promise((ok,no)=>main.toBlob(b=>b?ok(b):no(),'image/png'))})]);toast('이미지를 복사했어요. 카톡 등에 붙여넣으세요')}catch(_){toast('이 브라우저는 이미지 복사가 막혀 있어요. 저장을 써 주세요')}});
- document.getElementById('reset').addEventListener('click',()=>{free=false;LOOK.yaw=LOOK.pitch=0;AIMP=null;reset();req()});
+ document.getElementById('reset').addEventListener('click',()=>{free=false;setT(0);LOOK.yaw=LOOK.pitch=0;AIMP=null;reset();req()});
  // 화면 드래그 → 카메라 고개(구도) 이동
  let lk=null;
  main.addEventListener('pointerdown',e=>{e.preventDefault();main.setPointerCapture(e.pointerId);const c=solve(sel,W/H,0);lk={x:e.clientX,y:e.clientY,yaw:LOOK.yaw,pitch:LOOK.pitch,hf:2*Math.atan(Math.tan(c.fov*D/2)*W/H)/D,vf:c.fov};dragging=1});
