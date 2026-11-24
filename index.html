@@ -57,7 +57,7 @@ body:not([data-ar="169"]) .view{background:#141518}
 .acts{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 .badge{display:inline-block;font-size:12px;font-weight:700;color:#fff;background:var(--rec);border-radius:6px;padding:2px 8px}.badge[hidden]{display:none}
 .stats{display:flex;gap:22px}.stats div{display:flex;align-items:baseline;gap:6px}.stats small{font-size:11.5px;color:var(--sub);align-self:flex-start;line-height:1.2}.stats b{font-size:24px;font-weight:500;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
-#strip{display:block;width:calc(100% - 40px);margin:14px 20px 0;height:auto;border-radius:14px;background:var(--card)}#strip[hidden]{display:none}
+.stripw{padding:12px 0 2px}.stripw>span{color:var(--sub);font-size:15px;display:block;margin-bottom:8px}.stripw:has(#strip[hidden]){display:none}#strip{display:block;width:100%;height:auto;border-radius:12px;background:var(--card)}#strip[hidden]{display:none}
 .qcard{padding:14px 20px 20px}
 .qtabs{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
 .tab{display:inline-flex;align-items:center;gap:8px;height:38px;padding:0 16px 0 8px;font-size:13.5px;font-weight:600;background:var(--card);border-radius:14px}
@@ -141,7 +141,6 @@ body:not([data-ar="169"]) .view{background:#141518}
  .view canvas{max-height:40vh}body[data-ar="916"] .view canvas,body[data-ar="11"] .view canvas{height:40vh}
  .bar{order:3;background:var(--bg);border-radius:20px;border:0;box-shadow:var(--sh);padding:10px 12px}
  .stats{display:none}.bar{flex-wrap:nowrap}.acts{width:100%;justify-content:space-between;flex-wrap:nowrap}.acts .ib{flex:1;padding:0 8px}
- #strip{order:4;width:100%;margin:0}
  .qcard{order:5;background:var(--bg);border-radius:22px;box-shadow:var(--sh)}
  .maps{order:6;grid-template-columns:1fr}
  .side{order:7;position:static}
@@ -176,7 +175,6 @@ body:not([data-ar="169"]) .view{background:#141518}
     <div class="acts"><button class="ib" id="center" type="button" title="한쪽으로 옮긴 인물을 다시 가운데로"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 3v4M12 17v4M3 12h4M17 12h4"/></svg><span>가운데로</span></button><button class="ib" id="cpimg" type="button" title="이미지 복사 (카톡 등에 붙여넣기)"><svg viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></svg><span>이미지 복사</span></button><button class="ib" id="shot" type="button" title="이미지 저장"><svg viewBox="0 0 24 24"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg><span>이미지 저장</span></button></div>
     <div class="stats"><div><small>렌즈</small><b id="stL">35mm</b></div><div><small>카메라 높이</small><b id="stH">–</b></div><div><small>거리</small><b id="stD">–</b></div></div>
    </div>
-   <canvas id="strip" hidden></canvas>
    <div class="qcard">
     <p class="qlab">프롬프트<span hidden id="sum"></span><span hidden id="pillTxt"></span></p><div class="pr"><code id="prompt"></code><button class="btn" id="copy" type="button" aria-label="프롬프트 복사"><svg viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></svg><span>복사</span></button></div>
    </div>
@@ -192,6 +190,7 @@ body:not([data-ar="169"]) .view{background:#141518}
   <div id="panelMove"></div>
   <div class="lensrow"><span>카메라 화각</span><div class="lensbar"><input type="range" id="flr" min="2.64" max="5.3" step="0.01" aria-label="카메라 화각"><b id="flv">35mm</b></div></div>
   <div class="lensrow"><span>카메라 기울기 (더치)</span><div class="lensbar"><input type="range" id="tlr" min="-45" max="45" step="1" value="0" aria-label="카메라 기울기"><b id="tlv" title="더블클릭하면 0°">0°</b></div></div>
+  <div class="stripw"><span>무빙 시작 → 끝</span><canvas id="strip" hidden></canvas></div>
  </aside>
  </div>
 </div>
