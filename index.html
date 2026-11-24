@@ -62,7 +62,7 @@ body:not([data-ar="169"]) .view{background:#141518}
 .tab{display:inline-flex;align-items:center;gap:8px;height:38px;padding:0 16px 0 8px;font-size:13.5px;font-weight:600;background:var(--card);border-radius:14px}
 .tab svg{width:16px;height:16px;padding:4px;background:var(--bg);border-radius:50%;box-sizing:content-box}
 .sum{margin:0;font-size:13.5px;font-weight:600}.sumen{color:var(--sub);font-weight:400}
-.qlab{margin:14px 0 8px;font-size:14px;font-weight:500}
+.qlab{margin:0 0 10px;font-size:15px;font-weight:700}
 .pr{display:flex;gap:8px;align-items:flex-start}
 .pr code{flex:1;font:13.5px/1.6 ui-monospace,Menlo,monospace;background:var(--card);border-radius:16px;padding:12px 16px;overflow-wrap:anywhere;word-break:normal}
 .btn{flex:none;display:inline-flex;align-items:center;gap:6px;font-size:14px;font-weight:500;min-height:48px;padding:0 18px;border-radius:15px;border:0;background:var(--ink);color:var(--bg);cursor:pointer}.btn svg{width:18px;height:18px}
@@ -147,8 +147,7 @@ body:not([data-ar="169"]) .view{background:#141518}
    </div>
    <canvas id="strip" hidden></canvas>
    <div class="qcard">
-    <div class="qtabs"><span class="tab"><svg viewBox="0 0 24 24"><path d="M12 3l1.8 4.6L18.5 9l-4.7 1.4L12 15l-1.8-4.6L5.5 9l4.7-1.4z"/></svg>AI 프롬프트</span><p class="sum"><span id="sum"></span> <span class="sumen" id="pillTxt"></span></p></div>
-    <div class="qbody"><p class="qlab">이 구도를 AI에 이렇게 설명하세요</p><div class="pr"><code id="prompt"></code><button class="btn" id="copy" type="button" aria-label="프롬프트 복사"><svg viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></svg><span>복사</span></button></div></div>
+    <p class="qlab">프롬프트<span hidden id="sum"></span><span hidden id="pillTxt"></span></p><div class="pr"><code id="prompt"></code><button class="btn" id="copy" type="button" aria-label="프롬프트 복사"><svg viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></svg><span>복사</span></button></div>
    </div>
   </article>
   <div class="maps">
