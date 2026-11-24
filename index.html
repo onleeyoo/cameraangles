@@ -151,6 +151,7 @@ body:not([data-ar="169"]) .view{background:#141518}
 }
 @media(max-width:600px){.ctrl{gap:10px 8px}.ctrl .cl{display:none}.ctrl .cg{gap:6px}.ctrl .seg{padding:2px}.ctrl .seg button{padding:0 9px;font-size:14px;min-height:36px}.ctrl select{min-height:40px;padding:6px 24px 6px 9px;background-position:calc(100% - 12px) 50%,calc(100% - 7px) 50%;font-size:14px}.ctrl .cg:nth-child(2){margin-left:auto}.tg2{width:100%}}
 @media(max-width:420px){.acts .ib span{font-size:13px}.acts .ib svg{display:none}select{max-width:150px}}
+.pr code{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;line-clamp:2;overflow:hidden;text-overflow:ellipsis;height:calc(2lh + 18px);box-sizing:border-box;cursor:text}
 @media(prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 </head>
@@ -439,7 +440,7 @@ function boot(){
   const y=H/2,a=W+Gp*.18,b=W+Gp*.82,hs=Gp*.16;x.strokeStyle='#121316';x.lineWidth=Math.max(3,Gp*.05);x.lineCap='round';x.beginPath();x.moveTo(a,y);x.lineTo(b,y);x.moveTo(b-hs,y-hs);x.lineTo(b,y);x.lineTo(b-hs,y+hs);x.stroke();
   const n=names(sel);label(x,w,H,n.ko,n.en,k)};
  const drawThumbs=()=>{const [tw,th]=TH[ar];R.setSize(tw,th,false);for(const c of chips){const k=c.dataset.k,s={...sel,[k]:+c.dataset.i};if(k==='lens')delete s.fl;const cv=c.querySelector('canvas');if(cv.width!==tw||cv.height!==th){cv.width=tw;cv.height=th}const mv=opt('move',s)[4];cv.getContext('2d').drawImage(shoot(solve(s,tw/th,mv&&mv!=='hand'?(mv==='orbit'?.25:1):0,free&&(k==='lens'||k==='move')),tw,th),0,0)}};
- const ui=()=>{if(free)classify();for(const s of document.querySelectorAll('select[data-k]'))s.value=sel[s.dataset.k];const mm=sel.fl||opt('lens',sel)[4];flr.value=Math.log(mm);flv.textContent=mm+'mm';document.getElementById('stL').textContent=mm+'mm';const n=names(sel);document.getElementById('sum').textContent=n.ko.replace(/^[^·]+· /,'');document.getElementById('pillTxt').textContent=CASTS[sel.cast||'w'][0]+' · '+n.en.replace(/^[^·]+· /,'');document.getElementById('free').hidden=!free;document.getElementById('prompt').textContent=n.pr};
+ const ui=()=>{if(free)classify();for(const s of document.querySelectorAll('select[data-k]'))s.value=sel[s.dataset.k];const mm=sel.fl||opt('lens',sel)[4];flr.value=Math.log(mm);flv.textContent=mm+'mm';document.getElementById('stL').textContent=mm+'mm';const n=names(sel);document.getElementById('sum').textContent=n.ko.replace(/^[^·]+· /,'');document.getElementById('pillTxt').textContent=CASTS[sel.cast||'w'][0]+' · '+n.en.replace(/^[^·]+· /,'');document.getElementById('free').hidden=!free;document.getElementById('prompt').textContent=n.pr;document.getElementById('prompt').title=n.pr};
  let pend=0,dragging=null;
  const all=()=>{pend=0;[W,H]=AR[ar];ui();drawThumbs();R.setSize(W,H,false);main.width=W;main.height=H;drawStrip();drawMain(performance.now()/1000)};
  const req=()=>{if(!pend){pend=1;requestAnimationFrame(all)}};
@@ -492,7 +493,7 @@ function boot(){
  main.addEventListener('pointermove',e=>{if(!lk)return;const r=main.getBoundingClientRect();LOOK.yaw=Math.max(-60,Math.min(60,lk.yaw+(e.clientX-lk.x)/r.width*lk.hf));LOOK.pitch=Math.max(-45,Math.min(45,lk.pitch+(e.clientY-lk.y)/r.height*lk.vf));fast()});
  const lkEnd=()=>{if(lk){lk=null;dragging=null;bake();req()}};main.addEventListener('pointerup',lkEnd);main.addEventListener('pointercancel',lkEnd);
  main.addEventListener('dblclick',()=>{LOOK.yaw=LOOK.pitch=0;AIMP=null;req()});
- document.getElementById('copy').addEventListener('click',async e=>{const b=e.currentTarget,el=document.getElementById('prompt');try{await navigator.clipboard.writeText(el.textContent)}catch(_){const r=document.createRange();r.selectNodeContents(el);const s=getSelection();s.removeAllRanges();s.addRange(r);try{document.execCommand('copy')}catch(_){}}toast('프롬프트를 복사했어요');b.textContent='복사됨';setTimeout(()=>b.textContent='복사',1400)});
+ document.getElementById('copy').addEventListener('click',async e=>{const b=e.currentTarget,el=document.getElementById('prompt');try{await navigator.clipboard.writeText(el.textContent)}catch(_){const r=document.createRange();r.selectNodeContents(el);const s=getSelection();s.removeAllRanges();s.addRange(r);try{document.execCommand('copy')}catch(_){}}toast('프롬프트를 복사했어요');const sp=b.querySelector('span');if(sp){sp.textContent='복사됨';setTimeout(()=>sp.textContent='복사',1400)}});
 
  // 사람 모델 불러오기 (여자/남자, 실패하면 기본 마네킹 유지)
  const FZ0=G[0].o.map(o=>o[7]),MODELS={},FILES={w:'person',m:'male'};let cur=P;
