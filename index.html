@@ -125,7 +125,7 @@ body:not([data-ar="169"]) .view{background:#141518}
 @media(min-width:1181px) and (max-height:820px){.topin{min-height:50px;padding-top:6px;padding-bottom:6px}.nb{height:36px}.lgm{width:34px;height:34px}.hero{padding:8px 2px 10px;display:flex;align-items:baseline;gap:18px;flex-wrap:wrap}h1{font-size:30px}.lead{margin:0;font-size:13.5px}.seg button{min-height:34px}select{min-height:40px}.ib{height:40px}.shell{gap:10px 16px}}
 
 .thm .i-moon{display:none}:root[data-theme=dark] .thm .i-sun,:root:not([data-theme]) .thm .i-sun{display:none}:root[data-theme=dark] .thm .i-moon,:root:not([data-theme]) .thm .i-moon{display:block}@media(prefers-color-scheme:light){:root:not([data-theme]) .thm .i-moon{display:none}:root:not([data-theme]) .thm .i-sun{display:block}}
-.tgl em{font-style:normal}.map figcaption{display:flex;justify-content:space-between;align-items:center;min-height:30px}.snapt{font-size:13px;color:var(--sub);gap:6px}.snapt .sw{width:34px;height:20px}.snapt .sw i::after{width:14px;height:14px}.snapt .sw input:checked+i::after{transform:translateX(14px)}
+.tgl em{font-style:normal}.map figcaption .ib.sm svg{width:16px;height:16px;max-height:none;display:block;margin:0;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round}.map figcaption .ib.sm{color:var(--ink);font-weight:500}.ib.sm{height:34px;padding:0 10px;font-size:13px;border-radius:11px}.ib.sm svg{width:16px;height:16px}.map figcaption{display:flex;justify-content:space-between;align-items:center;min-height:30px}.snapt{font-size:13px;color:var(--sub);gap:6px}.snapt .sw{width:34px;height:20px}.snapt .sw i::after{width:14px;height:14px}.snapt .sw input:checked+i::after{transform:translateX(14px)}
 @media(min-width:1181px){
  .ctrl{flex-wrap:nowrap;gap:14px 22px}.ctrl .cg{flex:none}.tg2{gap:14px}
 }
@@ -149,10 +149,15 @@ body:not([data-ar="169"]) .view{background:#141518}
  .lgt{display:none}.nav a.nb span{display:none}.nav a.nb{padding:0 10px}
 }
 @media(max-width:600px){.ctrl{gap:10px 8px}.ctrl .cl{display:none}.ctrl .cg{gap:6px}.ctrl .seg{padding:2px}.ctrl .seg button{padding:0 9px;font-size:14px;min-height:36px}.ctrl select{min-height:40px;padding:6px 24px 6px 9px;background-position:calc(100% - 12px) 50%,calc(100% - 7px) 50%;font-size:14px}.ctrl .cg:nth-child(2){margin-left:auto}.tg2{width:100%}}
-@media(max-width:600px){.acts{gap:6px}.acts .ib{padding:0 6px;min-width:0}.acts #optBtn span,.acts #center span{display:none}.acts #optBtn,.acts #center{flex:0 0 40px}}
-@media(max-width:420px){.acts .ib span{font-size:12.5px;letter-spacing:-.02em}.acts .ib svg{display:none}.acts #center svg,.acts #optBtn svg{display:block}.acts{gap:4px}.ib.rec{gap:4px}select{max-width:150px}}
+@media(max-width:600px){.acts{gap:6px}.acts .ib{padding:0 6px;min-width:0}.acts .savewrap{flex:1.4}.acts .savewrap .sv{flex:1}.acts .savewrap .caret{flex:0 0 30px;padding:0 4px}.bar{position:relative}.acts .savewrap{position:static}.bar .spop{left:8px;right:8px;width:auto}}
+@media(max-width:420px){.acts .ib span{font-size:12.5px;letter-spacing:-.02em}.acts .ib svg{display:none}.acts #optBtn svg{display:block}.acts{gap:4px}.ib.rec{gap:4px}select{max-width:150px}}
 .pr code{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;line-clamp:2;overflow:hidden;text-overflow:ellipsis;height:calc(2lh + 18px);box-sizing:border-box;cursor:text}
-.optd{margin:4px 0 10px;font-size:13.5px;color:var(--sub)}.orow{border-top:1px solid var(--line);padding:10px 0}.orow>span:first-child{display:flex;flex-direction:column;color:var(--ink)!important;font-size:15px}.orow small{color:var(--sub);font-size:12.5px}
+/*opt*/.savewrap{position:relative;display:inline-flex}.savewrap .sv{border-radius:14px 0 0 14px;border-right:0}.savewrap .caret{border-radius:0 14px 14px 0;min-width:34px;padding:0 8px}.savewrap .caret[aria-expanded=true]{background:var(--card)}
+.spop{position:absolute;left:0;bottom:calc(100% + 8px);z-index:30;width:300px;background:var(--bg);border:1px solid var(--chip);border-radius:18px;box-shadow:0 18px 40px rgba(0,0,0,.18);padding:12px 14px 10px}.spop[hidden]{display:none}
+.sph{margin:2px 0 6px;font-size:13px;font-weight:700;color:var(--sub)}
+.orow{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:8px 0;border-top:1px solid var(--line);cursor:pointer}.orow>span:first-child{display:flex;flex-direction:column;font-size:14.5px}.orow small{color:var(--sub);font-size:12px}
+.spop .optd{margin:8px 0 0;font-size:12px}
+.optd{margin:4px 0 10px;font-size:13.5px;color:var(--sub)}
 .ib.rec .rdot{width:10px;height:10px;border-radius:50%;background:var(--rec);flex:none}.ib.rec.on{background:var(--rec);color:#fff;border-color:var(--rec)}.ib.rec.on .rdot{background:#fff;border-radius:2px}
 .ib:disabled{opacity:.6;cursor:default}
 @media(prefers-reduced-motion:reduce){*{transition:none!important}}
@@ -176,7 +181,7 @@ body:not([data-ar="169"]) .view{background:#141518}
   <article class="pcard">
    <div class="view"><canvas id="main"></canvas><div class="loading" id="loading"><i></i>미리보기 불러오는 중…</div></div>
    <div class="bar">
-    <div class="acts"><button class="ib" id="center" type="button" title="한쪽으로 옮긴 인물을 다시 가운데로"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 3v4M12 17v4M3 12h4M17 12h4"/></svg><span>가운데로</span></button><button class="ib" id="cpimg" type="button" title="이미지 복사 (카톡 등에 붙여넣기)"><svg viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></svg><span>이미지 복사</span></button><button class="ib" id="shot" type="button" title="이미지 저장"><svg viewBox="0 0 24 24"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg><span>이미지 저장</span></button><button class="ib" id="optBtn" type="button" title="저장 옵션" aria-label="저장 옵션"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg><span>저장 옵션</span></button><button class="ib rec" id="recBtn" type="button" title="내가 조작하는 화면을 영상으로 녹화"><i class="rdot"></i><span>무빙 녹화</span></button></div>
+    <div class="acts"><button class="ib rec" id="recBtn" type="button" title="내가 조작하는 화면을 영상으로 녹화"><i class="rdot"></i><span>무빙 녹화</span></button><button class="ib" id="cpimg" type="button" title="이미지 복사 (카톡 등에 붙여넣기)"><svg viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></svg><span>이미지 복사</span></button><div class="savewrap"><button class="ib sv" id="shot" type="button" title="이미지 저장"><svg viewBox="0 0 24 24"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg><span>이미지 저장</span></button><button class="ib caret" id="optBtn" type="button" aria-haspopup="true" aria-expanded="false" title="저장 옵션" aria-label="저장 옵션"><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></button><div class="spop" id="optPop" hidden><p class="sph">저장할 때 함께 넣기</p><label class="orow"><span><b>화면 속 샷 정보</b><small>미리보기 아래쪽 샷 이름 글자</small></span><span class="sw"><input type="checkbox" id="oInfo"><i></i></span></label><label class="orow"><span><b>탑뷰</b><small>미리보기 아래에 위에서 본 도면을 붙여요</small></span><span class="sw"><input type="checkbox" id="oTop"><i></i></span></label><label class="orow"><span><b>사이드뷰</b><small>미리보기 아래에 옆에서 본 도면을 붙여요</small></span><span class="sw"><input type="checkbox" id="oSide"><i></i></span></label><label class="orow"><span><b>프롬프트</b><small>맨 아래에 영문 프롬프트를 넣어요</small></span><span class="sw"><input type="checkbox" id="oPrompt"><i></i></span></label><p class="optd">이미지 저장·복사·영상 저장·무빙 녹화에 적용돼요. 모두 끄면 깨끗한 화면만 저장돼요.</p></div></div></div>
     <div class="stats"><div><small>렌즈</small><b id="stL">35mm</b></div><div><small>카메라 높이</small><b id="stH">–</b></div><div><small>거리</small><b id="stD">–</b></div></div>
    </div>
    <div class="qcard">
@@ -184,7 +189,7 @@ body:not([data-ar="169"]) .view{background:#141518}
    </div>
   </article>
   <div class="maps">
-   <figure class="map"><figcaption><b>탑뷰</b></figcaption><svg id="top" viewBox="0 0 400 300"></svg></figure>
+   <figure class="map"><figcaption><b>탑뷰</b><button class="ib sm" id="center" type="button" title="한쪽으로 옮긴 인물을 다시 가운데로"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 3v4M12 17v4M3 12h4M17 12h4"/></svg><span>가운데로</span></button></figcaption><svg id="top" viewBox="0 0 400 300"></svg></figure>
    <figure class="map"><figcaption><b>사이드뷰</b></figcaption><svg id="side" viewBox="0 0 400 300"></svg></figure>
   </div>
  </section>
@@ -206,14 +211,6 @@ body:not([data-ar="169"]) .view{background:#141518}
  </div>
 </footer>
 <div class="toast" id="toast" role="status"></div>
-<div class="modal" id="optModal" hidden><div class="mbox" role="dialog" aria-modal="true" aria-labelledby="optTitle">
- <div class="mhead"><h2 id="optTitle">저장 옵션</h2><button class="mx" id="optClose" type="button" aria-label="닫기">×</button></div>
- <p class="optd">이미지 저장·이미지 복사·영상 저장·무빙 녹화에 똑같이 적용돼요.</p>
- <label class="row orow"><span><b>화면 속 샷 정보</b><small>미리보기 아래쪽 샷 이름 글자</small></span><span class="sw"><input type="checkbox" id="oInfo"><i></i></span></label>
- <label class="row orow"><span><b>탑뷰 · 사이드뷰</b><small>미리보기 아래에 도면 두 개를 붙여요</small></span><span class="sw"><input type="checkbox" id="oMaps"><i></i></span></label>
- <label class="row orow"><span><b>프롬프트</b><small>맨 아래에 영문 프롬프트를 넣어요</small></span><span class="sw"><input type="checkbox" id="oPrompt"><i></i></span></label>
- <p class="optd">모두 끄면 깨끗한 화면 이미지만 저장돼요.</p>
-</div></div>
 <div class="modal" id="howModal" hidden><div class="mbox" role="dialog" aria-modal="true" aria-labelledby="howTitle">
  <div class="mhead"><h2 id="howTitle">사용방법</h2><button class="mx" id="howClose" type="button" aria-label="닫기">×</button></div>
  <ol class="howto">
@@ -221,7 +218,7 @@ body:not([data-ar="169"]) .view{background:#141518}
     <li><div><b>사이드뷰로 높이 잡기</b>카메라를 끌어서 높이·거리를 조절해요.<br>⊕를 끌면 보는 높이가 바뀌고, 얼굴 근처에서는 자석처럼 붙어요.</div></li>
     <li><div><b>구도 고르기</b>샷 사이즈, 앵글, 인물 방향을 골라요.<br>렌즈와 무빙은 그 아래에서 바꿔요.</div></li>
     <li><div><b>인물 정하기</b>1인·2인과 성별을 골라요.<br>2인은 탑뷰에서 인물을 끌어 위치를 바꿔요.</div></li>
-    <li><div><b>저장하고 복사</b>이미지 저장·복사로 화면을 가져가요. 무빙을 고르면 영상으로 저장되고,<br>‘무빙 녹화’로 내가 움직이는 화면을 영상으로 남길 수 있어요.<br>⚙ 저장 옵션에서 샷 정보·탑뷰/사이드뷰·프롬프트를 함께 넣을지 골라요.</div></li>
+    <li><div><b>저장하고 복사</b>이미지 저장·복사로 화면을 가져가요. 무빙을 고르면 영상으로 저장되고,<br>‘무빙 녹화’로 내가 움직이는 화면을 영상으로 남길 수 있어요.<br>저장 버튼 옆 ▾(저장 옵션)에서 샷 정보·탑뷰/사이드뷰·프롬프트를 함께 넣을지 골라요.</div></li>
    </ol>
  <p class="mmaker">만든 사람: <a href="https://www.instagram.com/yooj2_2/" target="_blank" rel="noopener">유정PD @yooj2_2</a> · 0202 Production</p>
  <ul class="mtips"><li>미리보기를 끌면 인물을 한쪽으로 치우치게 배치해요.</li><li>‘가운데로’ 버튼이나 더블클릭으로 인물을 다시 가운데로 되돌려요.</li><li>저장 옵션을 모두 끄면 글자 없는 깨끗한 이미지를 저장해요.</li><li>9:16은 릴스·쇼츠용 세로 화면이에요.</li></ul>
@@ -496,10 +493,10 @@ function boot(){
  document.getElementById('center').addEventListener('click',()=>{LOOK.yaw=LOOK.pitch=0;AIMP=null;req()});
  const shotBtn=document.getElementById('shot'),recBtn=document.getElementById('recBtn');
  // 저장 옵션
- const O=(()=>{const d={info:true,maps:false,prompt:false};try{return Object.assign(d,JSON.parse(localStorage.getItem('ca-save')||'{}'))}catch(e){return d}})();lab=O.info;req();
- const oIn={info:document.getElementById('oInfo'),maps:document.getElementById('oMaps'),prompt:document.getElementById('oPrompt')};
+ const O=(()=>{const d={info:true,top:false,side:false,prompt:false};try{const v=JSON.parse(localStorage.getItem('ca-save')||'{}');if('maps' in v){v.top=v.side=v.maps;delete v.maps}return Object.assign(d,v)}catch(e){return d}})();lab=O.info;req();
+ const oIn={info:document.getElementById('oInfo'),top:document.getElementById('oTop'),side:document.getElementById('oSide'),prompt:document.getElementById('oPrompt')};
  for(const k in oIn){oIn[k].checked=O[k];oIn[k].addEventListener('change',()=>{O[k]=oIn[k].checked;lab=O.info;try{localStorage.setItem('ca-save',JSON.stringify(O))}catch(e){}req()})}
- const om=document.getElementById('optModal');document.getElementById('optBtn').addEventListener('click',()=>{om.hidden=false});document.getElementById('optClose').addEventListener('click',()=>{om.hidden=true});om.addEventListener('click',e=>{if(e.target===om)om.hidden=true});
+ const op=document.getElementById('optPop'),ob=document.getElementById('optBtn');const setPop=v=>{op.hidden=!v;ob.setAttribute('aria-expanded',v)};ob.addEventListener('click',e=>{e.stopPropagation();setPop(op.hidden)});document.addEventListener('click',e=>{if(!op.hidden&&!op.contains(e.target)&&e.target!==ob)setPop(false)});addEventListener('keydown',e=>{if(e.key==='Escape')setPop(false)});
  // 도면 → 이미지 (라이트 색으로 고정)
  const PAL={'--ink':'#141518','--sub':'#71757e','--line':'#e3e5e9','--bg':'#ffffff','--card':'#f2f3f5','--rec':'#e5322d'};
  let svgCss=null;const getCss=()=>{if(svgCss!==null)return svgCss;let t='';const re=/^\.(ink|fink|sub|ring|fov|path|cam|rot|act|snap|aim|ret|h)\b/;for(const sh of document.styleSheets){let rs;try{rs=sh.cssRules}catch(e){continue}for(const r of rs){if(r.selectorText&&r.selectorText.split(',').some(x=>re.test(x.trim())))t+=r.cssText+'\n'}}svgCss=t.replace(/var\((--[a-z]+)\)/g,(m,v)=>PAL[v]||'#888');return svgCss};
@@ -507,11 +504,12 @@ function boot(){
  const rasterMap=id=>{const sv=document.getElementById(id),k=sv.innerHTML;if(MI[id].k===k&&MI[id].img)return Promise.resolve(MI[id].img);MI[id].k=k;const c=sv.cloneNode(true);c.setAttribute('xmlns','http://www.w3.org/2000/svg');c.setAttribute('width',800);c.setAttribute('height',600);const st=document.createElementNS('http://www.w3.org/2000/svg','style');st.textContent=getCss()+'text{font-family:"Apple SD Gothic Neo","Noto Sans KR",sans-serif}';c.insertBefore(st,c.firstChild);const u='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(new XMLSerializer().serializeToString(c));return new Promise(ok=>{const im=new Image();im.onload=()=>{if(MI[id].k===k)MI[id].img=im;ok(im)};im.onerror=()=>ok(MI[id].img);im.src=u})};
  const exCv=document.createElement('canvas');
  const wrap=(x,t,mw)=>{const ws=t.split(' '),ls=[];let l='';for(const w of ws){const n=l?l+' '+w:w;if(x.measureText(n).width>mw&&l){ls.push(l);l=w}else l=n}if(l)ls.push(l);return ls};
- const layout=()=>{const EW=W,pad=Math.round(EW*.03),mh=O.maps?Math.round((EW-pad*3)/2*.75)+pad*2+Math.round(EW*.03):0;let ph=0,lines=[],fs=Math.max(14,Math.round(EW*.022));if(O.prompt){const x=exCv.getContext('2d');x.font=`500 ${fs}px ui-monospace,Menlo,monospace`;lines=wrap(x,document.getElementById('prompt').textContent,EW-pad*2);ph=pad*2+Math.round(fs*1.5)*lines.length+Math.round(fs*1.8)}return{EW,EH:(H+mh+ph+1)&~1,W0:W,H0:H,pad,mh,ph,lines,fs}};
+ const mapList=()=>[['top','탑뷰'],['side','사이드뷰']].filter(([k])=>O[k]);
+ const layout=()=>{const EW=W,pad=Math.round(EW*.03),ms=mapList(),cw=ms.length===2?(EW-pad*3)/2:Math.min(EW-pad*2,EW*.6),mh=ms.length?Math.round(cw*.75)+pad*2+Math.round(EW*.03):0;let ph=0,lines=[],fs=Math.max(14,Math.round(EW*.022));if(O.prompt){const x=exCv.getContext('2d');x.font=`500 ${fs}px ui-monospace,Menlo,monospace`;lines=wrap(x,document.getElementById('prompt').textContent,EW-pad*2);ph=pad*2+Math.round(fs*1.5)*lines.length+Math.round(fs*1.8)}return{EW,EH:(H+mh+ph+1)&~1,W0:W,H0:H,pad,mh,ph,lines,fs}};
  const compose=L=>{if(exCv.width!==L.EW||exCv.height!==L.EH){exCv.width=L.EW;exCv.height=L.EH}const x=exCv.getContext('2d');x.fillStyle='#ffffff';x.fillRect(0,0,L.EW,L.EH);const sc=Math.min(L.EW/W,L.H0/H),dw=W*sc,dh=H*sc;x.fillStyle='#141518';x.fillRect(0,0,L.EW,L.H0);x.drawImage(main,(L.EW-dw)/2,(L.H0-dh)/2,dw,dh);let y=L.H0;
-  if(O.maps){rasterMap('top');rasterMap('side');const p=L.pad,cw=(L.EW-p*3)/2,ch=cw*.75,ly=Math.round(L.EW*.03);x.fillStyle='#f2f3f5';x.fillRect(0,y,L.EW,L.mh);x.fillStyle='#141518';x.font=`700 ${Math.round(ly*.6)}px ${FONT}`;x.textBaseline='middle';x.fillText('탑뷰',p,y+p+ly/2);x.fillText('사이드뷰',p*2+cw,y+p+ly/2);[['top',p],['side',p*2+cw]].forEach(([id,px])=>{x.fillStyle='#ffffff';x.fillRect(px,y+p+ly,cw,ch);if(MI[id].img)x.drawImage(MI[id].img,px,y+p+ly,cw,ch)});y+=L.mh}
+  const ms=mapList();if(ms.length){const p=L.pad,two=ms.length===2,cw=two?(L.EW-p*3)/2:Math.min(L.EW-p*2,L.EW*.6),ch=cw*.75,ly=Math.round(L.EW*.03);x.fillStyle='#f2f3f5';x.fillRect(0,y,L.EW,L.mh);x.font=`700 ${Math.round(ly*.6)}px ${FONT}`;x.textBaseline='middle';ms.forEach(([id,nm],i)=>{rasterMap(id);const px=two?p+i*(cw+p):(L.EW-cw)/2;x.fillStyle='#141518';x.fillText(nm,px,y+p+ly/2);x.fillStyle='#ffffff';x.fillRect(px,y+p+ly,cw,ch);if(MI[id].img)x.drawImage(MI[id].img,px,y+p+ly,cw,ch)});y+=L.mh}
   if(O.prompt){const p=L.pad,fs=L.fs;x.fillStyle='#ffffff';x.fillRect(0,y,L.EW,L.ph);x.fillStyle='#71757e';x.font=`700 ${Math.round(fs*.85)}px ${FONT}`;x.textBaseline='top';x.fillText('PROMPT',p,y+p);x.fillStyle='#141518';x.font=`500 ${fs}px ui-monospace,Menlo,monospace`;L.lines.forEach((l,i)=>x.fillText(l,p,y+p+Math.round(fs*1.8)+i*Math.round(fs*1.5)))}};
- const ready=async()=>{if(O.maps){await rasterMap('top');await rasterMap('side')}const L=layout();compose(L);return L};
+ const ready=async()=>{for(const [id] of mapList())await rasterMap(id);const L=layout();compose(L);return L};
  const dl=(u,name)=>{const a=document.createElement('a');a.download=name;a.href=u;document.body.appendChild(a);a.click();a.remove()};
  // 녹화 (자동: 프리셋 무빙 한 번 / 수동: 내가 조작하는 화면)
  const stopRec=()=>{if(!REC||REC.done)return;REC.done=1;try{REC.mr.stop()}catch(e){}};
