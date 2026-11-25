@@ -85,7 +85,7 @@ h2 em{font-style:normal;font-size:12.5px;font-weight:400;color:var(--sub);margin
 const U='https://dmpfjmcxnvslzsjvhmjh.supabase.co/rest/v1/rpc/c0202_stats',K='sb_publishable_b5QV7bNDUPFeE9l0qCDmbg_lu8CW3CD';
 const $=id=>document.getElementById(id),nf=n=>Number(n||0).toLocaleString('ko-KR');
 let key='';try{key=localStorage.getItem('ca-admin')||''}catch(e){}
-const EVN={img_save:'이미지 저장',img_copy:'이미지 복사',video_save:'무빙 영상 저장',rec:'무빙 녹화',prompt_copy:'프롬프트 복사'},DEVN={desktop:'PC',mobile:'모바일',tablet:'태블릿'};
+const EVN={img_save:'이미지 저장',img_copy:'이미지 복사',video_save:'무빙 영상 저장',rec:'무빙 녹화',prompt_copy:'프롬프트 복사',sb_add:'스토리보드 컷 추가'},DEVN={desktop:'PC',mobile:'모바일',tablet:'태블릿'};
 async function load(){
  const r=await fetch(U,{method:'POST',headers:{apikey:K,'Content-Type':'application/json'},body:JSON.stringify({p_key:key})});
  if(!r.ok)throw new Error(r.status);return r.json();
